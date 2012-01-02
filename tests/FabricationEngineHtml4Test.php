@@ -107,8 +107,8 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase {
 
     public function XtestMessingWithGoogle() {
 
-        //$webpage=file_get_contents('http://www.bing.com/');
-        $webpage=file_get_contents('http://www.google.com/');
+        //$webpage = file_get_contents('http://www.bing.com/');
+        $webpage = file_get_contents('http://www.google.com/');
 
 	$this->assertTrue($this->engine->run($webpage, 'string'));
         $NodeList=$this->engine->getHtml();
@@ -466,7 +466,8 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($this->engine->run($html, 'string'));
         
         //$result=$this->engine->getHtml('/head/noscript'); // not working strange.
-        $result=$this->engine->query('//noscript'); // works
+        //$result=$this->engine->query('//noscript'); // works
+	
         $result=$this->engine->getNoScript();
         $this->assertInternalType('object', $result);
         $this->assertInstanceOf('DOMNodeList', $result);
@@ -548,7 +549,9 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase {
     public function testHtmlBody() {
 
         $this->engine->run($this->design);
-        $NodeList=$this->engine->getHtml('/body');
+	
+        //$NodeList = $this->engine->getHtml('/body');
+        $NodeList = $this->engine->getBody();
         
         $this->assertInstanceOf('DOMNodeList', $NodeList);
         $this->assertEquals(1, $NodeList->length);
@@ -608,14 +611,14 @@ FIXTURE;
         $this->assertEquals('div', $divs->item(0)->nodeName);
 
         // getter for div's with a id attribute (default).
-        $divs=$this->engine->getDivsWith();
+        $divs=$this->engine->getDiv('[@*]');
         $this->assertInternalType('object', $divs);
         $this->assertInstanceOf('DOMNodeList', $divs);
-        $this->assertEquals(4, $divs->length); // includes tag with spaces.
+        $this->assertEquals(5, $divs->length); // includes tag with spaces.
         $this->assertEquals('div', $divs->item(0)->nodeName);
 
         // getter for div's with a class attribute.
-        $divs=$this->engine->getDivsWith('class');
+        $divs=$this->engine->getDiv('[@class]');
         $this->assertInternalType('object', $divs);
         $this->assertInstanceOf('DOMNodeList', $divs);
         $this->assertEquals(4, $divs->length);
@@ -727,22 +730,30 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $heading=$this->engine->getHeading();
+        $heading=$this->engine->getHeadings();
         
         $this->assertInternalType('object', $heading);
         $this->assertInstanceOf('DOMNodeList', $heading);
         $this->assertEquals(9, $heading->length);
         $this->assertEquals('h1', $heading->item(0)->nodeName);
         $this->assertEquals('Welcome to the Fabrication Engine', $heading->item(0)->nodeValue);
+	$this->assertEquals('Fabrication Engine 2', $heading->item(1)->nodeValue);
+	$this->assertEquals('Fabrication Engine 2.1', $heading->item(2)->nodeValue);
+	$this->assertEquals('Fabrication Engine 3', $heading->item(3)->nodeValue);
+	$this->assertEquals('Fabrication Engine 3.1', $heading->item(4)->nodeValue);
+	$this->assertEquals('Fabrication Engine 3.2', $heading->item(5)->nodeValue);
+	$this->assertEquals('Fabrication Engine 4', $heading->item(6)->nodeValue);
+	$this->assertEquals('Fabrication Engine 5', $heading->item(7)->nodeValue);
+	$this->assertEquals('Fabrication Engine 6', $heading->item(8)->nodeValue);
         
-        $heading=$this->engine->getHeading1();
+        $heading=$this->engine->getH1();
         $this->assertInternalType('object', $heading);
         $this->assertInstanceOf('DOMNodeList', $heading);
         $this->assertEquals(1, $heading->length);
         $this->assertEquals('h1', $heading->item(0)->nodeName);
         $this->assertEquals('Welcome to the Fabrication Engine', $heading->item(0)->nodeValue);
 
-        $heading=$this->engine->getHeading2();
+        $heading=$this->engine->getH2();
         $this->assertInternalType('object', $heading);
         $this->assertInstanceOf('DOMNodeList', $heading);
         $this->assertEquals(2, $heading->length);
@@ -751,7 +762,7 @@ FIXTURE;
         $this->assertEquals('h2', $heading->item(1)->nodeName);
         $this->assertEquals('Fabrication Engine 2.1', $heading->item(1)->nodeValue);
         
-        $heading=$this->engine->getHeading3();
+        $heading=$this->engine->getH3();
         $this->assertInternalType('object', $heading);
         $this->assertInstanceOf('DOMNodeList', $heading);
         $this->assertEquals(3, $heading->length);
@@ -762,21 +773,21 @@ FIXTURE;
         $this->assertEquals('h3', $heading->item(2)->nodeName);
         $this->assertEquals('Fabrication Engine 3.2', $heading->item(2)->nodeValue);
         
-        $heading=$this->engine->getHeading4();
+        $heading=$this->engine->getH4();
         $this->assertInternalType('object', $heading);
         $this->assertInstanceOf('DOMNodeList', $heading);
         $this->assertEquals(1, $heading->length);
         $this->assertEquals('h4', $heading->item(0)->nodeName);
         $this->assertEquals('Fabrication Engine 4', $heading->item(0)->nodeValue);
         
-        $heading=$this->engine->getHeading5();
+        $heading=$this->engine->getH5();
         $this->assertInternalType('object', $heading);
         $this->assertInstanceOf('DOMNodeList', $heading);
         $this->assertEquals(1, $heading->length);
         $this->assertEquals('h5', $heading->item(0)->nodeName);
         $this->assertEquals('Fabrication Engine 5', $heading->item(0)->nodeValue);
         
-        $heading=$this->engine->getHeading6();
+        $heading=$this->engine->getH6();
         $this->assertInternalType('object', $heading);
         $this->assertInstanceOf('DOMNodeList', $heading);
         $this->assertEquals(1, $heading->length);
@@ -876,7 +887,7 @@ FIXTURE;
         
     }
     
-    public function testtrong() {
+    public function testStrong() {
         $html= <<< FIXTURE
 <html>
     <head>
@@ -933,7 +944,7 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $citation=$this->engine->getCitation();
+        $citation=$this->engine->getCite();
         
         $this->assertInternalType('object', $citation);
         $this->assertInstanceOf('DOMNodeList', $citation);
@@ -968,7 +979,7 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $definition=$this->engine->getDefinition();
+        $definition=$this->engine->getDfn();
         
         $this->assertInternalType('object', $definition);
         $this->assertInstanceOf('DOMNodeList', $definition);
@@ -1038,7 +1049,7 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $sample=$this->engine->getSample();
+        $sample=$this->engine->getSamp();
         
         $this->assertInternalType('object', $sample);
         $this->assertInstanceOf('DOMNodeList', $sample);
@@ -1073,7 +1084,7 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $keyboard=$this->engine->getKeyboard();
+        $keyboard=$this->engine->getKbd();
         
         $this->assertInternalType('object', $keyboard);
         $this->assertInstanceOf('DOMNodeList', $keyboard);
@@ -1109,7 +1120,7 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $variable=$this->engine->getVariable();
+        $variable=$this->engine->getVar();
         
         $this->assertInternalType('object', $variable);
         $this->assertInstanceOf('DOMNodeList', $variable);
@@ -1144,7 +1155,7 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $abbreviation=$this->engine->getAbbreviation();
+        $abbreviation=$this->engine->getAbbr();
         
         $this->assertInternalType('object', $abbreviation);
         $this->assertInstanceOf('DOMNodeList', $abbreviation);
@@ -1219,7 +1230,7 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $paragraph=$this->engine->getParagraph();
+        $paragraph=$this->engine->getP();
         
         $this->assertInternalType('object', $paragraph);
         $this->assertInstanceOf('DOMNodeList', $paragraph);
@@ -1337,7 +1348,7 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $inserted=$this->engine->getInserted();
+        $inserted=$this->engine->getIns();
         
         $this->assertInternalType('object', $inserted);
         $this->assertInstanceOf('DOMNodeList', $inserted);
@@ -1378,7 +1389,7 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $deleted=$this->engine->getDeleted();
+        $deleted=$this->engine->getDel();
         
         $this->assertInternalType('object', $deleted);
         $this->assertInstanceOf('DOMNodeList', $deleted);
@@ -1439,7 +1450,7 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $deleted=$this->engine->getUnordered();
+        $deleted=$this->engine->getUl();
         
         $this->assertInternalType('object', $deleted);
         $this->assertInstanceOf('DOMNodeList', $deleted);
@@ -1500,7 +1511,7 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $deleted=$this->engine->getOrdered();
+        $deleted=$this->engine->getOl();
         
         $this->assertInternalType('object', $deleted);
         $this->assertInstanceOf('DOMNodeList', $deleted);
@@ -1554,7 +1565,7 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $dl=$this->engine->getDefinitionList();
+        $dl=$this->engine->getDl();
         
         $this->assertInternalType('object', $dl);
         $this->assertInstanceOf('DOMNodeList', $dl);
@@ -1596,7 +1607,7 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $dt=$this->engine->getDefinitionType();
+        $dt=$this->engine->getDt();
         
         $this->assertInternalType('object', $dt);
         $this->assertInstanceOf('DOMNodeList', $dt);
@@ -1638,7 +1649,7 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $dd=$this->engine->getDefinitionData();
+        $dd=$this->engine->getDd();
         
         $this->assertInternalType('object', $dd);
         $this->assertInstanceOf('DOMNodeList', $dd);
@@ -1742,7 +1753,7 @@ FIXTURE;
         $this->assertTrue($this->engine->run($html, 'string'));
 
         //$result=$this->engine->getTable()->list();
-        $result=$this->engine->getTableCaption('[@id="one"]');
+        $result=$this->engine->getCaption('[@id="one"]');
         
         
         $this->assertInternalType('object', $result);
@@ -1847,7 +1858,7 @@ FIXTURE;
         $this->assertTrue($this->engine->run($html, 'string'));
 
         //$result=$this->engine->getTable()->list();
-        $result=$this->engine->getTableTHead('[@id="table1-header"]');
+        $result=$this->engine->getTHead('[@id="table1-header"]');
         
         
         $this->assertInternalType('object', $result);
@@ -1921,7 +1932,7 @@ FIXTURE;
         $this->assertTrue($this->engine->run($html, 'string'));
 
         //$result=$this->engine->getTable()->list();
-        $result=$this->engine->getTableTFoot('[@id="table1-footer"]');
+        $result=$this->engine->getTFoot('[@id="table1-footer"]');
         
         
         $this->assertInternalType('object', $result);
@@ -1994,7 +2005,7 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $result=$this->engine->getTableTBody('[@id="table1-body"]');
+        $result=$this->engine->getTBody('[@id="table1-body"]');
         
         $this->assertInternalType('object', $result);
         $this->assertInstanceOf('DOMNodeList', $result);
@@ -2057,7 +2068,7 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $result=$this->engine->getTableColGroup('[@align="center"]');
+        $result=$this->engine->getColGroup('[@align="center"]');
         
         $this->assertInternalType('object', $result);
         $this->assertInstanceOf('DOMNodeList', $result);
@@ -2091,7 +2102,7 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $result=$this->engine->getTableCol();
+        $result=$this->engine->getCol();
         
         $this->assertInternalType('object', $result);
         $this->assertInstanceOf('DOMNodeList', $result);
@@ -2132,7 +2143,7 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $result=$this->engine->getTableTr();
+        $result=$this->engine->getTr();
         
         $this->assertInternalType('object', $result);
         $this->assertInstanceOf('DOMNodeList', $result);
@@ -2173,7 +2184,7 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $result=$this->engine->getTableTh();
+        $result=$this->engine->getTh();
         
         $this->assertInternalType('object', $result);
         $this->assertInstanceOf('DOMNodeList', $result);
@@ -2217,7 +2228,7 @@ FIXTURE;
         
         $this->assertTrue($this->engine->run($html, 'string'));
 
-        $result=$this->engine->getTableTd();
+        $result=$this->engine->getTd();
         
         $this->assertInternalType('object', $result);
         $this->assertInstanceOf('DOMNodeList', $result);
@@ -2274,24 +2285,29 @@ FIXTURE;
         }
     }
 
+    
     public function testImage() {
+	
         $this->engine->run($this->design);
-        
-        $result=$this->engine->getImage();
+        $result=$this->engine->getImg();
         
         $this->assertInstanceOf('DOMNodeList', $result);
         $this->assertEquals(6, $result->length);
     }
 
-    public function testImageInsideALink() {
+    
+    public function testLinkWithImage() {
+	
         $this->engine->run($this->design);
-        $NodeList=$this->engine->getImageInsideALink();
+        $NodeList=$this->engine->getLinkWithImage();
 
         $this->assertInstanceOf('DOMNodeList', $NodeList);
         $this->assertEquals(2, $NodeList->length);
     }
 
+    
     public function testImageWithAltTag() {
+	
         $this->engine->run($this->design);
         $NodeList=$this->engine->getImageWithAltTag();
 
@@ -2299,13 +2315,16 @@ FIXTURE;
         $this->assertEquals(1, $NodeList->length);   
     }
 
+    
     public function testImageWithoutAltTag() {
+	
         $this->engine->run($this->design);
         $NodeList=$this->engine->getImageWithoutAltTag();
 
         $this->assertInstanceOf('DOMNodeList', $NodeList);
         $this->assertEquals(5, $NodeList->length);
     }
+    
     
     public function testObject() {
 
@@ -2344,6 +2363,7 @@ FIXTURE;
         }
         
     }
+    
     
     public function testParam() {
 
@@ -2388,7 +2408,6 @@ FIXTURE;
         }
         
     }
-
     
     public function testMap() {
 
@@ -2444,15 +2463,20 @@ FIXTURE;
     
     // MAPPING for input<->output
     public function testSettingMapping() {
+	
         $this->assertTrue($this->engine->input('.hello', 'World'));
     }
 
+    
     public function testInputOutputMappingForHtmlIds() {
+	
         $this->assertTrue($this->engine->input('.hello', 'World'));
         $this->assertEquals('World', $this->engine->output('.hello'));
     }
 
+    
     public function XtestBuildingFromDesignMappingIds() {
+	
         $expected =
             $this->engine->getDoctype().
             '<html>'.

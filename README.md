@@ -22,45 +22,13 @@ within the Document Object Model. The FabricationEngine extends the PHP builtin
 DOMDocument in every way and enables the XPath object. This allows for an 
 insanely flexible and extensible document template engine, without placeholders.
 
-The Fabrication engine or "Fab" for short uses XPath to manipulate the DOM you 
+The Fabrication engine or "Fabic" for short uses XPath to manipulate the DOM you 
 can create a DOM structure by loading a html, xhtml, xml string or simply by
 loading a file, or you can build your own document structure by using the native
 DOMDoument API.
 
-Note DOMDocument is slightly retarded but mostly quite amazing!
-
-    1) Standard doctype is used no matter on the document validity.
-    2) Self closing tags like <br /> <img /> get messed up with DOMDocument.
-    3) Whitespacing is not consistant on input, output.
-    4) DOMDocument is special in many ways.
-
 
 ### Features
-
-## Head query methods.
-getHtml
-getHtmlHead
-getHtmlHeadTitle
-setHtmlHeadTitle
-
-
-## Body query methods.
-getImages
-getImagesInsideALink
-getImagesWithAltTag
-getImagesWithoutAltTag
-
-getElementById
-getElementBy
-setElementById
-setElementBy
-
-
-## Debug methods.
-dump
-
-
-## Proposed methods.
 
 
 ### Contributors

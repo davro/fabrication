@@ -36,7 +36,7 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
         
     
     public function testEngineOptionSettingDoctype() {
-        $this->assertEquals(true, $this->engine->setOption('doctype', 'html.5'));
+        $this->assertEquals('html.5', $this->engine->setOption('doctype', 'html.5'));
         $this->assertEquals('<!DOCTYPE HTML>', $this->engine->getDoctype());
     }
     
@@ -51,6 +51,169 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
         $this->engine->input('hello', 'world');
         $this->assertEquals('world', $this->engine->output('hello'));
     }
+
+    public function testEngineCreateElement() {
+
+	$value = "Hello World!";
+	$div = $this->engine->create('div', $value, array(), array());
+	$this->engine->appendChild($div);
+	
+	$this->assertEquals('DOMElement', get_class($div));
+	$this->assertEquals('div', $div->nodeName);
+	$this->assertEquals($value, $div->nodeValue);
+    }
+
+    public function testEngineCreateElementThenView() {
+	
+	$value = "";
+	$div = $this->engine->create('div', $value, array(), array());
+	$this->engine->appendChild($div);
+	
+	$this->assertEquals('DOMElement', get_class($div));
+	$this->assertEquals('div', $div->nodeName);
+	$this->assertEquals($value, $div->nodeValue);
+	
+	$this->assertEquals('<div></div>', $this->engine->view());
+    }
+    
+    public function testEngineCreateElementWithValueThenView() {
+	
+	$value = "Hello World!";
+	$div = $this->engine->create('div', $value, array(), array());
+	$this->engine->appendChild($div);
+	
+	$this->assertEquals('DOMElement', get_class($div));
+	$this->assertEquals('div', $div->nodeName);
+	$this->assertEquals($value, $div->nodeValue);
+	
+	$this->assertEquals('<div>Hello World!</div>', $this->engine->view());
+    }
+
+    public function testEngineCreateElementWithSingleAttributeAndValueThenView() {
+	
+	$value = "Hello World!";
+	$div = $this->engine->create('div', $value, array('id'=>'hello'));
+	$this->engine->appendChild($div);
+	
+	$this->assertEquals('DOMElement', get_class($div));
+	$this->assertEquals('div', $div->nodeName);
+	$this->assertEquals($value, $div->nodeValue);
+	
+	$this->assertEquals('<div id="hello">Hello World!</div>', $this->engine->view());
+    }
+
+    public function testEngineCreateElementWithRecursionThenView() {
+
+	$value = "Hello World!";
+	$div = $this->engine->create(
+	    'div',
+	    $value,
+	    array('id'=>'hello', 'class'=>'world'),
+	    array(
+		array('name'=>'div', 'value'=>'TEST', 'children'=>array(array('name'=>'div', 'value'=>'1'))),
+		array('name'=>'div', 'value'=>'TEST', 'attributes'=>array('id'=>'test2'), 'children'=>array(array('name'=>'div', 'value'=>'2'))),
+	    )
+
+	);
+	$this->engine->appendChild($div);
+	
+	$this->assertEquals('DOMElement', get_class($div));
+	$this->assertEquals('div', $div->nodeName);
+	$this->assertEquals($value.'TEST1TEST2', $div->nodeValue);
+	$this->assertEquals(
+	    '<div id="hello" class="world">Hello World!'.
+		'<div>TEST<div>1</div></div>'.
+		'<div id="test2">TEST<div>2</div></div>'.
+	    '</div>',
+	    $this->engine->view()
+	);
+    }
+    
+    public function testEngineCreateElementThenViewByXPath() {
+	
+	$value = "Hello World!";
+	$div = $this->engine->create('div', $value, array('id'=>'hello', 'class'=>'world'), array());
+	$this->engine->appendChild($div);
+	
+	$this->assertEquals('DOMElement', get_class($div));
+	$this->assertEquals('div', $div->nodeName);
+	$this->assertEquals($value, $div->nodeValue);
+	
+	// start running some xpath querys on the engine and view in html :))
+	$this->assertEquals('<div id="hello" class="world">'.$value.'</div>', $this->engine->view("//*"));
+	$this->assertEquals($value, $this->engine->view('//div[@id="hello"]/text()'));
+    }
+    
+    public function testEngineCreateElementWithRecursionThenViewByXPath() {
+	
+	$value = "Hello World!";
+	$div = $this->engine->create(
+	    'div',
+	    $value,
+	    array('id'=>'hello', 'class'=>'world'),
+	    array(
+		array('name'=>'div', 'value'=>'TEST', 'children'=>array(array('name'=>'div', 'value'=>'1'))),
+		array('name'=>'div', 'value'=>'TEST', 'attributes'=>array('id'=>'test2'), 'children'=>array(array('name'=>'div', 'value'=>'2'))),
+	    )
+
+	);
+	$this->engine->appendChild($div);
+	
+	$this->assertEquals('DOMElement', get_class($div));
+	$this->assertEquals('div', $div->nodeName);
+	$this->assertEquals($value.'TEST1TEST2', $div->nodeValue);
+	
+	// start running some xpath querys on the engine and view in html :))
+	$this->assertEquals("<div>2</div>", $this->engine->view('//div[@id="test2"]/div'));
+	$this->assertEquals("2", $this->engine->view("//div[@id='test2']/div/text()"));
+    }
+
+    public function testEngineCreateListViewFromData() {
+	
+	$listview = $this->engine->create('div', '', array('id'=>'listview'));
+	$listview->appendChild($this->engine->create('div', '', array('id'=>'data_id')));
+	$listview->appendChild($this->engine->create('div', '', array('id'=>'data_title')));
+	$listview->appendChild($this->engine->create('div', '', array('id'=>'data_content')));
+	
+//	$this->engine->appendChild($listview);
+//	
+//	$this->assertEquals(
+//	    '<div id="listview">'.
+//	    '<div id="data_id"></div>'.
+//	    '<div id="data_title"></div>'.
+//	    '<div id="data_content"></div>'.
+//	    '</div>',
+//	    $this->engine->view('//div[@id="listview"]')
+//	);
+
+	$data = array(
+	    array('data_id'=>1, 'data_title'=>'Title Testing1', 'data_content'=>'Content Testing1'),
+	    array('data_id'=>2, 'data_title'=>'Title Testing2', 'data_content'=>'Content Testing2'),
+	    array('data_id'=>3, 'data_title'=>'Title Testing3', 'data_content'=>'Content Testing3'),
+	);
+	
+	$this->assertEquals(
+	    '<div id="listview">'.
+	    '<div id="data_id_1">1</div>'.
+	    '<div id="data_title_1">Title Testing1</div>'.
+	    '<div id="data_content_1">Content Testing1</div>'.
+	    '<div id="data_id_2">2</div>'.
+	    '<div id="data_title_2">Title Testing2</div>'.
+	    '<div id="data_content_2">Content Testing2</div>'.
+	    '<div id="data_id_3">3</div>'.
+	    '<div id="data_title_3">Title Testing3</div>'.
+	    '<div id="data_content_3">Content Testing3</div>'.
+	    '</div>',
+	    $this->engine->template($listview, $data)
+	);
+
+	//$this->engine->template('//div[@id="listview"]', $data)
+    }
+    
+    public function testEngineIOAsObject() {
+        $this->engine->input('hello', 'world');
+//        $this->assertEquals('world', $this->engine->output('hello')->length());
+    }
     
     public function testEnginePhpStringSingleInput() {
         $this->engine->input('hello', 'world');
@@ -61,6 +224,7 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
             '?>', 
             $this->engine->output('hello', 'php.string')
         );
+	
     }
 
     public function testEnginePhpStringSingleInputEcho() {
@@ -619,5 +783,30 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
                 )
             )
         );
+    }
+    
+    /* 
+     * TODO reduced the method list in the engine by using __call to organise 
+     *  allowed method s depending on the doctype. This will also allow for more 
+     * granular control over the attributes.
+     * 
+     */
+    
+    public function testEngineDynamicCall() { 
+	
+	$result = $this->engine->getArticle();
+	
+	$this->assertInternalType('object', $result);
+	$this->assertEquals('DOMNodeList', get_class($result));
+    }
+    
+    // TODO
+    public function testEngineDiagram() { 
+	
+	$xml_string = file_get_contents(dirname(dirname(__FILE__)).'/tests/fixture/dia/Example.dia');
+	$this->engine->run($xml_string, 'string', 'xml');
+	
+	$xml = $this->engine->outputXML();
+	//$this->engine->dump($xml); exit;
     }
 }
