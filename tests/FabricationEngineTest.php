@@ -68,7 +68,164 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals('world', $this->engine->output('hello'));
 	}
 
+	public function testInputIDAndRenderOutput() {
+		
+		$this->engine->input('#hello', 'world');
+		$this->assertEquals('world', $this->engine->output('#hello'));
+
+		$this->engine->run('<div id="hello"></div>');
+
+		$this->assertEquals(
+			//'<div id="hello">world</div>',
+			'<div id="hello">world</div>',
+			$this->engine->view('//div[@id="hello"]')
+		);
+	}
 	
+	public function testInputClassAndRenderOutput() {
+		
+		$this->engine->input('.hello', 'world');
+		$this->assertEquals('world', $this->engine->output('.hello'));
+
+		$this->engine->run('<div class="hello"></div>');
+
+		$this->assertEquals(
+			'<div class="hello">world</div>',
+			$this->engine->view('//div[@class="hello"]')
+		);
+	}
+	
+	public function testInputIDClassAndViewHtmlOutput() {
+		
+		$this->engine->input('#hello', 'world');
+		$this->engine->input('.hello', 'world');
+		$this->assertEquals('world', $this->engine->output('#hello'));
+		$this->assertEquals('world', $this->engine->output('.hello'));
+
+		$this->engine->run('<div id="hello"></div><div class="hello"></div>');
+
+		$this->assertEquals(
+			'<div id="hello">world</div>',
+			$this->engine->view('//div[@id="hello"]')
+		);
+
+		$this->assertEquals(
+			'<div class="hello">world</div>',
+			$this->engine->view('//div[@class="hello"]')
+		);
+	}
+
+
+	public function testMultipleInputIDClassAndViewOutput() {
+		
+		$inputs = array(
+			'#hello' => 'world',
+			'.hello' => 'world',
+			'#foo'   => 'bar',
+			'.foo'   => 'bar'
+		);
+
+		foreach ($inputs as $key => $value) {
+			$this->engine->input($key, $value);
+		}
+		foreach ($inputs as $key => $value) {
+			$this->assertEquals($value, $this->engine->output($key));
+		}
+
+		$this->engine->run(
+			'<div id="hello"></div>'.
+			'<div class="hello"></div>'.
+			'<p id="foo"></p>'.
+			'<b class="foo"></b>'
+		);
+
+		$this->assertEquals(
+			'<div id="hello">world</div>',
+			$this->engine->view('//div[@id="hello"]')
+		);
+
+		$this->assertEquals(
+			'<div class="hello">world</div>',
+			$this->engine->view('//div[@class="hello"]')
+		);
+
+		$this->assertEquals(
+			'<p id="foo">bar</p>',
+			$this->engine->view('//p[@id="foo"]')
+		);
+
+		$this->assertEquals(
+			'<b class="foo">bar</b>',
+			$this->engine->view('//b[@class="foo"]')
+		);
+	}
+
+
+	public function testInputIDClassAndFetchDOMElements() {
+
+		$inputs = array(
+			'#hello' => 'world',
+			'.hello' => 'world',
+			'#foo'   => 'bar',
+			'.foo'   => 'bar'
+		);
+
+		foreach ($inputs as $key => $value) {
+			$this->engine->input($key, $value);
+		}
+		foreach ($inputs as $key => $value) {
+			$this->assertEquals($value, $this->engine->output($key));
+		}
+
+		$this->engine->run(
+			'<div id="hello"></div>'.
+			'<div class="hello"></div>'.
+			'<p id="foo"></p>'.
+			'<b class="foo"></b>'
+		);
+
+		$this->assertEquals(
+			'<div id="hello">world</div>',
+			$this->engine->view('//div[@id="hello"]')
+		);
+
+		$this->assertEquals(
+			'<div class="hello">world</div>',
+			$this->engine->view('//div[@class="hello"]')
+		);
+
+		$this->assertEquals(
+			'<p id="foo">bar</p>',
+			$this->engine->view('//p[@id="foo"]')
+		);
+
+		$this->assertEquals(
+			'<b class="foo">bar</b>',
+			$this->engine->view('//b[@class="foo"]')
+		);
+
+		// fetch the engine html body contents.
+		$nodeList = $this->engine->getBody();
+
+		// make some assertions on the load html DOM structure.
+		$this->assertEquals('DOMNodeList', get_class($nodeList));
+		$this->assertEquals(1, $nodeList->length);
+		$this->assertEquals(4, $nodeList->item(0)->childNodes->length);
+
+		$this->assertEquals('div', $nodeList->item(0)->childNodes->item(0)->nodeName);
+		$this->assertEquals('world', $nodeList->item(0)->childNodes->item(0)->nodeValue);
+
+		$this->assertEquals('div', $nodeList->item(0)->childNodes->item(1)->nodeName);
+		$this->assertEquals('world', $nodeList->item(0)->childNodes->item(1)->nodeValue);
+
+		$this->assertEquals('p', $nodeList->item(0)->childNodes->item(2)->nodeName);
+		$this->assertEquals('bar', $nodeList->item(0)->childNodes->item(2)->nodeValue);
+
+		$this->assertEquals('b', $nodeList->item(0)->childNodes->item(3)->nodeName);
+		$this->assertEquals('bar', $nodeList->item(0)->childNodes->item(3)->nodeValue);
+	}
+
+
 	public function testCreatingElement() {
 
 		$value = "Hello World!";
@@ -234,8 +391,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 	
 	public function testCreatingHTMLAndTemplateFromData() {
 
-		$map = 'id';
-		//$map = 'class';
+		//$map = 'id';
+		$map = 'class';
 
 		$element = 
 			'<div>Template:'.

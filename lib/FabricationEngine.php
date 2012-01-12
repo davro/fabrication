@@ -19,10 +19,7 @@ namespace Fabrication\Library;
  * Fabrication to invent or produce the act of fabricating, constructing,
  * construction; manufacture, factory.
  * 
- * For examples see tests/ as these will become the documentation.
- * 
- * The documentation will be generated from the UnitTestCases comments and
- * the 
+ * For examples see tests/ as these will become the living documentation.
  * 
  * <code>
  * 
@@ -31,7 +28,7 @@ namespace Fabrication\Library;
  * 
  * print $engine->output('hello');
  * 
- * // You can also output php strings, arrays, classes.
+ * // You can also use output templates, php strings, arrays, classes and more.
  * print $engine->output('hello', 'php.string');
  * print $engine->output('hello', 'php.array');
  * 
@@ -44,14 +41,28 @@ namespace Fabrication\Library;
  * @license http://www.gnu.org/copyleft/gpl.html
  * 
  */
+
 // Base engine element to extend from used in the specifcation.
 class FabricationElement {
 
+	private $engine;
+
+	private $element;
+
+	/**
+	 * Execution method from generating custom elements.
+	 *
+	 * @param FabricationElement $engine 
+	 * @param \DOMElement $element
+	 */
 	public function execute(FabricationEngine $engine, \DOMElement $element) {
 
+		$this->engine  = $engine;
+		$this->element = $element;
+
+		// fabricate your custom element.
 		$element->appendChild($engine->create('div', 'ExecuteTest'));
 	}
-
 }
 
 class FabricationEngine extends \DOMDocument {
@@ -59,13 +70,13 @@ class FabricationEngine extends \DOMDocument {
 	 * Symbol for id attribute assignment.
 	 * 
 	 */
-	const symbol_id ='.';
+	const symbol_id ='#';
 
 	/**
 	 * Symbol for class attributes assignment.
 	 * 
 	 */
-	const symbol_class ='#';
+	const symbol_class ='.';
 
 	/**
 	 * Debug switch.
@@ -283,6 +294,7 @@ class FabricationEngine extends \DOMDocument {
 	 * @return object           This current FabricationEngine object.
 	 */
 	public function getEngine() {
+
 		return $this;
 	}
 
@@ -291,6 +303,7 @@ class FabricationEngine extends \DOMDocument {
 	 * 
 	 */
 	public function getOption($key) {
+
 		return $this->options[$key];
 	}
 
@@ -303,7 +316,6 @@ class FabricationEngine extends \DOMDocument {
 	public function setOption($key, $value) {
 
 		$this->options[$key] = $value;
-		//$this->debug("[test] setOption: KEY:$key VALUE:$value");
 		return $this->options[$key];
 	}
 
@@ -314,7 +326,6 @@ class FabricationEngine extends \DOMDocument {
 	 */
 	public function getDoctype() {
 
-		//return $this->output['doctype'];
 		return $this->doctypes[$this->getOption('doctype')];
 	}
 
@@ -325,7 +336,6 @@ class FabricationEngine extends \DOMDocument {
 	public function setUp($options = array()) {
 
 		//libxml_clear_errors();
-		// XPath object and other setting.
 		// 
 		// DOMDocument options.
 		//$document->formatOutput = true;           // WORKS make optional.
@@ -401,23 +411,16 @@ class FabricationEngine extends \DOMDocument {
 		foreach ($this->input as $key => $value) {
 
 			$id = substr($key, 0, 1);
-
 			if ($id == self::symbol_id) {
 
 				$id = str_replace(self::symbol_id, '', $key);
 				$this->setElementById($id, $value);
 			}
-		}
-
-		// class assigner maps .keys with values.
-		foreach ($this->input as $key => $value) {
 
 			$class = substr($key, 0, 1);
-
-			if ($id == self::symbol_class) {
-
+			if ($class == self::symbol_class) {
 				$class = str_replace(self::symbol_class, '', $key);
-				$this->setElementById($class, $value); // change for class not id.
+				$this->setElementBy('class', $class, $value);
 			}
 		}
 
@@ -603,8 +606,7 @@ class FabricationEngine extends \DOMDocument {
 			$result = var_export($data, true);
 		}
 
-		if ($return) {
-			
+		if ($return) {			
 			return $result . $line_end;
 		} else {
 			print $result . $line_end;
@@ -614,7 +616,6 @@ class FabricationEngine extends \DOMDocument {
 	/**
 	 * Create elements with attributes and children.
 	 * 
-	 *
 	 * @param type $name
 	 * @param type $value
 	 * @param type $attributes
