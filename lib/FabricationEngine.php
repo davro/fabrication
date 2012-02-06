@@ -38,7 +38,7 @@ namespace Fabrication\Library;
  * </code>
  * 
  * @author David Stevens <mail.davro@gmail.com>
- * @license http://www.gnu.org/copyleft/gpl.html
+ * @license http://www.gnu.org/copyleft/lgpl.html
  * 
  */
 
@@ -143,15 +143,181 @@ class FabricationEngine extends \DOMDocument {
 	 * @var array
 	 */
 	public $doctypes;
+	
+	/**
+	 * Control for automatic fixing of DOMDocument bugs before output.
+	 *
+	 * @var boolean		True process and clean output, False do nothing. 
+	 */
+	private $outputProcess = false;
+	
 	// house keeping needed for these.
 	public $head;
-	public $title = 'FAB';
+	public $title = 'FABRIC';
 	public $body;
 	private $styles;
 	private $metas;
 	private $scripts;
 	private $document;
 	private $specification = array(
+		/**
+		 * W3C HTML5 specification.
+		 * 
+		 * http://www.w3.org/TR/html5/
+		 *
+		 *  1 Introduction
+		 *  Common infrastructure
+		 */
+
+		'html.5' => array(
+			/**
+			 * 3.2.3 Global attributes
+			 * The following attributes are common to and may be specified on 
+			 * all HTML elements (even those not defined in this specification):
+			 *
+			 * _global_attributes.
+			 * accesskey, class, contenteditable, contextmenu, dir, draggable
+			 * dropzone, hidden, id, lang, spellcheck, style, tabindex, title
+			 */
+			//
+			// 4.1.1 The root element.
+			//
+			'html' => array('manifest'),
+			//
+			// 4.2.* Document metadata
+			// head, title, base, link, meta, style
+			// 
+			'head'	=> array(),
+			'title'	=> array(),
+			'base'	=> array('href', 'target'),
+			'link'	=> array('href', 'rel', 'media', 'hreflang', 'type', 'sizes'),
+			'meta'	=> array('name', 'http-equiv', 'content', 'charset'),
+			'style'	=> array('media', 'type', 'scoped', 'title'),
+			//
+			// 4.3.* Scripting.
+			// script, noscript
+			//  
+			'script'	=> array('src', 'async', 'defer', 'type', 'charset'),
+			'noscript'	=> array(),
+			//
+			// 4.4 Sections
+			// 4.4.* The body element.
+			// body, section, nav, article, aside, h1, h2, h3, h4, h5, h6,
+			// hgroup, header, footer, address
+			//
+			'body'		=> array('onafterprint', 'onbeforeprint', 'onbeforeunload', 'onblur', 'onerror', 'onfocus', 'onhashchange', 'onload', 'onmessage', 'onoffline', 'ononline', 'onpagehide', 'onpageshow', 'onpopstate', 'onredo', 'onresize', 'onscroll', 'onstorage', 'onundo', 'onunload'),
+			'section'	=> array(),
+			'nav'		=> array(),
+			'article'	=> array(),
+			'aside'		=> array(),
+			'h1'		=> array(),
+			'h2'		=> array(),
+			'h3'		=> array(),
+			'h4'		=> array(),
+			'h5'		=> array(),
+			'h6'		=> array(),
+			'hgroup'	=> array(),
+			'header'	=> array(),
+			'footer'	=> array(),
+			'address'	=> array(),
+			//
+			// 4.5.* Grouping content
+			// p, hr, pre, blockquote, ol, ul, li, dl, dt, dd
+			// figure, figcaption, div
+			// 
+			'p'				=> array(),
+			'hr'			=> array(),
+			'pre'			=> array(),
+			'blockquote'	=> array(),
+			'ol'			=> array(),
+			'ul'			=> array(),
+			'li'			=> array(),
+			'dl'			=> array(),
+			'dt'			=> array(),
+			'dd'			=> array(),
+			'figure'		=> array(),
+			'figcaption'	=> array(),
+			'div'			=> array(),
+			//
+			// 4.6.* Text-level semantics
+			// a, em, strong, small, s, cite, q, dfn, abbr, time, code, var
+			// samp, kbd, sub, sup, i, b, u, mark, ruby, rt, rp, bdi ,bdo
+			// span, br, wbr
+			//
+			'a'			=> array('href', 'target', 'rel', 'media', 'hreflang', 'type'),
+			'em'		=> array(),
+			'strong'	=> array(),
+			'small'		=> array(),
+			's'			=> array(),
+			'cite'		=> array(),
+			'q'			=> array('cite'),
+			'dfn'		=> array('title'),
+			'abbr'		=> array('title'),
+			'time'		=> array('datetime', 'pubdate'),
+			'code'		=> array(),
+			'var'		=> array(),
+			'samp'		=> array(),
+			'kbd'		=> array(),
+			'sub'		=> array(),
+			'sup'		=> array(),
+			'i'			=> array(),
+			'b'			=> array(),
+			'u'			=> array(),
+			'mark'		=> array(),
+			'ruby'		=> array(),
+			'rt'		=> array(),
+			'rp'		=> array(),
+			'bdi'		=> array('dir'),
+			'bdo'		=> array('dir'),
+			'span'		=> array(),
+			'br'		=> array(),
+			'wbr'		=> array(),
+			//
+			// 4.7 Edits
+			// ins, del
+			'ins' => array('cite', 'datetime'),
+			'del' => array('cite', 'datetime' ),
+			//
+			// 4.8.* Embedded content
+			// img, iframe, embed, object, param, video, audio, source, track
+			//
+			'img'		=> array('alt', 'src', 'usemap', 'ismap', 'width', 'height'),
+			'iframe'	=> array('src', 'srcdoc', 'name', 'sandbox', 'seamless', 'width', 'height'),
+			'embed'		=> array('src', 'type', 'width', 'height'),
+			'object'	=> array('data', 'type', 'name', 'usemap', 'form', 'width', 'height'),
+			'param'		=> array('name', 'value'),
+			'video'		=> array('src', 'poster', 'preload', 'autoplay', 'mediagroup', 'loop', 'muted', 'controls', 'width', 'height'),
+			'audio'		=> array('src', 'preload', 'autoplay', 'mediagroup', 'loop', 'muted', 'controls'),
+			'source'	=> array('src', 'type', 'media'),
+			'track'		=> array('kind', 'src', 'srclang', 'label', 'default'),
+			// 4.8.10 Media elements
+			// 4.8.11 The canvas element
+			// map, area
+			'canvas'	=> array('width', 'height'),
+			'map'		=> array('name'),
+			'area'		=> array('alt', 'coords', 'shape', 'href', 'target', 'rel', 'media', 'hreflang', 'type'),
+			//
+			// 4.9.* Tabular data
+			// table, caption, colgroup, col, tbody, thead, tfoot, tr, td, th
+			//  
+			'table'		=> array('border'),
+			'caption'	=> array(),
+			'colgroup'	=> array('span'),
+			'col'		=> array('span'),
+			'tbody'		=> array(),
+			'thead'		=> array(),
+			'tfoot'		=> array(),
+			'tr'		=> array(),
+			'td'		=> array('colspan', 'rowspan', 'headers'),
+			'th'		=> array('colspan', 'rowspan', 'headers', 'scope'),
+			//
+			// 4.10 Forms
+			//
+			// 4.10.3 The form element
+			//
+			
+			
+		),
 		'html.4.01.transitional' => array(
 			/**
 			 * http://www.w3.org/TR/html401/about.html
@@ -172,25 +338,25 @@ class FabricationEngine extends \DOMDocument {
 			 * 7.2 HTML version information
 			 * 7.3 The HTML element
 			 */
-			'html'		=> array('setup'=>array('start_tag'=>'optional', 'end_tag'=>'optional'), 'lang'),
+			'html'		=> array('lang'),
 			 // 7.4 The document head
-			'head'		=> array('setup'=>array('start_tag'=>'optional', 'end_tag'=>'optional'), 'profile', 'lang'),
-			'title'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'lang'),
-			'meta'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'name', 'content', 'scheme', 'http-equiv', 'lang'),
+			'head'		=> array('profile', 'lang'),
+			'title'		=> array('lang'),
+			'meta'		=> array('name', 'content', 'scheme', 'http-equiv', 'lang'),
 			// 7.5 The document body
-			'body'		=> array('setup'=>array('start_tag'=>'optional', 'end_tag'=>'optional'), 'id', 'class', 'lang', 'title', 'style', 'bgcolor', 'onload', 'onunload', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'body'		=> array('id', 'class', 'lang', 'title', 'style', 'bgcolor', 'onload', 'onunload', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
 			// 7.5.4 Grouping elements: the DIV and SPAN elements
-			'div'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'span'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'div'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'span'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
 			// 7.5.5 Headings: The H1, H2, H3, H4, H5, H6 elements
-			'h1'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'h2'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'h3'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'h4'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'h5'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'h6'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'h1'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'h2'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'h3'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'h4'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'h5'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'h6'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
 			// 7.5.6 The ADDRESS element
-			'address'	=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),			
+			'address'	=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),			
 			
 			/**
 			 * http://www.w3.org/TR/html401/struct/dirlang.html
@@ -205,34 +371,34 @@ class FabricationEngine extends \DOMDocument {
 			 * 9.2 Structured text
 			 * 9.2.1 Phrase elements: EM, STRONG, DFN, CODE, SAMP, KBD, VAR, CITE, ABBR, and ACRONYM
 			 */
-			'em'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'strong'	=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'dfn'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'code'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'samp'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'kbd'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'var'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'cite'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'abbr'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'acronym'	=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'em'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'strong'	=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'dfn'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'code'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'samp'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'kbd'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'var'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'cite'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'abbr'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'acronym'	=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
 			// 9.2.2 Quotations: The BLOCKQUOTE and Q elements.
-			'blockquote'=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style','onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'q'			=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'blockquote'=> array( 'id', 'class', 'lang', 'title', 'style','onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'q'			=> array( 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
 			/**
 			 * 9.3 Lines and Paragraphs.
 			 */
-			'p'			=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'p'			=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
 			// 9.3.2 Controlling line breaks.
-			'br'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'title', 'style', 'clear'),
+			'br'		=> array('id', 'class', 'title', 'style', 'clear'),
 			// 9.3.3 Hyphenation
 			// 9.3.4 Preformatted text: The PRE element
-			'pre'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'id', 'class', 'title', 'style', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'pre'		=> array('id', 'class', 'title', 'style', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
 			// 9.3.5 Visual rendering of paragraphs
 			/**
 			 * 9.4 Marking document changes: The INS and DEL elements
 			 */
-			'ins'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'cite', 'datetime', 'id', 'class', 'title', 'style', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'del'		=> array('setup'=>array('start_tag'=>'required', 'end_tag'=>'required'), 'cite', 'datetime', 'id', 'class', 'title', 'style', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'ins'		=> array('cite', 'datetime', 'id', 'class', 'title', 'style', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
+			'del'		=> array('cite', 'datetime', 'id', 'class', 'title', 'style', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
 			
 			
 			
@@ -268,7 +434,6 @@ class FabricationEngine extends \DOMDocument {
 			'article'	=> array(),
 		)
 	);
-	//public $xpath;
 
 	/**
 	 * Main setup function for the Fabrication Engine.
@@ -279,13 +444,13 @@ class FabricationEngine extends \DOMDocument {
 
 		parent::__construct($version, $encoding);
 
-		$this->doctypes['html.5'] = '<!DOCTYPE HTML>'; // HTML5 Not a standard.
-		$this->doctypes['html.4.01.strict'] = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"' . "\n" . '   "http://www.w3.org/TR/html4/strict.dtd">';
-		$this->doctypes['html.4.01.transitional'] = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"' . "\n" . '   "http://www.w3.org/TR/html4/loose.dtd">';
-		$this->doctypes['html.4.01.frameset'] = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"' . "\n" . '   "http://www.w3.org/TR/html4/frameset.dtd">';
-		$this->doctypes['xhtml.1.0.strict'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"' . "\n" . '   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">';
-		$this->doctypes['xhtml.1.0.transitional'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"' . "\n" . '   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
-		$this->doctypes['xhtml.1.0.frameset'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"' . "\n" . '   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">';
+		$this->doctypes['html.5']					= '<!DOCTYPE HTML>'; // HTML5 Not a standard.
+		$this->doctypes['html.4.01.strict']			= '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"' . "\n" . '   "http://www.w3.org/TR/html4/strict.dtd">';
+		$this->doctypes['html.4.01.transitional']	= '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"' . "\n" . '   "http://www.w3.org/TR/html4/loose.dtd">';
+		$this->doctypes['html.4.01.frameset']		= '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"' . "\n" . '   "http://www.w3.org/TR/html4/frameset.dtd">';
+		$this->doctypes['xhtml.1.0.strict']			= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"' . "\n" . '   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">';
+		$this->doctypes['xhtml.1.0.transitional']	= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"' . "\n" . '   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
+		$this->doctypes['xhtml.1.0.frameset']		= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"' . "\n" . '   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">';
 	}
 
 	/**
@@ -330,25 +495,6 @@ class FabricationEngine extends \DOMDocument {
 	}
 
 	/**
-	 * Setup DOMDocument and XPath and stuff.
-	 * 
-	 */
-	public function setUp($options = array()) {
-
-		//libxml_clear_errors();
-		// 
-		// DOMDocument options.
-		//$document->formatOutput = true;           // WORKS make optional.
-		//$this->preserveWhiteSpace = false;
-		//$document->resolveExternals = true;       // TESTING
-		//$document->substituteEntities = false;    // TESTING
-		$this->recover = true;	   // TESTING
-		$this->strictErrorChecking = false;	 // TESTING
-
-		$this->xpath = new \DomXpath($this);
-	}
-
-	/**
 	 * Register a prefix and uri to the xpath namespace.
 	 * 
 	 * @param type $prefix
@@ -358,6 +504,25 @@ class FabricationEngine extends \DOMDocument {
 
 		$this->setUp();
 		$this->xpath->registerNamespace($prefix, $namespaceURI);
+	}
+
+	/**
+	 * Setup DOMDocument and XPath and stuff.
+	 * 
+	 */
+	public function setUp($options = array()) {
+
+		//libxml_clear_errors();
+		// 
+		// DOMDocument options.
+		//$this->formatOutput = true;			// TESTING make optional.
+		//$this->preserveWhiteSpace = false;	// TESTING
+		//$this->resolveExternals = true;		// TESTING
+		//$this->substituteEntities = false;	// TESTING
+		$this->recover = true;					// TESTING
+		$this->strictErrorChecking = false;		// TESTING
+
+		$this->xpath = new \DomXpath($this);
 	}
 
 	/**
@@ -378,7 +543,7 @@ class FabricationEngine extends \DOMDocument {
 			switch ($type . '.' . $load) {
 
 				case 'html.string':
-					//if ($this->loadHTML($html)) { // make error suppression optional.
+					// make error suppression optional.
 					if (@$this->loadHTML($data)) {
 						// success.
 					} else {
@@ -388,7 +553,7 @@ class FabricationEngine extends \DOMDocument {
 					break;
 
 				case 'html.file':
-					//if ($this->loadHTMLFile($html)) { //if ($this->loadHTMLFile($html)) { 
+					// make error suppression optional.
 					if (@$this->loadHTMLFile($data)) {
 						// success.
 					} else {
@@ -397,6 +562,7 @@ class FabricationEngine extends \DOMDocument {
 					break;
 
 				case 'xml.string':
+					// make error suppression optional.
 					if (@$this->loadXML($data)) {
 						// success.
 					} else {
@@ -406,25 +572,24 @@ class FabricationEngine extends \DOMDocument {
 			}
 		}
 
-		// create a more flexable symbol loop, array based..
-		// id assigner maps .keys with values.
+		// create a more flexable symbol loop, assigner map .keys to values.
 		foreach ($this->input as $key => $value) {
 
 			$id = substr($key, 0, 1);
 			if ($id == self::symbol_id) {
-
-				$id = str_replace(self::symbol_id, '', $key);
-				$this->setElementById($id, $value);
+				$this->setElementById(str_replace(self::symbol_id, '', $key)
+					, $value
+				);
 			}
 
 			$class = substr($key, 0, 1);
 			if ($class == self::symbol_class) {
-				$class = str_replace(self::symbol_class, '', $key);
-				$this->setElementBy('class', $class, $value);
+				$this->setElementBy('class'
+					, str_replace(self::symbol_class, '', $key)
+					, $value
+				);
 			}
 		}
-
-		//$html=mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
 
 		return true;
 	}
@@ -435,7 +600,7 @@ class FabricationEngine extends \DOMDocument {
 	 */
 	public function outputHTML() {
 
-		$this->output['raw'] = $this->saveHTML();
+		$this->output['raw'] = parent::saveHTML();
 		$this->outputProcess();
 
 		return $this->getDoctype('doctype') . $this->output['raw'];
@@ -454,16 +619,44 @@ class FabricationEngine extends \DOMDocument {
 	}
 
 	/**
+	 * Extend the native saveHTML method.
+	 * Allow path search functionality.
+	 * 
+	 * @param	string	$path	Output file path.
+	 * @param	boolean	$trim	Trim the output of surrounding space.
+	 * @return	string
+	 */
+	public function saveHTML($path = '', $trim = true) {
+
+		if ($path !=='') {
+			// no processing as just return xpath html result no adding doctype.
+			$this->output['raw'] = $this->view($path);
+		} else {
+			$this->output['raw'] = parent::saveHTML();
+		}
+		
+		$this->outputProcess();
+		
+		$raw = $this->output['raw'];
+		//$raw = $this->getDoctype('doctype') . $this->output['raw'];
+		
+		return $trim ? trim($raw) : $raw;
+	}
+
+	/**
 	 * Time to sort out the plethora of DOMDocument bugs.
 	 * 
 	 */
 	public function outputProcess() {
 
-
-		// Remove doctype added by DOMDocument (hacky)
-		$this->output['raw'] = preg_replace('/<!DOCTYPE[^>]+>/', '', $this->output['raw']);
-
-		if ($this->getOption('process')) {
+		// remove doctype.
+		$this->output['raw'] = preg_replace('/^<!DOCTYPE[^>]+>/U', '', $this->output['raw']);
+		
+		if ($this->outputProcess && $this->getOption('process')) {
+			
+			// Remove doctype added by DOMDocument (hacky)
+			$this->output['raw'] = $this->getDoctype().$this->output['raw'];
+		
 			// Remove all whitespace between tags, for the extremist .
 			//$this->output['html'] = preg_replace("/>\s+</", "><", $this->output['html']);
 
@@ -486,11 +679,13 @@ class FabricationEngine extends \DOMDocument {
 			if ($this->getOption('process.body.hr')) {
 				$this->output['raw'] = preg_replace('/<hr(.*)>/sU', '<hr\\1 />', $this->output['raw']);
 			}
-		}
-		// Trim whitespace need this to get exactly the wanted data back for test cases, mmm.
-		$this->output['raw'] = trim($this->output['raw']);
 
-		return true;
+			// Trim whitespace need this to get exactly the wanted data back for test cases, mmm.
+			$this->output['raw'] = trim($this->output['raw']);
+		
+			return $this->outputProcess;
+		}
+		return $this->outputProcess;
 	}
 
 	public function isCli() {
@@ -515,14 +710,12 @@ class FabricationEngine extends \DOMDocument {
 		$result = '';
 		
 		if ($this->isCli()) {
-			
 			$line_end = "\n";
 		} else {
 			$line_end = "<br />\n";
 		}
 
 		if (empty($options)) {
-			
 			$options = array(
 				//'show.methods'=>true
 				'show.methods' => false
@@ -530,7 +723,6 @@ class FabricationEngine extends \DOMDocument {
 		}
 
 		if (is_object($data)) {
-			
 			$classname = get_class($data);
 
 			$result = $line_end;
@@ -579,13 +771,11 @@ class FabricationEngine extends \DOMDocument {
 					}
 					break;
 
-				default:
-					$result.= var_export($data, true);
+				default: $result.= var_export($data, true);
 			}
 		}
 
-		if (is_array($data)) {
-			
+		if (is_array($data)) {	
 			$result = $line_end;
 			$result = $line_end;
 			$result.= str_repeat('-', 80) . $line_end;
@@ -597,12 +787,10 @@ class FabricationEngine extends \DOMDocument {
 		}
 
 		if (is_string($data)) {
-			
 			$result = var_export($data, true);
 		}
 
 		if (is_int($data)) {
-			
 			$result = var_export($data, true);
 		}
 
@@ -627,9 +815,7 @@ class FabricationEngine extends \DOMDocument {
 		$element = $this->createElement($name, $value);
 
 		if (count($children) > 0) {
-			
 			foreach ($children as $child) {
-				
 				$element->appendChild(
 					$this->create($child['name'],	
 						@$child['value'], 
@@ -641,7 +827,6 @@ class FabricationEngine extends \DOMDocument {
 		}
 
 		if (count($attributes) > 0) {
-
 			foreach ($attributes as $key => $value) {
 				$element->setAttribute($key, $value);
 			}
@@ -669,7 +854,6 @@ class FabricationEngine extends \DOMDocument {
 		if (is_array($value)) {
 
 			if (array_key_exists('name', $value)) {
-
 				$newElement = $this->create($value['name'], 
 					@$value['value'],
 					@$value['attributes'],
@@ -680,7 +864,6 @@ class FabricationEngine extends \DOMDocument {
 			}
 
 			if (@is_array($value[0])) {
-
 				foreach ($value as $k => $v) {
 					$this->createElementRecursion($element, $k, $v);
 				}
@@ -688,10 +871,7 @@ class FabricationEngine extends \DOMDocument {
 		}
 
 		if (is_object($value)) {
-
-			// TESTING ...
 			if ($value instanceof FabricationElement) {
-
 				$value->execute($this->getEngine(), $element);
 			}
 		}
@@ -769,6 +949,8 @@ class FabricationEngine extends \DOMDocument {
 	 */
 	public function template($element, $dataset = array(), $map = 'id') {
 
+		//$this->outputProcess = false;
+		
 		if (sizeof($dataset) == 0) { return false; }
 
 		if (is_string($element)) {
@@ -843,7 +1025,7 @@ class FabricationEngine extends \DOMDocument {
 	 * @return type 
 	 */
 	public function view($path = '', $trim = true, $return = true, $type = 'html') {
-
+		
 		$buffer = '';
 		if (!empty($path)) {
 
@@ -858,7 +1040,6 @@ class FabricationEngine extends \DOMDocument {
 			}
 
 			if ($trim) {
-				
 				$buffer = trim($template->saveHTML());
 			} else {
 				$buffer = $template->saveHTML();
@@ -1236,13 +1417,22 @@ class FabricationEngine extends \DOMDocument {
 		$arg_string = '';
 		$arg_container = array();
 		if (count($args) > 0) {
-
+			
+			// check the args and collect info for xpath conversion.
 			foreach ($args as $key => $arg) {
-
-				if (preg_match('/^([a-zA-Z]{1})/', $arg, $matches)) {
-					$arg_container[] = $arg;
-				} else {
-					$arg_string.=$arg;
+				
+				switch (true) {
+				
+					case is_string($arg):
+						if (preg_match('/^([a-zA-Z]{1})/U', $arg, $matches)) {
+							$arg_container[] = $arg;
+						} else {
+							$arg_string.=$arg;
+						}
+						break;
+						
+					case is_array($arg):
+						break;
 				}
 			}
 		}
@@ -1252,11 +1442,11 @@ class FabricationEngine extends \DOMDocument {
 		//
 
 		// GETTERS
-		if (preg_match('/^get(.*)/', $method, $matches)) {
+		if (preg_match('/^get(.*)/U', $method, $matches)) {
 
 			$method = strtolower($method);
 
-			$find = preg_replace('/^get/', '', $method);
+			$find = preg_replace('/^get/U', '', $method);
 
 			if (array_key_exists($find, $this->specification[$this->getOption('doctype')])) {
 				$path = '//' . $find . $arg_string;
@@ -1281,11 +1471,21 @@ class FabricationEngine extends \DOMDocument {
 		}
 
 		// SETTERS
-		if (preg_match('/^set(.*)/', $method, $matches)) {
+		if (preg_match('/^set(.*)/U', $method, $matches)) {
 			
+			var_dump("Method: $method");
+			var_dump("ARGS: ".var_export($args,true));
+			
+			die("__CALL TESTING\n");
 		}
 	}
 
+	// TODO convert and element into html.
+	public function innerHTML(DOMElement $element) {	
+		//
+	}
+	
+	// Setters eventually put in __call
 	/**
 	 * 
 	 * 
@@ -1307,7 +1507,7 @@ class FabricationEngine extends \DOMDocument {
 	}
 
 	/**
-	 * 
+	 * Setter for changing HTML element.
 	 * 
 	 */
 	public function setHtml($q, $value) {

@@ -42,7 +42,12 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 	public function testDefaultDoctype() {
 		
 		$this->assertEquals('html.4.01.transitional', $this->engine->getOption('doctype'));
-		$this->assertEquals('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"' . "\n" . '   "http://www.w3.org/TR/html4/loose.dtd">', $this->engine->getDoctype());
+		$this->assertEquals(
+			'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"'.
+			"\n".
+			'   "http://www.w3.org/TR/html4/loose.dtd">'
+			, $this->engine->getDoctype()
+		);
 	}
 
 	
@@ -50,6 +55,18 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		
 		$this->assertEquals('html.5', $this->engine->setOption('doctype', 'html.5'));
 		$this->assertEquals('<!DOCTYPE HTML>', $this->engine->getDoctype());
+		
+		$this->engine->run('<h1>TESTING</h1>');
+		
+		$this->assertEquals(
+			//'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">'.
+			//'<!DOCTYPE HTML>'.
+			//"\n".
+			'<html><body>'.
+			'<h1>TESTING</h1>'.
+			'</body></html>'
+			, $this->engine->saveHTML('', true)
+		);
 	}
 
 	
@@ -67,6 +84,7 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		$this->engine->input('hello', 'world');
 		$this->assertEquals('world', $this->engine->output('hello'));
 	}
+
 
 	public function testInputIDAndRenderOutput() {
 		
@@ -383,6 +401,7 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		
 		// attach the result and search using the view method.
 		$this->engine->appendChild($result);
+		
 		$this->assertEquals(1, $this->engine->view("//div[@$map='uid_1']/text()"));
 		$this->assertEquals(2, $this->engine->view("//div[@$map='uid_2']/text()"));
 		$this->assertEquals(3, $this->engine->view("//div[@$map='uid_3']/text()"));
@@ -999,8 +1018,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 	
 	/*
 	 * TODO reduced the method list in the engine by using __call to organise 
-	 *  allowed method s depending on the doctype. This will also allow for more 
-	 * granular control over the attributes.
+	 * allowed method s depending on the doctype. This will also allow for more 
+	 * granular control over the allowed attributes.
 	 * 
 	 */
 	public function testDynamicCall() {
@@ -1009,6 +1028,9 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 
 		$this->assertInternalType('object', $result);
 		$this->assertEquals('DOMNodeList', get_class($result));
+		
+		
+		//$this->assertTrue($this->engine->setTesting('', 'Test', 'Testing', array()));
 	}
 
 	
@@ -1022,4 +1044,46 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		//$this->engine->dump($xml); exit;
 	}
 
+	
+	public function testOverrideDOMsaveHTML() {
+
+		$this->assertEquals("", $this->engine->saveHTML());
+		
+		// DOMDocument default returns a single newline...
+		$this->assertEquals("\n", $this->engine->saveHTML('', false)
+		);
+	}
+
+
+	public function testOverrideDOMsaveHTMLwithHTMLString() {
+
+		$this->engine->run('<div id="test"></div>');
+
+		$this->assertEquals(
+			'<html><body><div id="test"></div></body></html>'
+			, $this->engine->saveHTML()
+		);
+	}
+
+
+	public function testOverrideDOMsaveHTMLBodyOnly() {
+
+		$this->engine->run('<div id="test"></div>');
+
+		$this->assertEquals(
+			'<body><div id="test"></div></body>',
+			$this->engine->saveHTML('/html/body')
+		);
+	}
+
+
+	public function testOverrideDOMsaveHTMLDivOnly() {
+
+		$this->engine->run('<div id="test"></div>');
+
+		$this->assertEquals(
+			'<div id="test"></div>',
+			$this->engine->saveHTML('/html/body/div')
+		);
+	}
 }
