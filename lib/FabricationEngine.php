@@ -93,13 +93,6 @@ class FabricationEngine extends \DOMDocument {
 	public $input = array();
 
 	/**
-	 * Input meta array.
-	 * 
-	 * @var type 
-	 */
-	public $input_meta = array();
-
-	/**
 	 * Output container.
 	 * 
 	 * @var type 
@@ -315,7 +308,7 @@ class FabricationEngine extends \DOMDocument {
 			//
 			// 4.10.3 The form element
 			//
-			
+			// TODO
 			
 		),
 		'html.4.01.transitional' => array(
@@ -399,9 +392,7 @@ class FabricationEngine extends \DOMDocument {
 			 */
 			'ins'		=> array('cite', 'datetime', 'id', 'class', 'title', 'style', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
 			'del'		=> array('cite', 'datetime', 'id', 'class', 'title', 'style', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			
-			
-			
+				
 			// TODO
 			'form'		=> array(),
 			'base'		=> array(),
@@ -444,7 +435,7 @@ class FabricationEngine extends \DOMDocument {
 
 		parent::__construct($version, $encoding);
 
-		$this->doctypes['html.5']					= '<!DOCTYPE HTML>'; // HTML5 Not a standard.
+		$this->doctypes['html.5']					= '<!DOCTYPE HTML>'; // HTML5 Experimental.
 		$this->doctypes['html.4.01.strict']			= '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"' . "\n" . '   "http://www.w3.org/TR/html4/strict.dtd">';
 		$this->doctypes['html.4.01.transitional']	= '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"' . "\n" . '   "http://www.w3.org/TR/html4/loose.dtd">';
 		$this->doctypes['html.4.01.frameset']		= '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"' . "\n" . '   "http://www.w3.org/TR/html4/frameset.dtd">';
@@ -494,6 +485,11 @@ class FabricationEngine extends \DOMDocument {
 		return $this->doctypes[$this->getOption('doctype')];
 	}
 
+	public function getSpecification() {
+
+		return $this->specification[$this->getOption('doctype')];
+	}
+
 	/**
 	 * Register a prefix and uri to the xpath namespace.
 	 * 
@@ -534,7 +530,7 @@ class FabricationEngine extends \DOMDocument {
 	 * @param type $type
 	 * @return type 
 	 */
-	public function run($data='', $load='string', $type='html') {
+	public function run($data = '', $load = 'string', $type = 'html') {
 
 		//libxml_use_internal_errors(true);
 
@@ -572,12 +568,13 @@ class FabricationEngine extends \DOMDocument {
 			}
 		}
 
-		// create a more flexable symbol loop, assigner map .keys to values.
+		// create a more flexable symbol loop, mapper.
 		foreach ($this->input as $key => $value) {
 
 			$id = substr($key, 0, 1);
 			if ($id == self::symbol_id) {
-				$this->setElementById(str_replace(self::symbol_id, '', $key)
+				$this->setElementById(
+					str_replace(self::symbol_id, '', $key)
 					, $value
 				);
 			}
@@ -814,6 +811,12 @@ class FabricationEngine extends \DOMDocument {
 
 		$element = $this->createElement($name, $value);
 
+		if (count($attributes) > 0) {
+			foreach ($attributes as $key => $value) {
+				$element->setAttribute($key, $value);
+			}
+		}		
+
 		if (count($children) > 0) {
 			foreach ($children as $child) {
 				$element->appendChild(
@@ -826,12 +829,6 @@ class FabricationEngine extends \DOMDocument {
 			}
 		}
 
-		if (count($attributes) > 0) {
-			foreach ($attributes as $key => $value) {
-				$element->setAttribute($key, $value);
-			}
-		}
-		
 		return $element;
 	}
 
@@ -847,7 +844,6 @@ class FabricationEngine extends \DOMDocument {
 	public function createElementRecursion(\DOMElement $element, $name, $value) {
 
 		if (is_string($value)) {
-
 			$element->appendChild($this->createElement($name, $value));
 		}
 
@@ -929,7 +925,7 @@ class FabricationEngine extends \DOMDocument {
 		$document->appendChild($head);
 		$document->appendChild($body);
 
-		// First up the Fabrication Development (IDE)
+		// TODO Fabrication Development (IDE)
 		// $this->createFabricationIDE(); 
 
 		$this->appendChild($document);
@@ -963,12 +959,11 @@ class FabricationEngine extends \DOMDocument {
 			$template = $engine->getDiv()->item(0);
 			
 			if (!$template instanceof \DOMElement) {
-				throw new \Exception('Template is not an instance of the DOMElement.');
+				throw new \Exception('Template element\'s first child should be an instance of the DOMElement.');
 			}
 		}
 		
 		if ($element instanceof \DOMElement) {
-			
 			$template = $element;
 		}
 		
@@ -976,7 +971,6 @@ class FabricationEngine extends \DOMDocument {
 		$container = $this->create($template->nodeName, $template->nodeValue);
 		
 		foreach ($dataset as $key => $row) {
-
 			// process the template child nodes.
 			foreach ($template->childNodes as $child) {
 
@@ -997,7 +991,7 @@ class FabricationEngine extends \DOMDocument {
 					
 					if (in_array($mappedAttributeValue, array_keys($row))) {
 						
-						// create the mapped node attribute with update numeric key.
+						// create the mapped node attribute with updated numeric key.
 						$nodeAttributes[$mappedAttributeName] = $mappedAttributeValue.'_'.($key + 1);
 						
 						// fabricate the new child nodes.
@@ -1064,7 +1058,7 @@ class FabricationEngine extends \DOMDocument {
 	}
 
 	/**
-	 * Main XPath query method with some basic sanity checking.
+	 * Main XPath query method.
 	 * 
 	 */
 	public function query($path) {
@@ -1079,6 +1073,7 @@ class FabricationEngine extends \DOMDocument {
 	}
 
 	/**
+	 * Debug method for writing to disk.
 	 *
 	 * @param type $line 
 	 */
@@ -1096,7 +1091,6 @@ class FabricationEngine extends \DOMDocument {
 	public function input($key, $value, $meta=array()) {
 
 		$this->input[$key] = $value;
-//	$this->input_meta[$key] = $meta;
 		return true;
 	}
 
@@ -1327,9 +1321,8 @@ class FabricationEngine extends \DOMDocument {
 				case 'javascript':
 					/**
 					 * JAVASCRIPT 
-					 * This could get interesting.
 					 * 
-					 * Simplest example.
+					 * Simplest example line by line ...
 					 * 
 					 * <script type="text/JavaScript">
 					 *   $(document).ready(function(){
@@ -1513,7 +1506,7 @@ class FabricationEngine extends \DOMDocument {
 	public function setHtml($q, $value) {
 
 		$this->getHtml($q)->item(0)->nodeValue = "$value";
-		return $this;
+		return $this->getHtml($q)->item(0);
 	}
 
 }
