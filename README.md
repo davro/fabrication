@@ -48,7 +48,7 @@ Example input key,value pair to a html template.
 
 	?>
 
-Templating engine example assigning a #key,value pair to a html elements value,
+Example assigning a #key,value pair to a html elements value,
 identified by the elements id.
 
     <?php
