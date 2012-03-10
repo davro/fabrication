@@ -52,7 +52,7 @@ identified by the elements id.
       $template = '<html><head></head><body><div id="hello"></div></body></html>';
       $engine->run($template);
 
-      echo $fabric->output('hello'); 
+      echo $engine->output('#hello'); 
       # world
 
       echo $engine->saveHTML();
