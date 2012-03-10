@@ -40,7 +40,7 @@ Dataset Templating.
 Templating engine example assigning a #key,value pair to a html elements value,
 identified by the elements id.
 
-`<?php
+<pre><?php
 $engine = new FabricationEngine();
 
 $engine->input('#hello', 'world');
@@ -60,7 +60,7 @@ echo $engine->saveFabric();
 #   "http://www.w3.org/TR/html4/loose.dtd">'.
 #<html><head></head><body><div id="hello">world</div></body></html>
 
-?>`
+?></pre>
 
 
 ### Contributors
