@@ -2,31 +2,29 @@
 
 ### Introduction
 
-Next generation templating engine based on the Document Object Model
+Next generation template engine based on the Document Object Model
 
 The Fabrication engine or "Fabic" for short.
 
 The Fabrication Engine represents and interacts with objects in HTML, XHTML and 
 XML documents using DOM and XPath its "Elements" are addressed and manipulated 
 within the syntax of public interface, direct XPath queries can be executed on 
-the Document Object Model or simply use one of the many built in query methods
-to create, read, update and delete also template elements structures based on
-data structures.
+the Document Object Model or simply use one of the many built in query methods.
 
 The FabricationEngine is not like most of the other templating engine's on the 
 market, maily because the engine has no concept of place holders, it is only 
-concerned with elements and attributes, structures, expressions and processing 
-instructions for inserting content that requires processing. 
+concerned with elements and attributes, structures, expressions and instructions 
+for content that requires processing.
 
 Structures are the templates and expressions are paths to the elements contained
 within the Document Object Model. The FabricationEngine extends the PHP builtin 
 DOMDocument in many ways and enables the native usage of the XPath object. 
-This allows for an insanely flexible and extensible document template engine.
+This allows for an insanely flexible and extensible templating engine.
 
 You can create a DOM structure by loading a html, xhtml, xml string or simply by
 loading a file, or you can build your own document structure by using the native
 DOMDoument API. Also there is a specifcation method with the ability to recursivly
-create structures.
+create structures. There are also some advanced dateset templating features.
 
 
 ### Features
@@ -41,6 +39,12 @@ Templating engine example assigning a #key,value pair to a html elements value,
 identified by the elements id.
 
       <?php
+      namespace Fabrication\Tests;
+
+      use Fabrication\Library\FabricationEngine;
+
+      require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
+
       $engine = new FabricationEngine();
 
       $engine->input('#hello', 'world');
@@ -50,15 +54,15 @@ identified by the elements id.
       $engine->run($template);
 
       echo $fabric->output('hello'); 
-      #world
+      # world
 
       echo $engine->saveHTML();
-      #<html><head></head><body><div id="hello">world</div></body></html>
+      # <html><head></head><body><div id="hello">world</div></body></html>
 
       echo $engine->saveFabric();
-      #<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-      #   "http://www.w3.org/TR/html4/loose.dtd">'.
-      #<html><head></head><body><div id="hello">world</div></body></html>
+      # <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+      #    "http://www.w3.org/TR/html4/loose.dtd">'.
+      # <html><head></head><body><div id="hello">world</div></body></html>
 
       ?>
 
