@@ -35,31 +35,44 @@ Dataset Templating.
 
 ### Documentation
 
+Example input key,value pair to a html template.
+
+    <?php
+    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
+      
+    $engine = new Fabrication\Library\FabricationEngine();
+    $engine->input('hello', 'world');
+
+    echo $engine->output('hello'); 
+    # world
+
+	?>
+
 Templating engine example assigning a #key,value pair to a html elements value,
 identified by the elements id.
 
-      <?php
-      require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
+    <?php
+    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
+      
+    $template = '<html><head></head><body><div id="hello"></div></body></html>';
 
-      $engine = new Fabrication\Library\FabricationEngine();
+    $engine = new Fabrication\Library\FabricationEngine();
+    $engine->input('#hello', 'world');
 
-      $engine->input('#hello', 'world');
+    $engine->run($template);
 
-      $template = '<html><head></head><body><div id="hello"></div></body></html>';
-      $engine->run($template);
+    echo $engine->output('#hello'); 
+    # world
 
-      echo $engine->output('#hello'); 
-      # world
+    echo $engine->saveHTML();
+    # <html><head></head><body><div id="hello">world</div></body></html>
 
-      echo $engine->saveHTML();
-      # <html><head></head><body><div id="hello">world</div></body></html>
+    echo $engine->saveFabric();
+    # <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    #    "http://www.w3.org/TR/html4/loose.dtd">'.
+    # <html><head></head><body><div id="hello">world</div></body></html>
 
-      echo $engine->saveFabric();
-      # <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-      #    "http://www.w3.org/TR/html4/loose.dtd">'.
-      # <html><head></head><body><div id="hello">world</div></body></html>
-
-      ?>
+    ?>
 
 ### Contributors
 
