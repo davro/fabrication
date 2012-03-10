@@ -37,9 +37,10 @@ Dataset Templating.
 
 ### Documentation
 
-Example using the FabricationEngine as a Templating Engine like Smarty, Savant.
+Templating engine example assigning a #key,value pair to a html elements value,
+identified by the elements id.
 
-<?php
+`<?php
 $engine = new FabricationEngine();
 
 $engine->input('#hello', 'world');
@@ -59,7 +60,7 @@ echo $engine->saveFabric();
 #   "http://www.w3.org/TR/html4/loose.dtd">'.
 #<html><head></head><body><div id="hello">world</div></body></html>
 
-?>
+?>`
 
 
 ### Contributors
