@@ -39,13 +39,9 @@ Templating engine example assigning a #key,value pair to a html elements value,
 identified by the elements id.
 
       <?php
-      namespace Fabrication\Tests;
-
-      use Fabrication\Library\FabricationEngine;
-
       require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
 
-      $engine = new FabricationEngine();
+      $engine = new Fabrication\Library\FabricationEngine();
 
       $engine->input('#hello', 'world');
 
