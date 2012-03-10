@@ -48,7 +48,6 @@ identified by the elements id.
       $engine = new FabricationEngine();
 
       $engine->input('#hello', 'world');
-      $engine->input('.', 'bar');
 
       $template = '<html><head></head><body><div id="hello"></div></body></html>';
       $engine->run($template);
