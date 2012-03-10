@@ -40,28 +40,27 @@ Dataset Templating.
 Templating engine example assigning a #key,value pair to a html elements value,
 identified by the elements id.
 
-<pre><?php
-$engine = new FabricationEngine();
+      <?php
+      $engine = new FabricationEngine();
 
-$engine->input('#hello', 'world');
-$engine->input('.', 'bar');
+      $engine->input('#hello', 'world');
+      $engine->input('.', 'bar');
 
-$template = '<html><head></head><body><div id="hello"></div></body></html>';
-$engine->run($template);
+      $template = '<html><head></head><body><div id="hello"></div></body></html>';
+      $engine->run($template);
 
-echo $fabric->output('hello'); 
-#world
+      echo $fabric->output('hello'); 
+      #world
 
-echo $engine->saveHTML();
-#<html><head></head><body><div id="hello">world</div></body></html>
+      echo $engine->saveHTML();
+      #<html><head></head><body><div id="hello">world</div></body></html>
 
-echo $engine->saveFabric();
-#<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-#   "http://www.w3.org/TR/html4/loose.dtd">'.
-#<html><head></head><body><div id="hello">world</div></body></html>
+      echo $engine->saveFabric();
+      #<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+      #   "http://www.w3.org/TR/html4/loose.dtd">'.
+      #<html><head></head><body><div id="hello">world</div></body></html>
 
-?></pre>
-
+      ?>
 
 ### Contributors
 
