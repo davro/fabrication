@@ -31,6 +31,36 @@ create structures.
 
 ### Features
 
+Templating without place holders.
+Document specification pattern methods.
+Dataset Templating.
+
+### Documentation
+
+Example using the FabricationEngine as a Templating Engine like Smarty, Savant.
+
+<?php
+$engine = new FabricationEngine();
+
+$engine->input('#hello', 'world');
+$engine->input('.', 'bar');
+
+$template = '<html><head></head><body><div id="hello"></div></body></html>';
+$engine->run($template);
+
+echo $fabric->output('hello'); 
+#world
+
+echo $engine->saveHTML();
+#<html><head></head><body><div id="hello">world</div></body></html>
+
+echo $engine->saveFabric();
+#<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+#   "http://www.w3.org/TR/html4/loose.dtd">'.
+#<html><head></head><body><div id="hello">world</div></body></html>
+
+?>
+
 
 ### Contributors
 
@@ -40,22 +70,4 @@ create structures.
 ### License
 
 Fabrication Engine is released under the LGPL license.
-
-
-### NOTES
-
-http://www.w3.org/TR/html401/
-http://dev.w3.org/html5/spec/Overview.html#semantics
-
-Get the title of a page:
-//title/text()
-
-Show all the alt tags:
-//img/@alt
-
-Show the href for every link:
-//a/@href
-
-Get an element with a particular CSS id:
-//*[@id='mainContent']
 
