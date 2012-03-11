@@ -115,12 +115,12 @@ Class keys are automatically mapped to elements with matching class identifiers.
 
     ?>
 
-### Example: Output                  (template patterns, fun stuff!)
-The Output method retrives key, value pairs from the stack.
+### Example: Output patterns.
+Output method retrives key, value pairs from the stack.
 With the Option to apply patterns to the stack or parts of the stack.
 You have seen the simplest example of Output in the first example, so we can 
 move on to something more advanced, like turning the plain text Input data 
-into actual php code on the fly cool huh!
+into known patterns on the fly cool huh!
 
     <?php
     require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
@@ -128,13 +128,34 @@ into actual php code on the fly cool huh!
     $engine = new FabricationEngine();
     $engine->input('hello', 'world');
 
-	echo $engine->output('hello', 'php');
-	#
-	# <?php
+    echo $engine->output('hello', 'php');
+    #
+    # <?php
     # $hello="world";
     # ?>
-	#
+    #
+
     ?>
+
+Ouput method using the php standard object.
+
+    <?php
+    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
+
+    $engine = new FabricationEngine();
+    $engine->input('hello', 'world');
+
+    echo $engine->output('hello', 'php.object');
+    #
+    # <?php
+    # $data=new stdClass;
+    # $data->hello='world';
+    # ?>
+    #
+
+    ?>
+
+
 
 
 ### Example: Option change doctype from default to HTML5.
