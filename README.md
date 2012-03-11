@@ -216,10 +216,55 @@ Doctypes are selected from the current supported list.
 
     ?>
 
+### Example: Template pattern with matching identifiers into dataset output.
+Template method allows for an elements pattern to be templated onto the dataset
+based on a map between to the element and dataset, this map will automatically 
+bump an integer value for display auto incrementing dataset.
+
+    <?php
+    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
+      
+    $engine = new FabricationEngine();
+
+    $pattern = '<div>PatternTemplate:'.
+        '<div class="uid">UID.</div>'.
+        '<div class="title">Title.</div>'.
+        '<div class="content">Content.</div>'.
+        '</div>';
+
+    $dataset = array(
+        array('uid' => 1, 'title' => 'Title 1', 'content' => 'Content 1'),
+        array('uid' => 2, 'title' => 'Title 2', 'content' => 'Content 2'),
+        array('uid' => 3, 'title' => 'Title 3', 'content' => 'Content 3'),
+    );
+
+    $result = $this->engine->template($pattern, $dataset, 'class');
+		
+	echo $this->engine->saveXML($result)
+    #
+    # <div>PatternTemplate:UID.Title.Content.
+    #    <div class="uid_1">1</div>
+    #    <div class="title_1">Title 1</div>
+    #    <div class="content_1">Content 1</div>
+    #
+    #    <div class="uid_2">2</div>
+    #    <div class="title_2">Title 2</div>
+    #    <div class="content_2">Content 2</div>
+    #
+    #    <div class="uid_3">3</div>
+    #    <div class="title_3">Title 3</div>
+    #    <div class="content_3">Content 3</div>
+    # </div>
+    #
+
+    ?>
+
+ 
+
 ## TODO
 
 
-### Example: View                    (paths)
+### Example: Template                (datasets)
 
 ### Example: Create                  (..)
 
@@ -227,14 +272,13 @@ Doctypes are selected from the current supported list.
 
 ### Example: createElementRecursion  (..)
 
-### Example: Template                (datasets)
+### Example: Specification           (types)
 
 ### Example: Query                   (paths)
 
-### Example: Specification Calls     (types)
+### Example: View                    (paths)
 
 ### Example: Dump and Debug          (types)
-
 
 
 ## Contributors
