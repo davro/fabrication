@@ -238,9 +238,9 @@ bump an integer value for display auto incrementing dataset.
         array('uid' => 3, 'title' => 'Title 3', 'content' => 'Content 3'),
     );
 
-    $result = $this->engine->template($pattern, $dataset, 'class');
+    $result = $engine->template($pattern, $dataset, 'class');
 		
-	echo $this->engine->saveXML($result)
+	echo $engine->saveXML($result)
     #
     # <div>PatternTemplate:UID.Title.Content.
     #    <div class="uid_1">1</div>
