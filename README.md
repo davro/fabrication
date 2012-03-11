@@ -35,6 +35,7 @@ Dataset Templating.
 
 ## Documentation
 
+
 ### Example: Input key, value pair and output.
 Simple example of Input/Output.
 
@@ -50,6 +51,7 @@ Simple example of Input/Output.
 	#
 
 	?>
+
 
 ### Example: Input id #key, value pair.
 ID keys are automatically mapped to elements with matching id identifiers.
@@ -83,6 +85,7 @@ ID keys are automatically mapped to elements with matching id identifiers.
 
     ?>
 
+
 ### Example: Input class .key, value pair.
 Class keys are automatically mapped to elements with matching class identifiers.
 
@@ -115,6 +118,7 @@ Class keys are automatically mapped to elements with matching class identifiers.
 
     ?>
 
+
 ### Example: Output patterns.
 Output method retrives key, value pairs from the stack.
 With the Option to apply patterns to the stack or parts of the stack.
@@ -137,7 +141,7 @@ into known patterns on the fly cool huh!
 
     ?>
 
-Ouput method using the php standard object.
+Output method using a standard php array.
 
     <?php
     require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
@@ -145,7 +149,26 @@ Ouput method using the php standard object.
     $engine = new FabricationEngine();
     $engine->input('hello', 'world');
 
-    echo $engine->output('hello', 'php.object');
+    echo $engine->output('hello', 'php.array');
+    #
+    # <?php
+    # $data=array(
+    # 'hello'=>'world',
+    # );
+    # ?>
+    #
+
+    ?>
+
+Output method using a standard php class.
+
+    <?php
+    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
+
+    $engine = new FabricationEngine();
+    $engine->input('hello', 'world');
+
+    echo $engine->output('hello', 'php.class');
     #
     # <?php
     # $data=new stdClass;
@@ -154,8 +177,6 @@ Ouput method using the php standard object.
     #
 
     ?>
-
-
 
 
 ### Example: Option change doctype from default to HTML5.
