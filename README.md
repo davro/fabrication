@@ -44,12 +44,14 @@ Simple example of basic input/output.
     $engine = new Fabrication\Library\FabricationEngine();
     $engine->input('hello', 'world');
 
-    echo $engine->output('hello'); 
+    echo $engine->output('hello');
+	#
     # world
+	#
 
 	?>
 
-### Example: ID #key, value pair.
+### Example: Input id #key, value pair.
 ID keys are automatically mapped to elements with matching id identifiers.
 
     <?php
@@ -62,20 +64,26 @@ ID keys are automatically mapped to elements with matching id identifiers.
 
     $engine->run($template);
 
-    echo $engine->output('#hello'); 
+    echo $engine->output('#hello');
+	#
     # world
+	#
 
     echo $engine->saveHTML();
+	#
     # <html><head></head><body><div id="hello">world</div></body></html>
+	#
 
     echo $engine->saveFabric();
+	#
     # <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     #    "http://www.w3.org/TR/html4/loose.dtd">'.
     # <html><head></head><body><div id="hello">world</div></body></html>
+	#
 
     ?>
 
-### Example: Class .key, value pair.
+### Example: Input class .key, value pair.
 Class keys are automatically mapped to elements with matching class identifiers.
 
     <?php
@@ -89,20 +97,48 @@ Class keys are automatically mapped to elements with matching class identifiers.
     $engine->run($template);
 
     echo $engine->output('.hello'); 
+	#
     # world
+	#
 
     echo $engine->saveHTML();
+	#
     # <html><head></head><body><div class="hello">world</div></body></html>
+	#
 
     echo $engine->saveFabric();
+	#
     # <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     #    "http://www.w3.org/TR/html4/loose.dtd">'.
     # <html><head></head><body><div class="hello">world</div></body></html>
+	#
 
     ?>
 
-### Example: Doctype change default doctype to HTML5.
-Class keys are automatically mapped to elements with matching class identifiers.
+### Example: Output                  (template patterns, fun stuff!)
+The Output method retrives key, value pairs from the stack.
+With the Option to apply patterns to the stack or parts of the stack.
+You have seen the simplest example of Output in the first example, so we can 
+move on to something more advanced, like turning the plain text Input data 
+into actual php code on the fly cool huh!
+
+    <?php
+    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
+
+    $engine = new FabricationEngine();
+    $engine->input('hello', 'world');
+
+	echo $engine->output('hello', 'php');
+	#
+	# <?php
+    # $hello="world";
+    # ?>
+	#
+    ?>
+
+
+### Example: Option change doctype from default to HTML5.
+Doctypes are selected from an supported list.
 
     <?php
     require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
@@ -117,8 +153,29 @@ Class keys are automatically mapped to elements with matching class identifiers.
     echo $engine->saveFabric();
     # <!DOCTYPE HTML>
     # <html><head></head><body></body></html>
+	#
 
     ?>
+
+## TODO
+
+
+### Example: View                    (paths)
+
+### Example: Create                  (..)
+
+### Example: CreateElement           (..)
+
+### Example: createElementRecursion  (..)
+
+### Example: Template                (datasets)
+
+### Example: Query                   (paths)
+
+### Example: Specification Calls     (types)
+
+### Example: Dump and Debug          (types)
+
 
 
 ## Contributors
