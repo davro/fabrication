@@ -263,10 +263,11 @@ bump an integer value for display auto incrementing dataset.
     ?>
 
 
-### Example: Create an element with attributes and children, recursivly.
+### Example: Create an element with attributes and children, recursively.
 Create method extends the builtin method createElement adding attribute 
-functionality and the ability to recursivly add children to the element 
+functionality and the ability to recursively add children to the element 
 style and script elements.
+
 NOTE: this method is experimental.
 
     <?php
@@ -305,7 +306,31 @@ NOTE: this method is experimental.
 
     ?>
 
-Create method with children and recursion coming soon.
+Create method with children and recursion.
+
+NOTE: this method is experimental.
+
+    <?php
+    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
+      
+    $engine = new Fabrication\Library\FabricationEngine();
+
+
+    $hi = $engine->create('div', '', array('id'=>'hello-world'),
+        array(
+            array('name'=>'u', 'value'=>'Hello', 'attributes'=>array(), 'children'=>array()), 
+            array('name'=>'strong', 'value'=>'World', 'attributes'=>array(), 'children'=>array())
+        )
+    );
+
+    $engine->appendChild($hi);
+
+    echo $engine->saveHTML()
+    # 
+    # <div id="hello-world"><u>Hello</u><strong>World</strong></div>
+    #
+
+    ?>
 
 ## TODO
 
