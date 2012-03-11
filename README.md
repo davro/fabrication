@@ -129,7 +129,7 @@ into known patterns on the fly cool huh!
     <?php
     require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
 
-    $engine = new FabricationEngine();
+    $engine = new Fabrication\Library\FabricationEngine();
     $engine->input('hello', 'world');
 
     echo $engine->output('hello', 'php');
@@ -146,7 +146,7 @@ Output method using a standard php array.
     <?php
     require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
 
-    $engine = new FabricationEngine();
+    $engine = new Fabrication\Library\FabricationEngine();
     $engine->input('hello', 'world');
 
     echo $engine->output('hello', 'php.array');
@@ -165,7 +165,7 @@ Output method using standard php class.
     <?php
     require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
 
-    $engine = new FabricationEngine();
+    $engine = new Fabrication\Library\FabricationEngine();
     $engine->input('hello', 'world');
 
     echo $engine->output('hello', 'php.class');
@@ -183,7 +183,7 @@ Output method using css template.
     <?php
     require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
 
-    $engine = new FabricationEngine();
+    $engine = new Fabrication\Library\FabricationEngine();
     $engine->input('body', array('bgcolor'=>'#999999'));
 
     echo $engine->output('body', 'css');
@@ -204,7 +204,7 @@ Doctypes are selected from the current supported list.
       
     $template = '<html><head></head><body></body></html>';
 
-    $engine = new FabricationEngine();
+    $engine = new Fabrication\Library\FabricationEngine();
     $engine->run($template);
 
     $engine->setOption('doctype', 'html.5');
@@ -224,7 +224,7 @@ bump an integer value for display auto incrementing dataset.
     <?php
     require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
       
-    $engine = new FabricationEngine();
+    $engine = new Fabrication\Library\FabricationEngine();
 
     $pattern = '<div>PatternTemplate:'.
         '<div class="uid">UID.</div>'.
