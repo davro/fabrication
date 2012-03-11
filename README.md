@@ -1,6 +1,6 @@
-## Fabrication Engine
+# Fabrication Engine
 
-### Introduction
+## Introduction
 
 Next generation template engine based on the Document Object Model
 
@@ -27,13 +27,13 @@ DOMDoument API. Also there is a specifcation method with the ability to recursiv
 create structures. There are also some advanced dateset templating features.
 
 
-### Features
+## Features
 
 Templating without place holders.
 Document specification pattern methods.
 Dataset Templating.
 
-### Documentation
+## Documentation
 
 Example input key, value pair and output.
 
@@ -101,12 +101,12 @@ Class keys are automatically mapped to elements with matching class identifiers.
     ?>
 
 
-### Contributors
+## Contributors
 
 * David Stevens (davro)
 
 
-### License
+## License
 
 Fabrication Engine is released under the LGPL license.
 
