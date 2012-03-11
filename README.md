@@ -35,7 +35,8 @@ Dataset Templating.
 
 ## Documentation
 
-Example input key, value pair and output.
+### Example input key, value pair and output.
+Simple example of basic input/output.
 
     <?php
     require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
@@ -48,7 +49,7 @@ Example input key, value pair and output.
 
 	?>
 
-Example ID #key, value pair.
+### Example ID #key, value pair.
 ID keys are automatically mapped to elements with matching id identifiers.
 
     <?php
@@ -74,7 +75,7 @@ ID keys are automatically mapped to elements with matching id identifiers.
 
     ?>
 
-Example Class .key, value pair.
+### Example Class .key, value pair.
 Class keys are automatically mapped to elements with matching class identifiers.
 
     <?php
