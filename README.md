@@ -210,11 +210,13 @@ Doctypes are selected from the current supported list.
     $engine->setOption('doctype', 'html.5');
 
     echo $engine->saveFabric();
+    #
     # <!DOCTYPE HTML>
     # <html><head></head><body></body></html>
 	#
 
     ?>
+
 
 ### Example: Template pattern with matching identifiers into dataset output.
 Template method allows for an elements pattern to be templated onto the dataset
@@ -226,10 +228,11 @@ bump an integer value for display auto incrementing dataset.
       
     $engine = new Fabrication\Library\FabricationEngine();
 
-    $pattern = '<div>PatternTemplate:'.
-        '<div class="uid">UID.</div>'.
-        '<div class="title">Title.</div>'.
-        '<div class="content">Content.</div>'.
+    $pattern = 
+        '<div>PatternTemplate:'.
+            '<div class="uid">UID.</div>'.
+            '<div class="title">Title.</div>'.
+            '<div class="content">Content.</div>'.
         '</div>';
 
     $dataset = array(
@@ -259,18 +262,52 @@ bump an integer value for display auto incrementing dataset.
 
     ?>
 
- 
+
+### Example: Create an element with attributes and children, recursivly.
+Create method extends the builtin method createElement adding attribute 
+functionality and the ability to recursivly add children to the element 
+style and script elements.
+NOTE: this method is experimental.
+
+    <?php
+    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
+      
+    $engine = new Fabrication\Library\FabricationEngine();
+
+    $hi = $engine->create('div', 'Hello World', array('id'=>'hello-world'));
+
+    echo $hi->nodeName;
+    #
+    # div
+    #
+
+    echo $hi->nodeValue;
+    #
+    # Hello World
+    #
+
+	echo $hi->attributes->getNamedItem('id')->nodeName;
+    #
+    # id
+    #
+
+    echo $hi->attributes->getNamedItem('id')->nodeValue;
+    #
+    # hello-world
+    #
+
+
+    $engine->appendChild($hi);
+    echo $engine->saveHTML();
+    #
+    # <div id="hello-world">Hello World</div>
+    #
+
+    ?>
+
+Create method with children and recursion coming soon.
 
 ## TODO
-
-
-### Example: Template                (datasets)
-
-### Example: Create                  (..)
-
-### Example: CreateElement           (..)
-
-### Example: createElementRecursion  (..)
 
 ### Example: Specification           (types)
 
