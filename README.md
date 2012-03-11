@@ -318,8 +318,20 @@ NOTE: this method is experimental.
 
     $hi = $engine->create('div', '', array('id'=>'hello-world'),
         array(
-            array('name'=>'u', 'value'=>'Hello', 'attributes'=>array(), 'children'=>array()), 
-            array('name'=>'strong', 'value'=>'World', 'attributes'=>array(), 'children'=>array())
+            array('name'=>'u', 'value'=>'Hello', 
+                'attributes'=>array('id'=>'hello'), 
+                'children'=>array()
+            ),
+            array('name'=>'strong', 
+                'attributes'=>array('id'=>'world'), 
+                'children'=>array(
+                    array('name'=>'i', 'value'=>'W'),
+                    array('name'=>'i', 'value'=>'o'),
+                    array('name'=>'i', 'value'=>'r'),
+                    array('name'=>'i', 'value'=>'l'),
+                    array('name'=>'i', 'value'=>'d')
+                )
+            )
         )
     );
 
@@ -327,7 +339,12 @@ NOTE: this method is experimental.
 
     echo $engine->saveHTML()
     # 
-    # <div id="hello-world"><u>Hello</u><strong>World</strong></div>
+    # <div id="hello-world">
+    # <u id="hello">Hello</u>
+    # <strong id="world">
+    # <i>W</i><i>o</i><i>r</i><i>l</i><i>d</i>
+    # </strong>
+    # </div>
     #
 
     ?>
