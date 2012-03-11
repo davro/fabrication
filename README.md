@@ -160,7 +160,7 @@ Output method using a standard php array.
 
     ?>
 
-Output method using a standard php class.
+Output method using standard php class.
 
     <?php
     require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
@@ -178,9 +178,26 @@ Output method using a standard php class.
 
     ?>
 
+Output method using css template.
+
+    <?php
+    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
+
+    $engine = new FabricationEngine();
+    $engine->input('body', array('bgcolor'=>'#999999'));
+
+    echo $engine->output('body', 'css');
+    #
+    # body {
+    # bgcolor: #999999;
+    # } 
+    #
+
+    ?>
+
 
 ### Example: Option change doctype from default to HTML5.
-Doctypes are selected from an supported list.
+Doctypes are selected from the current supported list.
 
     <?php
     require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
