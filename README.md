@@ -36,7 +36,7 @@ Dataset Templating.
 ## Documentation
 
 ### Example: Input key, value pair and output.
-Simple example of basic input/output.
+Simple example of Input/Output.
 
     <?php
     require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
