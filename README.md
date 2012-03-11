@@ -35,7 +35,7 @@ Dataset Templating.
 
 ## Documentation
 
-### Example input key, value pair and output.
+### Example: Input key, value pair and output.
 Simple example of basic input/output.
 
     <?php
@@ -49,7 +49,7 @@ Simple example of basic input/output.
 
 	?>
 
-### Example ID #key, value pair.
+### Example: ID #key, value pair.
 ID keys are automatically mapped to elements with matching id identifiers.
 
     <?php
@@ -75,7 +75,7 @@ ID keys are automatically mapped to elements with matching id identifiers.
 
     ?>
 
-### Example Class .key, value pair.
+### Example: Class .key, value pair.
 Class keys are automatically mapped to elements with matching class identifiers.
 
     <?php
@@ -98,6 +98,25 @@ Class keys are automatically mapped to elements with matching class identifiers.
     # <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     #    "http://www.w3.org/TR/html4/loose.dtd">'.
     # <html><head></head><body><div class="hello">world</div></body></html>
+
+    ?>
+
+### Example: Doctype change default doctype to HTML5.
+Class keys are automatically mapped to elements with matching class identifiers.
+
+    <?php
+    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
+      
+    $template = '<html><head></head><body></body></html>';
+
+    $engine = new FabricationEngine();
+    $engine->run($template);
+
+    $engine->setOption('doctype', 'html.5');
+
+    echo $engine->saveFabric();
+    # <!DOCTYPE HTML>
+    # <html><head></head><body></body></html>
 
     ?>
 
