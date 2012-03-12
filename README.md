@@ -230,9 +230,9 @@ bump an integer value for display auto incrementing dataset.
 
     $pattern = 
         '<div>PatternTemplate:'.
-            '<div class="uid">UID.</div>'.
-            '<div class="title">Title.</div>'.
-            '<div class="content">Content.</div>'.
+        '   <div class="uid">UID.</div>'.
+        '   <div class="title">Title.</div>'.
+        '   <div class="content">Content.</div>'.
         '</div>';
 
     $dataset = array(
@@ -258,6 +258,36 @@ bump an integer value for display auto incrementing dataset.
     #    <div class="title_3">Title 3</div>
     #    <div class="content_3">Content 3</div>
     # </div>
+    #
+
+	# append the result and view some xpath results.
+    $this->engine->appendChild($result);
+
+    echo $this->engine->view("//div[@class='uid_1']/text()");
+    echo $this->engine->view("//div[@class='title_1']/text()");
+    echo $this->engine->view("//div[@class='content_1']/text()");
+    #
+    # 1
+    # Title 1
+    # Content 1
+    #
+
+    echo $this->engine->view("//div[@class='uid_2']/text()");
+    echo $this->engine->view("//div[@class='title_2']/text()");
+    echo $this->engine->view("//div[@class='content_2']/text()");
+    #
+    # 2
+    # Title 2
+    # Content 2
+    #
+
+    echo $this->engine->view("//div[@class='uid_3']/text()");
+    echo $this->engine->view("//div[@class='title_3']/text()");
+    echo $this->engine->view("//div[@class='content_3']/text()");
+    #
+    # 3
+    # Title 3
+    # Content 3
     #
 
     ?>
