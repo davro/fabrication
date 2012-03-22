@@ -129,6 +129,7 @@ You have seen the simplest example of Output in the first example, so we can
 move on to something more advanced, like turning the plain text Input data 
 into known patterns on the fly cool huh!
 
+```php
     <?php
     require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
 
@@ -143,9 +144,11 @@ into known patterns on the fly cool huh!
     #
 
     ?>
+```
 
 Output method using a standard php array.
 
+```php
     <?php
     require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
 
@@ -162,9 +165,11 @@ Output method using a standard php array.
     #
 
     ?>
+```
 
 Output method using standard php class.
 
+```php
     <?php
     require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
 
@@ -180,9 +185,11 @@ Output method using standard php class.
     #
 
     ?>
+```
 
 Output method using css template.
 
+```php
     <?php
     require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
 
@@ -197,11 +204,12 @@ Output method using css template.
     #
 
     ?>
-
+```
 
 ### Example: Option change doctype from default to HTML5.
 Doctypes are selected from the current supported list.
 
+```php
     <?php
     require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
       
@@ -219,13 +227,14 @@ Doctypes are selected from the current supported list.
 	#
 
     ?>
-
+```
 
 ### Example: Template pattern with matching identifiers into dataset output.
 Template method allows for an elements pattern to be templated onto the dataset
 based on a map between to the element and dataset, this map will automatically 
 bump an integer value for display auto incrementing dataset.
 
+```php
     <?php
     require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
       
@@ -294,7 +303,7 @@ bump an integer value for display auto incrementing dataset.
     #
 
     ?>
-
+```
 
 ### Example: Create an element with attributes and children, recursively.
 Create method extends the builtin method createElement adding attribute 
@@ -303,6 +312,7 @@ style and script elements.
 
 NOTE: this method is experimental.
 
+```php
     <?php
     require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
       
@@ -338,11 +348,13 @@ NOTE: this method is experimental.
     #
 
     ?>
+```
 
 Create method with children and recursion.
 
 NOTE: this method is experimental.
 
+```php
     <?php
     require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
       
@@ -381,6 +393,7 @@ NOTE: this method is experimental.
     #
 
     ?>
+```
 
 ## TODO
 
