@@ -1,11 +1,11 @@
 <?php
-
 namespace Fabrication\Tests;
 
 use Fabrication\Library\FabricationEngine;
 
 //require_once(dirname(dirname(__FILE__)).'/lib/Fabrication.php');
 require_once(dirname(dirname(__FILE__)) . '/lib/FabricationEngine.php');
+
 
 class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 
@@ -38,7 +38,205 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		$this->assertObjectHasAttribute('options', $this->engine);
 	}
 
+
+	// This example code is copyied into the README.md testing for consistency.
+	// Simplest example.
+	public function testReadmeExample1() {
+
+		$engine = new FabricationEngine();
+		$engine->input('hello', 'world');
+		
+		$this->assertEquals($engine->output('hello'), 'world');
+	}
+
+
+	public function testReadmeExample2() {
+
+		$engine = new FabricationEngine();
+		$engine->input('#hello', 'world');
+		$template = '<html><head></head><body><div id="hello"></div></body></html>';
+		$engine->run($template);
+
+		$this->assertEquals($engine->output('#hello'), 'world');
+
+		// Default save method.
+		$this->assertEquals(
+			'<html><head></head><body><div id="hello">world</div></body></html>',
+			$engine->saveHTML()
+		);
+
+		$this->assertEquals(
+'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">'.
+"\n<html><head></head><body><div id=\"hello\">world</div></body></html>\n",
+			$engine->saveFabric()
+		);
+	}
+
+
+	public function testReadmeExample3() {
+
+		$engine = new FabricationEngine();
+		$engine->input('.hello', 'world');
+		$template = '<html><head></head><body><div class="hello"></div></body></html>';
+		$engine->run($template);
+
+		$this->assertEquals($engine->output('.hello'), 'world');
+
+		// Default save method.
+		$this->assertEquals(
+			'<html><head></head><body><div class="hello">world</div></body></html>',
+			$engine->saveHTML()
+		);
+
+		$this->assertEquals(
+'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">'.
+"\n<html><head></head><body><div class=\"hello\">world</div></body></html>\n",
+			$engine->saveFabric()
+		);
+	}
+
+
+	public function testReadmeExampleOutput() {
+
+		$tag='>';
+		$engine = new FabricationEngine();
+		$engine->input('hello', 'world');
+		$this->assertEquals(
+			"<?php\n\$hello=\"world\";\n?$tag",
+			$engine->output('hello', 'php')
+		);
+	}
+
+
+	public function testReadmeExampleOutput1() {
+
+		$engine = new FabricationEngine();
+		$engine->input('hello', 'world');
+		$this->assertEquals(
+"<?php
+\$data=array(
+'hello'=>'world',
+);
+?>", 
+			$engine->output('hello', 'php.array')
+		);
+	}
+
+
+	public function testReadmeExampleOutput2() {
+
+		$tag='>';
+		$engine = new FabricationEngine();
+		$engine->input('hello', 'world');
+		$this->assertEquals("<?php\n\$data=new stdClass;\n\$data->hello='world';\n?$tag", 
+			$engine->output('hello', 'php.class')
+		);
+	}
+
+
+	public function testReadmeExampleOutput3() {
+
+		$engine = new FabricationEngine();
+		$engine->input('body', array('bgcolor'=>'#999999'));
+		$this->assertEquals(
+			"body {\nbgcolor: #999999;\n}\n", 
+			$engine->output('body', 'css')
+		);
+	}
 	
+	
+	public function testReadmeExampleOptionDoctype() {
+
+		$engine = new FabricationEngine();
+		$template = '<html><head></head><body></body></html>';
+		$engine->run($template);
+
+		$this->assertEquals('html.5', $engine->setOption('doctype', 'html.5'));
+
+		$this->assertEquals(
+			"<!DOCTYPE HTML>\n".
+			"<html><head></head><body></body></html>\n",
+			$engine->saveFabric()
+		);
+
+	}
+
+
+	public function testReadmeExampleTemplateDataset() {
+		// SEE:  testCreatingHTMLAndTemplateFromData();
+	}
+
+
+	public function testReadmeExampleCreate() {
+
+		$engine = new FabricationEngine();
+
+		$hi = $engine->create('div', 'Hello World', array('id'=>'hello-world'));
+
+		$this->assertEquals('div', $hi->nodeName);
+		$this->assertEquals('Hello World', $hi->nodeValue);
+		$this->assertEquals('id', $hi->attributes->getNamedItem('id')->nodeName);
+		$this->assertEquals('hello-world', $hi->attributes->getNamedItem('id')->nodeValue);
+
+		$engine->appendChild($hi);
+
+		$this->assertEquals(
+			'<div id="hello-world">Hello World</div>', 
+			$engine->saveHTML()
+		);
+	}
+
+
+	public function testReadmeExampleCreate1() {
+
+		$engine = new FabricationEngine();
+
+		$hi = $engine->create('div', '', array('id'=>'hello-world'),
+			array(
+				array('name'=>'u', 'value'=>'Hello', 
+					'attributes'=>array('id'=>'hello'), 
+					'children'=>array()
+				), 
+				array('name'=>'strong', 
+					'attributes'=>array('id'=>'world'), 
+					'children'=>array(
+						array('name'=>'i', 'value'=>'W'),
+						array('name'=>'i', 'value'=>'o'),
+						array('name'=>'i', 'value'=>'r'),
+						array('name'=>'i', 'value'=>'l'),
+						array('name'=>'i', 'value'=>'d')
+					)
+				)
+			)
+		);
+
+		$this->assertEquals('div', $hi->nodeName);
+		$this->assertEquals('HelloWorld', $hi->nodeValue);
+		$this->assertEquals('id', $hi->attributes->getNamedItem('id')->nodeName);
+		$this->assertEquals('hello-world', $hi->attributes->getNamedItem('id')->nodeValue);
+
+		$engine->appendChild($hi);
+
+		$this->assertEquals(
+			'<div id="hello-world">'.
+			'<u id="hello">Hello</u>'.
+			'<strong id="world">'.
+			'<i>W</i><i>o</i><i>r</i><i>l</i><i>d</i>'.
+			'</strong>'.
+			'</div>', 
+			$engine->saveHTML()
+		);
+	}
+
+
+	public function testReadmeExampleSpecification() {}
+	public function testReadmeExampleQuery() {}
+	public function testReadmeExampleView() {}
+	public function testReadmeExampleDumpDebug() {}
+
+
 	public function testDefaultDoctype() {
 		
 		$this->assertEquals('html.4.01.transitional', $this->engine->getOption('doctype'));
@@ -50,7 +248,7 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
-	
+
 	public function testOptionSettingDoctype() {
 		
 		$this->assertEquals('html.5', $this->engine->setOption('doctype', 'html.5'));
@@ -244,7 +442,7 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 	}
 
 
-	public function testCreatingElement() {
+	public function testTemplateElement() {
 
 		$value = "Hello World!";
 		$div = $this->engine->create('div', $value, array(), array());
@@ -255,16 +453,47 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($value, $div->nodeValue);
 	}
 
+
+	public function testFabricCreatingElementWithStyle() {
+
+		$id = 'hello';
+		$name  = 'div';
+		$value = 'Hello World!';
+
+		$attributes = array('id'=>$id);
+		$children   = array();
+		$styles     = array("{$name}#{$id} { color:#999999; }");
+//		$scripts    = array('console.log("testing")');
+
+		$div = $this->engine->create($name, $value
+			, $attributes
+			, $children
+			, $styles
+//			, $scripts
+		);
+
+		$this->assertEquals('DOMElement', get_class($div));
+		$this->assertEquals($name,  $div->nodeName);
+		$this->assertEquals($value, $div->nodeValue);
+
+		$this->engine->appendChild($div);
+
+		$this->assertEquals("<$name id=\"hello\">$value</$name>"
+			, $this->engine->saveHTML()
+		);
+	}
+
+//	public function testCreatingElementThenView
+
 	
 	public function testCreatingElementThenView() {
 
-		$value = "";
-		$div = $this->engine->create('div', $value, array(), array());
+		$div = $this->engine->create('div', '', array(), array());
 		$this->engine->appendChild($div);
 
 		$this->assertEquals('DOMElement', get_class($div));
 		$this->assertEquals('div', $div->nodeName);
-		$this->assertEquals($value, $div->nodeValue);
+		$this->assertEquals('', $div->nodeValue);
 
 		$this->assertEquals('<div></div>', $this->engine->view());
 	}
@@ -446,8 +675,216 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 			'</div>',
 			$this->engine->saveXML($result)
 		);
+
+		// sweet example just append the output to the engine.
+		$this->engine->appendChild($result);
+
+		$this->assertEquals(1, $this->engine->view("//div[@$map='uid_1']/text()"));
+		$this->assertEquals('Title 1', $this->engine->view("//div[@$map='title_1']/text()"));
+		$this->assertEquals('Content 1', $this->engine->view("//div[@$map='content_1']/text()"));
+		$this->assertEquals(2, $this->engine->view("//div[@$map='uid_2']/text()"));
+		$this->assertEquals('Title 2', $this->engine->view("//div[@$map='title_2']/text()"));
+		$this->assertEquals('Content 2', $this->engine->view("//div[@$map='content_2']/text()"));
+		$this->assertEquals('Title 3', $this->engine->view("//div[@$map='title_3']/text()"));
+		$this->assertEquals('Content 3', $this->engine->view("//div[@$map='content_3']/text()"));
+
+		$this->assertEquals(3, $this->engine->view("//div[@$map='uid_3']/text()"));
+
+
+//		$this->assertEquals(
+//			'',
+//			$this->engine->saveFabric()
+//		);
+
 	}
-	
+
+
+	public function testPattern() {
+
+		$this->engine->input('hello', 'world');
+
+		$this->assertEquals(
+			$this->engine->getDoctype() . 
+			'<html>' .
+			'<head></head>' .
+			'<body></body>' .
+			"</html>\n",
+			(string) $this->engine->pattern()
+		);
+	}
+
+
+	public function testPatternHtmlHeadKeyValue() {
+
+		$this->engine->input('html.head', 
+			array( 
+				array('name' => 'title', 'value' => 'FABRIC::TITLE'),
+			)
+		);
+
+		$this->assertEquals(
+			$this->engine->getDoctype() . 
+			'<html>' .
+			'<head>' . 
+			'<title>FABRIC::TITLE</title>' . 
+			'</head>' .
+			'<body>' .
+			'</body>' .
+			"</html>\n",
+			(string) $this->engine->pattern()
+		);
+	}
+
+
+	public function testPatternHtmlHeadMultipleKeyValue() {
+
+		$this->engine->input('html.head', 
+			array( 
+				array('name' => 'title', 'value' => 'FABRIC::TITLE'),
+				array('name' => 'meta', 'attributes' => array('property'=>'hello world', 'content'=>'foo bar'))
+			)
+		);
+
+		$this->assertEquals(
+			$this->engine->getDoctype() . 
+			'<html>' .
+			'<head>' . 
+			'<title>FABRIC::TITLE</title>' . 
+			'<meta property="hello world" content="foo bar">' . 
+			'</head>' .
+			'<body>' .
+			'</body>' .
+			"</html>\n",
+			(string) $this->engine->pattern()
+		);
+	}
+
+
+	public function testPatternHtmlHeadBodyMultipleKeyValue() {
+
+		// input the dataset used by the html pattern.
+		$this->engine->input('html.head', 
+			array( 
+				array('name' => 'title', 'value' => 'FABRIC::TITLE'),
+				array('name' => 'meta', 'attributes' => array('property'=>'hello world', 'content'=>'foo bar'))
+			)
+		);
+
+		$this->engine->input('html.body', 
+			array(
+				array('name' => 'div', 'value' => 'FABRIC::HEADER', 'attributes' => array('id'=>'header') ),
+				array('name' => 'div', 'value' => 'FABRIC::CONTENT', 'attributes' => array('id'=>'content') ),
+				array('name' => 'div', 'value' => 'FABRIC::FOOTER', 'attributes' => array('id'=>'footer') ),
+			)
+		);
+
+		// check the html pattern output based on the dataset.
+		$this->assertEquals(
+			$this->engine->getDoctype() . 
+			'<html>' .
+			'<head>' . 
+			'<title>FABRIC::TITLE</title>' . 
+			'<meta property="hello world" content="foo bar">' . 
+			'</head>' .
+			'<body>' .
+			'<div id="header">FABRIC::HEADER</div>' . 
+			'<div id="content">FABRIC::CONTENT</div>' . 
+			'<div id="footer">FABRIC::FOOTER</div>' . 
+			'</body>' .
+			"</html>\n",
+			(string) $this->engine->pattern()
+		);
+
+		// title
+		$this->assertEquals('FABRIC::TITLE',
+			$this->engine->query('/html/head/title')->item(0)->nodeValue
+		);
+		$this->assertEquals('FABRIC::TITLE',
+			$this->engine->getTitle()->item(0)->nodeValue
+		);
+
+		// meta tag.
+		$this->assertEquals('hello world',
+			$this->engine->getMeta()->item(0)->attributes->getNamedItem('property')->nodeValue
+		);
+		$this->assertEquals('foo bar',
+			$this->engine->getMeta()->item(0)->attributes->getNamedItem('content')->nodeValue
+		);
+
+		// body header
+		$this->assertEquals('FABRIC::HEADER',
+			$this->engine->getDiv()->item(0)->nodeValue
+		);
+		$this->assertEquals('header',
+			$this->engine->getDiv()->item(0)->attributes->getNamedItem('id')->nodeValue
+		);
+
+		// body content
+		$this->assertEquals('FABRIC::CONTENT',
+			$this->engine->getDiv()->item(1)->nodeValue
+		);
+		$this->assertEquals('content',
+			$this->engine->getDiv()->item(1)->attributes->getNamedItem('id')->nodeValue
+		);
+
+		// body footer
+		$this->assertEquals('FABRIC::FOOTER',
+			$this->engine->getDiv()->item(2)->nodeValue
+		);
+		$this->assertEquals('footer',
+			$this->engine->getDiv()->item(2)->attributes->getNamedItem('id')->nodeValue
+		);
+
+	}
+
+
+	public function testPatternXmlKeyValue() {
+
+		// TODO xml doctype correct output.
+
+		// input the dataset used by the html pattern.
+		$this->engine->input('xml', 
+			array( 
+				array('name' => 'title', 'value' => 'FABRIC::TITLE'),
+				array('name' => 'meta', 'attributes' => array('property'=>'hello world', 'content'=>'foo bar'))
+			)
+		);
+
+		// check the html pattern output based on the dataset.
+		$this->assertEquals(
+			$this->engine->getDoctype() . 
+			'<xml>' .
+			"</xml>\n",
+			(string) $this->engine->pattern('Xml')
+		);
+	}
+
+
+	public function testPatternSpecification() {
+
+		$this->assertEquals(2,
+			sizeof($this->engine->pattern()->specification)
+		);
+	}
+
+
+	public function testPatternHtmlTable() {
+
+		$this->assertEquals(
+			'<table></table>',
+			(string) $this->engine->pattern('HtmlTable')
+		);
+	}
+
+
+	public function testPatternHtmlForm() {
+
+		$this->assertEquals(
+			'<form></form>',
+			(string) $this->engine->pattern('HtmlForm')
+		);
+	}
+
 	
 	public function testIOAsObject() {
 		$this->engine->input('hello', 'world');
@@ -615,7 +1052,7 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 			'$' . "data->hello='world';\n" .
 			'$' . "data->foo='bar';\n" .
 			'?>'
-			, $this->engine->output('', 'php.object')
+			, $this->engine->output('', 'php.class')
 		);
 	}
 	
@@ -635,7 +1072,7 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 			.'$' . "data->foo='bar';\n"
 		//	.'$' . "data->test=" . var_export($testing, true) . ";\n"
 			, 
-			$this->engine->output('', 'php.object',
+			$this->engine->output('', 'php.class',
 				array('return' => true, 'tags' => false)
 			)
 		);
@@ -863,7 +1300,7 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	
-	public function testPhpTemplate() {
+	public function XtestPhpTemplate() {
 
 		$data = array(
 		    '$data=new stdClass()',

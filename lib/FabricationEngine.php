@@ -1,7 +1,5 @@
 <?php
-
 namespace Fabrication\Library;
-
 /**
  * Fabrication Engine
  * 
@@ -42,29 +40,6 @@ namespace Fabrication\Library;
  * 
  */
 
-// Base engine element to extend from used in the specifcation.
-class FabricationElement {
-
-	private $engine;
-
-	private $element;
-
-	/**
-	 * Execution method from generating custom elements.
-	 *
-	 * @param FabricationElement $engine 
-	 * @param \DOMElement $element
-	 */
-	public function execute(FabricationEngine $engine, \DOMElement $element) {
-
-		$this->engine  = $engine;
-		$this->element = $element;
-
-		// fabricate your custom element.
-		$element->appendChild($engine->create('div', 'ExecuteTest'));
-	}
-}
-
 class FabricationEngine extends \DOMDocument {
 	/**
 	 * Symbol for id attribute assignment.
@@ -100,14 +75,15 @@ class FabricationEngine extends \DOMDocument {
 	public $output = array();
 
 	/**
+	 * Options 
 	 *
-	 * doctype                  now we have a choice !!
-	 * process                  nice word for hacks to clean up DOMDocument retardedness.
+	 * doctype                  Choose your doctype
+	 * process                  Clean up DOMDocument tardedness.
 	 * process.doctype          Doctype depending on doctype option.
-	 * process.body.image       Image tags to be valid depending on doctype option.
+	 * process.body.image       Image tags valid depending on doctype option.
 	 * process.body.br          br tags to be valid depending on doctype option.
 	 * process.body.hr          hr tags to be valid depending on doctype option.
-	 * process.body.a           A tags and match a tags with #name to document anchors.
+	 * process.body.a           A tags and match a tags with #name to #anchors.
 	 *
 	 * @var array       Doctypes avaliable.
 	 */
@@ -124,19 +100,12 @@ class FabricationEngine extends \DOMDocument {
 	);
 
 	/**
-	 * Current selected doctype.
+	 * Current html object.
 	 * 
 	 * @var string
 	 */
-	public $doctype;
+	public $html;
 
-	/**
-	 * List of suggested doctypes.
-	 * 
-	 * @var array
-	 */
-	public $doctypes;
-	
 	/**
 	 * Control for automatic fixing of DOMDocument bugs before output.
 	 *
@@ -148,283 +117,10 @@ class FabricationEngine extends \DOMDocument {
 	public $head;
 	public $title = 'FABRIC';
 	public $body;
-	private $styles;
+	private $styles = array();
+	private $scripts = array();
 	private $metas;
-	private $scripts;
 	private $document;
-	private $specification = array(
-		/**
-		 * W3C HTML5 specification.
-		 * 
-		 * http://www.w3.org/TR/html5/
-		 *
-		 *  1 Introduction
-		 *  Common infrastructure
-		 */
-
-		'html.5' => array(
-			/**
-			 * 3.2.3 Global attributes
-			 * The following attributes are common to and may be specified on 
-			 * all HTML elements (even those not defined in this specification):
-			 *
-			 * _global_attributes.
-			 * accesskey, class, contenteditable, contextmenu, dir, draggable
-			 * dropzone, hidden, id, lang, spellcheck, style, tabindex, title
-			 */
-			//
-			// 4.1.1 The root element.
-			//
-			'html' => array('manifest'),
-			//
-			// 4.2.* Document metadata
-			// head, title, base, link, meta, style
-			// 
-			'head'	=> array(),
-			'title'	=> array(),
-			'base'	=> array('href', 'target'),
-			'link'	=> array('href', 'rel', 'media', 'hreflang', 'type', 'sizes'),
-			'meta'	=> array('name', 'http-equiv', 'content', 'charset'),
-			'style'	=> array('media', 'type', 'scoped', 'title'),
-			//
-			// 4.3.* Scripting.
-			// script, noscript
-			//  
-			'script'	=> array('src', 'async', 'defer', 'type', 'charset'),
-			'noscript'	=> array(),
-			//
-			// 4.4 Sections
-			// 4.4.* The body element.
-			// body, section, nav, article, aside, h1, h2, h3, h4, h5, h6,
-			// hgroup, header, footer, address
-			//
-			'body'		=> array('onafterprint', 'onbeforeprint', 'onbeforeunload', 'onblur', 'onerror', 'onfocus', 'onhashchange', 'onload', 'onmessage', 'onoffline', 'ononline', 'onpagehide', 'onpageshow', 'onpopstate', 'onredo', 'onresize', 'onscroll', 'onstorage', 'onundo', 'onunload'),
-			'section'	=> array(),
-			'nav'		=> array(),
-			'article'	=> array(),
-			'aside'		=> array(),
-			'h1'		=> array(),
-			'h2'		=> array(),
-			'h3'		=> array(),
-			'h4'		=> array(),
-			'h5'		=> array(),
-			'h6'		=> array(),
-			'hgroup'	=> array(),
-			'header'	=> array(),
-			'footer'	=> array(),
-			'address'	=> array(),
-			//
-			// 4.5.* Grouping content
-			// p, hr, pre, blockquote, ol, ul, li, dl, dt, dd
-			// figure, figcaption, div
-			// 
-			'p'				=> array(),
-			'hr'			=> array(),
-			'pre'			=> array(),
-			'blockquote'	=> array(),
-			'ol'			=> array(),
-			'ul'			=> array(),
-			'li'			=> array(),
-			'dl'			=> array(),
-			'dt'			=> array(),
-			'dd'			=> array(),
-			'figure'		=> array(),
-			'figcaption'	=> array(),
-			'div'			=> array(),
-			//
-			// 4.6.* Text-level semantics
-			// a, em, strong, small, s, cite, q, dfn, abbr, time, code, var
-			// samp, kbd, sub, sup, i, b, u, mark, ruby, rt, rp, bdi ,bdo
-			// span, br, wbr
-			//
-			'a'			=> array('href', 'target', 'rel', 'media', 'hreflang', 'type'),
-			'em'		=> array(),
-			'strong'	=> array(),
-			'small'		=> array(),
-			's'			=> array(),
-			'cite'		=> array(),
-			'q'			=> array('cite'),
-			'dfn'		=> array('title'),
-			'abbr'		=> array('title'),
-			'time'		=> array('datetime', 'pubdate'),
-			'code'		=> array(),
-			'var'		=> array(),
-			'samp'		=> array(),
-			'kbd'		=> array(),
-			'sub'		=> array(),
-			'sup'		=> array(),
-			'i'			=> array(),
-			'b'			=> array(),
-			'u'			=> array(),
-			'mark'		=> array(),
-			'ruby'		=> array(),
-			'rt'		=> array(),
-			'rp'		=> array(),
-			'bdi'		=> array('dir'),
-			'bdo'		=> array('dir'),
-			'span'		=> array(),
-			'br'		=> array(),
-			'wbr'		=> array(),
-			//
-			// 4.7 Edits
-			// ins, del
-			'ins' => array('cite', 'datetime'),
-			'del' => array('cite', 'datetime' ),
-			//
-			// 4.8.* Embedded content
-			// img, iframe, embed, object, param, video, audio, source, track
-			//
-			'img'		=> array('alt', 'src', 'usemap', 'ismap', 'width', 'height'),
-			'iframe'	=> array('src', 'srcdoc', 'name', 'sandbox', 'seamless', 'width', 'height'),
-			'embed'		=> array('src', 'type', 'width', 'height'),
-			'object'	=> array('data', 'type', 'name', 'usemap', 'form', 'width', 'height'),
-			'param'		=> array('name', 'value'),
-			'video'		=> array('src', 'poster', 'preload', 'autoplay', 'mediagroup', 'loop', 'muted', 'controls', 'width', 'height'),
-			'audio'		=> array('src', 'preload', 'autoplay', 'mediagroup', 'loop', 'muted', 'controls'),
-			'source'	=> array('src', 'type', 'media'),
-			'track'		=> array('kind', 'src', 'srclang', 'label', 'default'),
-			// 4.8.10 Media elements
-			// 4.8.11 The canvas element
-			// map, area
-			'canvas'	=> array('width', 'height'),
-			'map'		=> array('name'),
-			'area'		=> array('alt', 'coords', 'shape', 'href', 'target', 'rel', 'media', 'hreflang', 'type'),
-			//
-			// 4.9.* Tabular data
-			// table, caption, colgroup, col, tbody, thead, tfoot, tr, td, th
-			//  
-			'table'		=> array('border'),
-			'caption'	=> array(),
-			'colgroup'	=> array('span'),
-			'col'		=> array('span'),
-			'tbody'		=> array(),
-			'thead'		=> array(),
-			'tfoot'		=> array(),
-			'tr'		=> array(),
-			'td'		=> array('colspan', 'rowspan', 'headers'),
-			'th'		=> array('colspan', 'rowspan', 'headers', 'scope'),
-			//
-			// 4.10 Forms
-			//
-			// 4.10.3 The form element
-			//
-			// TODO
-			
-		),
-		'html.4.01.transitional' => array(
-			/**
-			 * http://www.w3.org/TR/html401/about.html
-			 * 
-			 * 1 About the HTML 4 Specification
-			 * 2 Introduction to HTML 4
-			 * 3 On SGML and HTML
-			 * 4 Conformance: requirements and recommendations
-			 * 5 HTML Document Representation
-			 * 6 Basic HTML data types
-			 */
-			
-			/**
-			 * http://www.w3.org/TR/html401/struct/global.html
-			 * 
-			 * 7 The global structure of an HTML document
-			 * 7.1 Introduction to the structure of an HTML document
-			 * 7.2 HTML version information
-			 * 7.3 The HTML element
-			 */
-			'html'		=> array('lang'),
-			 // 7.4 The document head
-			'head'		=> array('profile', 'lang'),
-			'title'		=> array('lang'),
-			'meta'		=> array('name', 'content', 'scheme', 'http-equiv', 'lang'),
-			// 7.5 The document body
-			'body'		=> array('id', 'class', 'lang', 'title', 'style', 'bgcolor', 'onload', 'onunload', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			// 7.5.4 Grouping elements: the DIV and SPAN elements
-			'div'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'span'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			// 7.5.5 Headings: The H1, H2, H3, H4, H5, H6 elements
-			'h1'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'h2'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'h3'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'h4'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'h5'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'h6'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			// 7.5.6 The ADDRESS element
-			'address'	=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),			
-			
-			/**
-			 * http://www.w3.org/TR/html401/struct/dirlang.html
-			 * 
-			 * 8 Language information and text direction
-			 */
-
-			/**
-			 * http://www.w3.org/TR/html401/struct/text.html
-			 * 
-			 * 9 Text
-			 * 9.2 Structured text
-			 * 9.2.1 Phrase elements: EM, STRONG, DFN, CODE, SAMP, KBD, VAR, CITE, ABBR, and ACRONYM
-			 */
-			'em'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'strong'	=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'dfn'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'code'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'samp'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'kbd'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'var'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'cite'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'abbr'		=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'acronym'	=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			// 9.2.2 Quotations: The BLOCKQUOTE and Q elements.
-			'blockquote'=> array( 'id', 'class', 'lang', 'title', 'style','onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'q'			=> array( 'id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			/**
-			 * 9.3 Lines and Paragraphs.
-			 */
-			'p'			=> array('id', 'class', 'lang', 'title', 'style', 'align', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			// 9.3.2 Controlling line breaks.
-			'br'		=> array('id', 'class', 'title', 'style', 'clear'),
-			// 9.3.3 Hyphenation
-			// 9.3.4 Preformatted text: The PRE element
-			'pre'		=> array('id', 'class', 'title', 'style', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			// 9.3.5 Visual rendering of paragraphs
-			/**
-			 * 9.4 Marking document changes: The INS and DEL elements
-			 */
-			'ins'		=> array('cite', 'datetime', 'id', 'class', 'title', 'style', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-			'del'		=> array('cite', 'datetime', 'id', 'class', 'title', 'style', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup'),
-				
-			// TODO
-			'form'		=> array(),
-			'base'		=> array(),
-			'script'	=> array(),
-			'noscript'	=> array(),
-
-
-			'ul'		=> array(),
-			'ol'		=> array(),
-			'dl'		=> array(),
-			'dt'		=> array(),
-			'dd'		=> array(),
-			'meta'		=> array('name', 'content', 'scheme', 'http-equiv'),
-			'table'		=> array(),
-			'caption'	=> array(),
-			'thead'		=> array(),
-			'tbody'		=> array(),
-			'tfoot'		=> array(),
-			'colgroup'	=> array(),
-			'col'		=> array(),
-			'tr'		=> array(),
-			'th'		=> array(),
-			'td'		=> array(),
-			'a'			=> array(),
-			'img'		=> array(),
-			'object'	=> array(),
-			'param'		=> array(),
-			'map'		=> array(),
-			// HTML 5 
-			'article'	=> array(),
-		)
-	);
 
 	/**
 	 * Main setup function for the Fabrication Engine.
@@ -435,14 +131,35 @@ class FabricationEngine extends \DOMDocument {
 
 		parent::__construct($version, $encoding);
 
-		$this->doctypes['html.5']					= '<!DOCTYPE HTML>'; // HTML5 Experimental.
-		$this->doctypes['html.4.01.strict']			= '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"' . "\n" . '   "http://www.w3.org/TR/html4/strict.dtd">';
-		$this->doctypes['html.4.01.transitional']	= '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"' . "\n" . '   "http://www.w3.org/TR/html4/loose.dtd">';
-		$this->doctypes['html.4.01.frameset']		= '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"' . "\n" . '   "http://www.w3.org/TR/html4/frameset.dtd">';
-		$this->doctypes['xhtml.1.0.strict']			= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"' . "\n" . '   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">';
-		$this->doctypes['xhtml.1.0.transitional']	= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"' . "\n" . '   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
-		$this->doctypes['xhtml.1.0.frameset']		= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"' . "\n" . '   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">';
+		//spl_autoload_register(array('\Fabrication\Library\FabricationEngine', 'autoloader'));
+		spl_autoload_register(array($this, 'autoloader'));
+
+		// default pattern html, this can be changed at runtime, xml, javascript ...
+		$this->pattern = $this->pattern('Html');
 	}
+
+
+	// TODO Experimental 
+	private function autoloader($class = NULL) {
+
+		// this array will be pulled from cache/autoload.fabric
+		$cache = array(
+			'Fabrication\Library\Pattern\Xml'			=> 'xml/xml.php',
+			'Fabrication\Library\Pattern\XmlTest'		=> 'xml/test.php',
+			'Fabrication\Library\Pattern\Html'			=> 'html/html.php',
+			'Fabrication\Library\Pattern\HtmlTable'		=> 'html/table.php',
+			'Fabrication\Library\Pattern\HtmlForm'		=> 'html/form.php',
+			'Fabrication\Library\Pattern\HtmlCanvas'	=> 'html/canvas.php'
+		);
+
+		if (isset($cache[$class])) {
+			include_once('pattern/' . $cache[$class]);
+
+			return true;
+		}
+		return false;
+	}
+
 
 	/**
 	 * Direct access to the Fabric of the engine.
@@ -482,24 +199,36 @@ class FabricationEngine extends \DOMDocument {
 	 */
 	public function getDoctype() {
 
-		return $this->doctypes[$this->getOption('doctype')];
+		return $this->pattern->doctypes[$this->getOption('doctype')];
+		//return $this->pattern->doctypes[$this->pattern->doctype];
 	}
 
-	public function getSpecification() {
 
-		return $this->specification[$this->getOption('doctype')];
+	// Experimental, signature will change!
+	public function getSpecification($element = '') {
+
+		if (isset($element) && $element !== '') {
+			$spec = $this->pattern->specification[$this->getOption('doctype')][$element];
+		}  else {
+			$spec = $this->pattern->specification[$this->getOption('doctype')];
+
+		}
+		//array_flip($spec);
+		//var_dump($spec);
+		return $spec;
 	}
+
 
 	/**
 	 * Register a prefix and uri to the xpath namespace.
 	 * 
 	 * @param type $prefix
-	 * @param type $namespaceURI 
+	 * @param type $uri
 	 */
-	public function registerNamespace($prefix, $namespaceURI) {
+	public function registerNamespace($prefix, $uri) {
 
 		$this->setUp();
-		$this->xpath->registerNamespace($prefix, $namespaceURI);
+		$this->xpath->registerNamespace($prefix, $uri);
 	}
 
 	/**
@@ -542,6 +271,7 @@ class FabricationEngine extends \DOMDocument {
 					// make error suppression optional.
 					if (@$this->loadHTML($data)) {
 						// success.
+						$this->pattern = $this->pattern('Html');
 					} else {
 						//print "[FAIL] problem loading html string.\n";
 						return false;
@@ -552,6 +282,7 @@ class FabricationEngine extends \DOMDocument {
 					// make error suppression optional.
 					if (@$this->loadHTMLFile($data)) {
 						// success.
+						//$this->pattern = $this->pattern('HtmlFile');
 					} else {
 						return false;
 					}
@@ -561,6 +292,7 @@ class FabricationEngine extends \DOMDocument {
 					// make error suppression optional.
 					if (@$this->loadXML($data)) {
 						// success.
+						$this->pattern = $this->pattern('Xml');
 					} else {
 						return false;
 					}
@@ -568,7 +300,7 @@ class FabricationEngine extends \DOMDocument {
 			}
 		}
 
-		// create a more flexable symbol loop, mapper.
+		// TODO extend symbol mapping loop.
 		foreach ($this->input as $key => $value) {
 
 			$id = substr($key, 0, 1);
@@ -594,6 +326,7 @@ class FabricationEngine extends \DOMDocument {
 	/**
 	 * Return the engine output html view.
 	 * 
+	 * @deprecated
 	 */
 	public function outputHTML() {
 
@@ -606,6 +339,7 @@ class FabricationEngine extends \DOMDocument {
 	/**
 	 * Return the engine output xml view.
 	 * 
+	 * @deprecated
 	 */
 	public function outputXML() {
 
@@ -641,13 +375,60 @@ class FabricationEngine extends \DOMDocument {
 	}
 
 	/**
+	 * Return the engine output html view.
+	 * 
+	 * styles
+	 * scripts 
+	 * 
+	 */
+	public function saveFabric($type = 'html') {
+
+		switch($type) {
+			case 'html':
+				$this->output['raw'] = parent::saveHTML();
+				break;
+
+			case 'xml':
+				$this->output['raw'] = parent::saveXML();
+				break;
+		}
+
+		// default output process.
+		$this->outputProcess();
+
+		// TODO style the output, bundle all the elements styles to fabric.css
+		$this->bundleElementStyles();
+
+		// TODO script the output, bundle all the elements scripts, to fabric.js
+		$this->bundleElementScripts();
+
+		return $this->getDoctype() . $this->output['raw'];
+	}
+
+	
+	public function bundleElementStyles() {
+		return;
+	}
+
+	public function bundleElementScripts() {
+		return;
+	}
+
+	/**
 	 * Time to sort out the plethora of DOMDocument bugs.
 	 * 
+	 * TODO Styles create compiled CSS file, insert into reference into the head.
+	 * TODO Script create compiled JS file, insert into the page footer.
+	 * TODO Both should be configurable using options.
 	 */
 	public function outputProcess() {
 
 		// remove doctype.
-		$this->output['raw'] = preg_replace('/^<!DOCTYPE[^>]+>/U', '', $this->output['raw']);
+		$this->output['raw'] = preg_replace(
+			'/^<!DOCTYPE[^>]+>/U', 
+			'', 
+			$this->output['raw']
+		);
 		
 		if ($this->outputProcess && $this->getOption('process')) {
 			
@@ -666,15 +447,33 @@ class FabricationEngine extends \DOMDocument {
 			 * <img />  <img src="" />  <img src="/image.png" />
 			 */
 			if ($this->getOption('process.body.image')) {
-				$this->output['raw'] = preg_replace('/<img(.*)>/sU', '<img\\1 />', $this->output['raw']);
+				$this->output['raw'] = preg_replace(
+					'/<img(.*)>/sU', 
+					'<img\\1 />', $this->output['raw']
+				);
 			}
 
 			if ($this->getOption('process.body.br')) {
-				$this->output['raw'] = preg_replace('/<br(.*)>/sU', '<br\\1 />', $this->output['raw']);
+				$this->output['raw'] = preg_replace(
+					'/<br(.*)>/sU', 
+					'<br\\1 />', 
+					$this->output['raw']
+				);
 			}
 
 			if ($this->getOption('process.body.hr')) {
-				$this->output['raw'] = preg_replace('/<hr(.*)>/sU', '<hr\\1 />', $this->output['raw']);
+				$this->output['raw'] = preg_replace(
+					'/<hr(.*)>/sU', 
+					'<hr\\1 />', 
+					$this->output['raw']
+				);
+			}
+
+			// TODO Styles add configurable reference into the header.
+			if ($this->getOption('process.style')) {
+			}
+			// TODO Scripts add configurable refernce into the footer.
+			if ($this->getOption('process.script')) {
 			}
 
 			// Trim whitespace need this to get exactly the wanted data back for test cases, mmm.
@@ -807,29 +606,87 @@ class FabricationEngine extends \DOMDocument {
 	 * @param type $children
 	 * @return type 
 	 */
-	public function create($name, $value='', $attributes=array(), $children=array()) {
+	public function create($name, $value = '', $attributes = array() , $children = array(), 
+		$styles = array(), $scripts = array()) {
 
-		$element = $this->createElement($name, $value);
+		try {
 
-		if (count($attributes) > 0) {
-			foreach ($attributes as $key => $value) {
-				$element->setAttribute($key, $value);
+			$element = $this->createElement($name, $value);
+
+			if (count($attributes) > 0) {
+				foreach ($attributes as $key => $value) {
+					$element->setAttribute($key, $value);
+				}
+			}		
+
+			if (count($children) > 0) {
+				foreach ($children as $child) {
+					$element->appendChild(
+						$this->create($child['name'],	
+							@$child['value'], 
+							@$child['attributes'], 
+							@$child['children']
+						)
+					);
+				}
 			}
-		}		
 
-		if (count($children) > 0) {
-			foreach ($children as $child) {
-				$element->appendChild(
-					$this->create($child['name'],	
-						@$child['value'], 
-						@$child['attributes'], 
-						@$child['children']
-					)
-				);
+			/**
+			 * Styles and Scripts.
+			 * When page is rendered the default behaviour is to load the CSS at
+			 * the top of the page and any javascript at the bottom of the page.
+			 * This behaviour should be configurable.
+			 * Styles and Scripts will be compiled into fabric.css, fabric.js 
+			 * on save. 
+			 *
+			 * Basic template concept.
+			 * <html>
+			 *   <head>
+			 *   <!-- content -->
+			 *   <link type="text/css" rel="stylesheet" href="fabric.css" media="all" />
+			 *   </head>
+			 *
+			 *   <body>
+			 *   <!-- content -->
+			 *   <script type="text/javascript" src="fabric.js"></script>
+			 *   </body>
+			 * </html>
+			 */
+			if (count($styles) > 0) {
+				foreach($styles as $style) {
+					$this->styles[] = $style;
+				}
 			}
+
+			if (count($scripts) > 0) {
+				foreach($scripts as $script) {
+					$this->scripts[] = $script;
+				}
+			}
+
+			return $element;
+
+		} catch(\Exception $e) {
+			die('Exception: ' . $e->getMessage());
 		}
+	}
 
-		return $element;
+	// TODO
+	public function getStyles() {
+
+		return $this->styles;
+	}
+
+	// TODO
+	public function getScripts() {
+
+		return $this->scripts;
+	}
+
+	// TODO 
+	public function checkElementAttribute($nodeName, $attribute) {
+
+		$specification = $this->engine->getSpecification();
 	}
 
 	/**
@@ -873,104 +730,115 @@ class FabricationEngine extends \DOMDocument {
 		}
 	}
 
+
+	/**
+	 * Pattern method for 
+	 * 
+	 * @param  string	$name	Object name to instantiate.
+	 * @return object			Product object.
+	 */ 
+	public function pattern($name = 'Html') {
+
+		// create the object name with the namespace.
+		$objectName = 'Fabrication\Library\Pattern\\' . $name;
+
+		$product = new $objectName($this);
+		// product map data.
+
+		return $product;
+	}
+
+
 	/**
 	 * Document specification pattern.
 	 * 
-	 * Three element required to build the basic html structure.
-	 * 
-	 * 1) /html
-	 * 2) /html/head
-	 * 3) /html/body
 	 * 
 	 */
-	public function specification($specification = array()) {
+	public function specification($pattern = array(), $contract = 'html',  
+		$elements = array('head', 'body')
+		) {
 
-		$sections = array('head', 'body');
+		// create the root specification element.
+		$assent = $this->createElement($contract, '');
 
-		foreach ($sections as $section) {
-			if (!array_key_exists($section, $specification)) {
-				die('Missing key section ' . $section);
+		// create the root layout sections.
+		$sections = array();
+		foreach ($elements as $element) {
+
+			// ensure each section
+			if (!array_key_exists($element, $pattern)) {
+				die('Specification pattern is missing a key section ' . $element);
+			}
+
+			$sections[$element] = $this->createElement($element, '');
+		}
+
+		// create the elements in the pattern.
+		foreach ($pattern as $key => $container) {
+
+			if (isset($sections[$key]) ) {
+
+				foreach ($container as $name => $value) {
+
+					$this->createElementRecursion($sections[$key], $name, $value);
+				}
 			}
 		}
 
-		// doctype handled by the engine using option methods.
-		$document = $this->createElement('html', '');
-		$head = $this->createElement('head', '');
-		$body = $this->createElement('body', '');
-
-		foreach ($specification as $key => $container) {
-
-			switch ($key) {
-
-				case 'doctype':
-					break;
-
-				case 'html':
-					break;
-
-				case 'head':
-					foreach ($container as $name => $value) {
-						$this->createElementRecursion($head, $name, $value);
-					}
-					break;
-
-				case 'body':
-					foreach ($container as $name => $value) {
-						$this->createElementRecursion($body, $name, $value);
-					}
-					break;
-			}
+		// append all the sections to the root product.
+		foreach (array_keys($sections) as $section) {
+			$assent->appendChild($sections[$section]);
 		}
 
-		$document->appendChild($head);
-		$document->appendChild($body);
+		// append the product to the engine.
+		$this->appendChild($assent);
 
-		// TODO Fabrication Development (IDE)
-		// $this->createFabricationIDE(); 
-
-		$this->appendChild($document);
-
+		// current context.
 		return $this;
 	}
+
 
 	/**
 	 * Template method allows for an element and its children to be used as the 
 	 * pattern for an array dataset, the default map for the element children 
 	 * atrribute is 'id'
 	 *
-	 * @param DOMElement	$element
-	 * @param array			$dataset
-	 * @param string		$map
+	 * @param mixed			$pattern	String or DOMElement
+	 * @param array			$dataset	Dataset to template.
+	 * @param string		$map		Identifier.
 	 * @return DOMElement
 	 */
-	public function template($element, $dataset = array(), $map = 'id') {
+	public function template($pattern, $dataset = array(), $map = 'id') {
 
 		//$this->outputProcess = false;
 		
 		if (sizeof($dataset) == 0) { return false; }
 
-		if (is_string($element)) {
+		if (is_string($pattern)) {
 			
 			$engine = new FabricationEngine();
-			$engine->loadXML($element);
+			$engine->loadXML($pattern);
 			
 			//$template = $engine->query('/*')->item(0);
 			//$template = $engine->query('//*')->item(0);
 			$template = $engine->getDiv()->item(0);
 			
 			if (!$template instanceof \DOMElement) {
-				throw new \Exception('Template element\'s first child should be an instance of the DOMElement.');
+				throw new \Exception(
+					'First div item should be an instance of the DOMElement.'
+				);
 			}
 		}
-		
-		if ($element instanceof \DOMElement) {
-			$template = $element;
+
+		if ($pattern instanceof \DOMElement) {
+			$template = $pattern;
 		}
-		
+
 		// create an empty container, from the template node details.
 		$container = $this->create($template->nodeName, $template->nodeValue);
-		
+
 		foreach ($dataset as $key => $row) {
+
 			// process the template child nodes.
 			foreach ($template->childNodes as $child) {
 
@@ -981,22 +849,22 @@ class FabricationEngine extends \DOMDocument {
 
 				if (is_object($child->attributes->getNamedItem($map))) {
 
-					$mappedAttributeName  = $child->attributes->getNamedItem($map)->nodeName;
-					$mappedAttributeValue = $child->attributes->getNamedItem($map)->nodeValue;
-					
+					$mappedName  = $child->attributes->getNamedItem($map)->nodeName;
+					$mappedValue = $child->attributes->getNamedItem($map)->nodeValue;
+
 					$nodeAttributes = array();
 					foreach($child->attributes as $attribute) {
 						$nodeAttributes[$attribute->nodeName] = $attribute->nodeValue;
 					}
-					
-					if (in_array($mappedAttributeValue, array_keys($row))) {
-						
+
+					if (in_array($mappedValue, array_keys($row))) {
+
 						// create the mapped node attribute with updated numeric key.
-						$nodeAttributes[$mappedAttributeName] = $mappedAttributeValue.'_'.($key + 1);
+						$nodeAttributes[$mappedName] = $mappedValue.'_'.($key + 1);
 						
 						// fabricate the new child nodes.
 						$node = $this->create($child->nodeName,
-							$row[$mappedAttributeValue], $nodeAttributes
+							$row[$mappedValue], $nodeAttributes
 						);
 						
 						$container->appendChild($node);
@@ -1033,6 +901,7 @@ class FabricationEngine extends \DOMDocument {
 				$template->appendChild($node);
 			}
 
+			// string buffer.
 			if ($trim) {
 				$buffer = trim($template->saveHTML());
 			} else {
@@ -1041,8 +910,8 @@ class FabricationEngine extends \DOMDocument {
 			
 		} else {
 
-			if ($trim) {
-				
+			// string buffer
+			if ($trim) {	
 				$buffer = trim($this->saveHTML());
 			} else {
 				$buffer = $this->saveHTML();
@@ -1050,7 +919,6 @@ class FabricationEngine extends \DOMDocument {
 		}
 
 		if ($return) {
-			
 			return $buffer;
 		}
 
@@ -1111,28 +979,183 @@ class FabricationEngine extends \DOMDocument {
 	 * generic language reserved variables.
 	 *
 	 */
-	public function output($key, $query='', $options=array(), $output='') {
+	public function output($key = '', $query='', $options=array(), $output='') {
 
-		if ($key == '' || array_key_exists($key, $this->input)) {
+		//if ($key == '' || array_key_exists($key, $this->input)) {
 
-			// ensure key based retrievals are returned first/fast if empty query.
-			if (empty($query)) {
-				return $this->input[$key];
+		// ensure key based retrievals are returned first/fast if empty query.
+		if (empty($query)) {
+			return $this->input[$key];
+		}
+
+		// setup standard options.
+		if (empty($options)) {
+			$options = array(
+				'return' => true,
+				'tags' => true,
+				'echo' => false, // TODO echo of each variable, objects __toString.
+			);
+		}
+
+		// Experimental
+		$output = $this->templateTextElement($key, $query, $options);
+		//file_put_contents('/tmp/fabrication.out', $output);
+
+		if (array_key_exists('return', $options)) {
+			if ($options['return']) {
+				return $output;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Magic method for handling specification and helper based method these 
+	 * each method has a configuration array for the helper xpath query. 
+	 * 
+	 * @param type $method
+	 * @param type $args
+	 * @return type 
+	 */
+	public function __call($method, $args) {
+
+		//print "Method:$method \n" . var_export($args); die;
+
+		$helpers = array(
+			'gethtml'					=> array('path' => '/html'),
+			'getheadings'				=> array('path' => '//h1|//h2|//h3|//h4|//h5|//h6'),
+			'getlinkwithimage'			=> array('path' => '//a//img'),
+			'getlinkrelalternatehref'	=> array('path' => '//link[@rel="alternate"]/@href'),
+			
+			// div helper group.
+			'getdivswith'				=> array('path' => '//div[@$element]'), // TESTING
+			'getdivswithid'				=> array('path' => '//div[@id]'),
+			'getdivswithclass'			=> array('path' => '//div[@class]'),
+			'getdivswithstyle'			=> array('path' => '//div[@class]'),
+			
+			// image helper group.
+			'getimagewithalttag'		=> array('path' => '//img[@alt]'),
+			'getimagewithoutalttag'		=> array('path' => '//img[not(@alt)]'),
+			
+			// TESTING preg replace
+			//'getdivswith'		=> array('pattern'=>'^(\w+)', 'replacement'=>'//div[@($1)]'),
+			//'getallwith'		=> array('pattern'=>'^(\w+)', 'replacement'=>'//*[@($1)]'),
+			//'getallwith'		=> array('pattern'=>'^(\w+)', 'replacement'=>'//*[@id="($1)"]'),
+		);
+
+		// process arguments.
+		$arg_string = '';
+		$arg_container = array();
+		if (count($args) > 0) {
+			
+			// check the args and collect info for xpath conversion.
+			foreach ($args as $key => $arg) {
+
+				switch (true) {
+
+					case is_string($arg):
+						if (preg_match('/^([a-zA-Z]{1})/U', $arg, $matches)) {
+							$arg_container[] = $arg;
+						} else {
+							$arg_string.=$arg;
+						}
+						break;
+
+					case is_array($arg):
+						// TODO
+						break;
+				}
+			}
+		}
+
+		//
+		// Change specification depending on doctype.
+		//
+
+		// GETTERS
+		if (preg_match('/^get(.*)/U', $method, $matches)) {
+
+			$method = strtolower($method);
+
+			$find = preg_replace('/^get/U', '', $method);
+
+			// return the 
+			$doctype = $this->pattern->specification[$this->getOption('doctype')];
+			if (array_key_exists($find, $doctype)) {
+				$path = '//' . $find . $arg_string;
+				return $this->query($path);
 			}
 
-			// setup standard options.
-			if (empty($options)) {
-				$options = array(
-					'return' => true,
-					'tags' => true,
-					'echo' => false, // TODO echo of each variable, objects __toString.
-				);
-			}
+			// getter helpers.
+			$find = $method;
+			if (array_key_exists($find, $helpers)) {
 
-			$query_parts = explode('.', $query);
-			$language = $query_parts[0];
-			$template = $query_parts[1];
-			$result = '';
+				if (array_key_exists('path', $helpers[$find])) {
+					$path = $helpers[$find]['path'] . $arg_string;
+				} else {
+					$path = $find . $arg_string;
+				}
+				return $this->query($path);
+			} else {
+
+				die("\n[FAIL] __call Unknown method: $method Find:$find\n");
+				return false;
+			}
+		}
+
+		// SETTERS
+		if (preg_match('/^set(.*)/U', $method, $matches)) {
+			
+			var_dump("Method: $method");
+			var_dump("ARGS: ".var_export($args,true));
+			
+			die("__CALL TESTING\n");
+		}
+	}
+
+	// TODO convert and element into html.
+	public function innerHTML(DOMElement $element) {	
+		//
+	}
+	
+	// Setters eventually put in __call
+	/**
+	 * 
+	 * 
+	 */
+	public function setElementById($id, $value) {
+
+		return $this->query("//*[@id='$id']")->item(0)->nodeValue = "$value";
+	}
+
+	/**
+	 * Setter for changing a element  
+	 * 
+	 */
+	public function setElementBy($element, $value, $nodeValue) {
+
+		//$this->dump($this->query("//*[@$element='$value']"));
+		return $this->query("//*[@$element='$value']")->item(0)->nodeValue = $nodeValue;
+	}
+
+	/**
+	 * Setter for changing HTML element.
+	 * 
+	 */
+	public function setHtml($q, $value) {
+
+		$this->getHtml($q)->item(0)->nodeValue = "$value";
+		return $this->getHtml($q)->item(0);
+	}
+
+	// TESTING
+	public function templateTextElement($key, $query, $options) {
+
+			$query_parts = (array)  explode('.', $query);
+			$language    = (string) isset($query_parts[0]) ? $query_parts[0] : '';
+			$template    = (string) isset($query_parts[1]) ? $query_parts[1] : '';
+			$result      = (string) '';
 
 			switch ($language) {
 				case 'php':
@@ -1144,23 +1167,25 @@ class FabricationEngine extends \DOMDocument {
 					 * 
 					 */
 					switch ($template) {
-						case 'template':
+
+						case 'array':
+							// construction.
+							$result.='$data=array(' . "\n";
 							foreach ($this->input as $k => $v) {
 								if ($key !== '' && $key !== $k) {
 									continue;
 								}
-								$result.=$v . ";\n";
+								$result.="'$k'=>" . var_export($v, true) . ",\n";
 							}
-							break;
-						case 'object':
-							$result = '$data=new stdClass;' . "\n";
-							foreach ($this->input as $k => $v) {
-								if ($key !== '' && $key !== $k) {
-									continue;
+							$result.=");\n";
+							// echo, implementation.
+							if (array_key_exists('echo', $options) && array_key_exists('class', $options)) {
+								if ($options['echo'] === true) {
+									$result.='echo $data' . $class . ';';
 								}
-								$result.='$data->'.$k."="."'".$v."';\n";
 							}
 							break;
+
 						case 'class':
 							// construction.
 							if (array_key_exists('class', $options)) {
@@ -1209,48 +1234,42 @@ class FabricationEngine extends \DOMDocument {
 									}
 									$result.="}\n";
 								}
-							}
-//                            // assignment.
-//                            if (array_key_exists('class', $options)) {
-//                                if  ($options['class']) {
-//                                    $class=$options['class'];
-//                                    foreach($this->input as $k => $v) {
-//                                        if ($key !== '' && $key !== $k) { continue; }
-//                                        $result.='$object'.$class."->".$k."=".var_export($v,true).";\n";
-//                                    }
-//                                }
-//                            } else {                                
-//                                foreach($this->input as $k => $v) {
-//                                    if ($key !== '' && $k !== $k) { continue; }
-//                                    $result.='$data->'.$k.'='.var_export($v,true).";\n";
-//                                }
-//                            }
-//                            // echo, implementation.
-//                            if (array_key_exists('echo', $options) && array_key_exists('class', $options)) { 
-//                                if ($options['echo'] === true) {
-//                                    $class=$options['class'];
-//                                    $result.='echo $object'.$class.';';
-//                                }
-//                            }
-							break;
-						case 'array':
-							// construction.
-							$result.='$data=array(' . "\n";
-							foreach ($this->input as $k => $v) {
-								if ($key !== '' && $key !== $k) {
-									continue;
+							} else {
+								$result = '$data=new stdClass;' . "\n";
+								foreach ($this->input as $k => $v) {
+									if ($key !== '' && $key !== $k) {
+										continue;
+									}
+									$result.='$data->'.$k."="."'".$v."';\n";
 								}
-								$result.="'$k'=>" . var_export($v, true) . ",\n";
+
 							}
-							$result.=");\n";
-							// echo, implementation.
-							if (array_key_exists('echo', $options) && array_key_exists('class', $options)) {
-								if ($options['echo'] === true) {
-									$result.='echo $data' . $class . ';';
-								}
-							}
+		//                            // assignment.
+		//                            if (array_key_exists('class', $options)) {
+		//                                if  ($options['class']) {
+		//                                    $class=$options['class'];
+		//                                    foreach($this->input as $k => $v) {
+		//                                        if ($key !== '' && $key !== $k) { continue; }
+		//                                        $result.='$object'.$class."->".$k."=".var_export($v,true).";\n";
+		//                                    }
+		//                                }
+		//                            } else {                                
+		//                                foreach($this->input as $k => $v) {
+		//                                    if ($key !== '' && $k !== $k) { continue; }
+		//                                    $result.='$data->'.$k.'='.var_export($v,true).";\n";
+		//                                }
+		//                            }
+		//                            // echo, implementation.
+		//                            if (array_key_exists('echo', $options) && array_key_exists('class', $options)) { 
+		//                                if ($options['echo'] === true) {
+		//                                    $class=$options['class'];
+		//                                    $result.='echo $object'.$class.';';
+		//                                }
+		//                            }
 							break;
-						case 'string':
+
+						default:
+
 							// construction.
 							foreach ($this->input as $k => $v) {
 								if ($key !== '' && $key !== $k) {
@@ -1270,7 +1289,8 @@ class FabricationEngine extends \DOMDocument {
 								}
 							}
 							break;
-					}
+					} // if 
+
 					// option :: language tags.
 					if (array_key_exists('tags', $options)) {
 						if ($options['tags'] === true) {
@@ -1358,155 +1378,9 @@ class FabricationEngine extends \DOMDocument {
 					// PYTHON
 					break;
 			}
-		}
 
-		//file_put_contents('/tmp/fabrication.out', $output);
+		return $output;
 
-		if (array_key_exists('return', $options)) {
-			if ($options['return']) {
-				return $output;
-			}
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Magic method for handling specification and helper based method these 
-	 * each method has a configuration array for the helper xpath query. 
-	 * 
-	 * @param type $method
-	 * @param type $args
-	 * @return type 
-	 */
-	public function __call($method, $args) {
-
-		//print "Method:$method \n" . var_export($args); die;
-
-		$helpers = array(
-			'gethtml'					=> array('path' => '/html'),
-			'getheadings'				=> array('path' => '//h1|//h2|//h3|//h4|//h5|//h6'),
-			'getlinkwithimage'			=> array('path' => '//a//img'),
-			'getlinkrelalternatehref'	=> array('path' => '//link[@rel="alternate"]/@href'),
-			
-			// div helper group.
-			'getdivswith'				=> array('path' => '//div[@$element]'), // TESTING
-			'getdivswithid'				=> array('path' => '//div[@id]'),
-			'getdivswithclass'			=> array('path' => '//div[@class]'),
-			'getdivswithstyle'			=> array('path' => '//div[@class]'),
-			
-			// image helper group.
-			'getimagewithalttag'		=> array('path' => '//img[@alt]'),
-			'getimagewithoutalttag'		=> array('path' => '//img[not(@alt)]'),
-			
-			// TESTING preg replace
-			//'getdivswith'		=> array('pattern'=>'^(\w+)', 'replacement'=>'//div[@($1)]'),
-			//'getallwith'		=> array('pattern'=>'^(\w+)', 'replacement'=>'//*[@($1)]'),
-			//'getallwith'		=> array('pattern'=>'^(\w+)', 'replacement'=>'//*[@id="($1)"]'),
-		);
-
-
-
-		$arg_string = '';
-		$arg_container = array();
-		if (count($args) > 0) {
-			
-			// check the args and collect info for xpath conversion.
-			foreach ($args as $key => $arg) {
-				
-				switch (true) {
-				
-					case is_string($arg):
-						if (preg_match('/^([a-zA-Z]{1})/U', $arg, $matches)) {
-							$arg_container[] = $arg;
-						} else {
-							$arg_string.=$arg;
-						}
-						break;
-						
-					case is_array($arg):
-						break;
-				}
-			}
-		}
-
-		//
-		// Change specification depending on doctype.
-		//
-
-		// GETTERS
-		if (preg_match('/^get(.*)/U', $method, $matches)) {
-
-			$method = strtolower($method);
-
-			$find = preg_replace('/^get/U', '', $method);
-
-			if (array_key_exists($find, $this->specification[$this->getOption('doctype')])) {
-				$path = '//' . $find . $arg_string;
-				return $this->query($path);
-			}
-
-			// getter helpers.
-			$find = $method;
-			if (array_key_exists($find, $helpers)) {
-
-				if (array_key_exists('path', $helpers[$find])) {
-					$path = $helpers[$find]['path'] . $arg_string;
-				} else {
-					$path = $find . $arg_string;
-				}
-				return $this->query($path);
-			} else {
-
-				die("\n[FAIL] __call Unknown method: $method Find:$find\n");
-				return false;
-			}
-		}
-
-		// SETTERS
-		if (preg_match('/^set(.*)/U', $method, $matches)) {
-			
-			var_dump("Method: $method");
-			var_dump("ARGS: ".var_export($args,true));
-			
-			die("__CALL TESTING\n");
-		}
-	}
-
-	// TODO convert and element into html.
-	public function innerHTML(DOMElement $element) {	
-		//
-	}
-	
-	// Setters eventually put in __call
-	/**
-	 * 
-	 * 
-	 */
-	public function setElementById($id, $value) {
-
-		return $this->query("//*[@id='$id']")->item(0)->nodeValue = "$value";
-	}
-
-	/**
-	 * Setter for changing a element  
-	 * 
-	 */
-	public function setElementBy($element, $value, $nodeValue) {
-
-		//$this->dump($this->query("//*[@$element='$value']"));
-
-		return $this->query("//*[@$element='$value']")->item(0)->nodeValue = "$nodeValue";
-	}
-
-	/**
-	 * Setter for changing HTML element.
-	 * 
-	 */
-	public function setHtml($q, $value) {
-
-		$this->getHtml($q)->item(0)->nodeValue = "$value";
-		return $this->getHtml($q)->item(0);
 	}
 
 }
