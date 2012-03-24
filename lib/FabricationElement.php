@@ -1,6 +1,12 @@
 <?php
 
-// Base engine element to extend from used in the specification.
+/**
+ * Base engine element to extend from used in the specification.
+ * This element will become a dynamic element for displaying specification
+ * elements that can be generalized the rest will have specific pattern
+ * implementations, like html.table, html.form.
+ * 
+ */
 class FabricationElement {
 
 	private $engine;

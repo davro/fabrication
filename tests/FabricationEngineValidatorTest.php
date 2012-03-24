@@ -3,11 +3,9 @@ namespace Fabrication\Tests;
 
 use Fabrication\Library\Fabrication;
 use Fabrication\Library\FabricationEngine;
-use Fabrication\Library\FabricationMessage;
 
 require_once(dirname(dirname(__FILE__)).'/lib/Fabrication.php');
 //require_once(dirname(dirname(__FILE__)).'/lib/FabricationEngine.php');
-//require_once(dirname(dirname(__FILE__)).'/lib/FabricationMessage.php');
 
 /**
  * Testing W3C
@@ -23,7 +21,7 @@ class FabricationEngineValidatorTest extends \PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf('Fabrication\Library\FabricationEngine', $this->engine);
 	}
 
-	public function XtestW3CValidatorLocalhost() {
+	public function testW3CValidatorLocalhost() {
 
 		// local fixture code change needed.
 		//$path = dirname(dirname(__FILE__)).'/tests/fixture/design.html';
@@ -31,7 +29,7 @@ class FabricationEngineValidatorTest extends \PHPUnit_Framework_TestCase {
 		$message = Fabrication::W3C('http://localhost/', 'xhtml');
 
 		$this->assertInternalType('object', $message);
-		$this->assertEquals('Fabrication\Library\FabricationMessage', get_class($message));
+		$this->assertEquals('Fabrication\Library\FabricationEngine', get_class($message));
 
 		// test localhost check for local w3c validator.
 	}
@@ -44,7 +42,7 @@ class FabricationEngineValidatorTest extends \PHPUnit_Framework_TestCase {
 		$message = Fabrication::W3C('http://bing.com/', 'xhtml');
 
 		$this->assertInternalType('object', $message);
-		$this->assertEquals('Fabrication\Library\FabricationMessage', get_class($message));
+		$this->assertEquals('Fabrication\Library\FabricationEngine', get_class($message));
 
 		$this->assertEquals('env:Envelope', $message->getEngine()->getElementsByTagName('Envelope')->item(0)->nodeName);
 		$this->assertEquals('env:Body', $message->getEngine()->getElementsByTagName('Body')->item(0)->nodeName);

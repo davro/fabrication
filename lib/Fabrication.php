@@ -2,18 +2,23 @@
 namespace Fabrication\Library;
 
 use Fabrication\Library\FabricationEngine;
-use Fabrication\Library\FabricationMessage;
 
 require_once(dirname(dirname(__FILE__)).'/lib/FabricationEngine.php');
-require_once(dirname(dirname(__FILE__)).'/lib/FabricationMessage.php');
 
+/**
+ * Base fabrication class. 
+ *
+ *
+ * NOTE this class is experimental the signature may change.
+ * 
+ */
 class Fabrication {
 
     /**
      * Super global arrays.
      * 
      * @param type $data
-     * @return FabricationMessage 
+     * @return FabricationEngine 
      */
     public static function super($data='GET') {
 	
@@ -36,7 +41,7 @@ class Fabrication {
             break;
         }
         
-        return new FabricationMessage($engine);
+        return $engine;
     }
     
     
@@ -64,7 +69,7 @@ class Fabrication {
             $engine->loadXML(self::fetch(sprintf($W3CCSS, $uri)));
             break;
         }
-        return new FabricationMessage($engine);
+		return $engine;
     }
 
     
