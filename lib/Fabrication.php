@@ -56,24 +56,23 @@ class Fabrication {
         }
         
         $engine = new FabricationEngine();
-        $engine->setUp();
         $engine->registerNamespace('m', 'http://www.w3.org/2005/10/markup-validator');
 
         switch ($service) {
             case 'html':
             case 'xhtml':
-            $engine->loadXML(self::fetch(sprintf($W3CHTML, $uri)));
+            $engine->loadXML(self::request(sprintf($W3CHTML, $uri)));
             break;
 
             case 'css':
-            $engine->loadXML(self::fetch(sprintf($W3CCSS, $uri)));
+            $engine->loadXML(self::request(sprintf($W3CCSS, $uri)));
             break;
         }
 		return $engine;
     }
 
     
-    private function fetch($uri, $options=array()) {
+    private function request($uri, $options=array()) {
 
         $options[CURLOPT_URL] = $uri;
         $options[CURLOPT_RETURNTRANSFER] = 1;
@@ -81,12 +80,8 @@ class Fabrication {
         $options[CURLOPT_FOLLOWLOCATION] = true;
         $options[CURLOPT_MAXREDIRS] = 5;
 
-        return self::execute($options);
-    }
+        //return self::execute($options);
 
-    
-    private function execute($options) {
-        
         $resource = curl_init();
         curl_setopt_array($resource, $options);
         
@@ -96,5 +91,7 @@ class Fabrication {
         curl_close($resource);
         
         return $response;
+
     }
+
 }
