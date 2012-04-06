@@ -4,17 +4,10 @@
 
 Next generation template engine based on the Document Object Model
 
-The Fabrication engine or "Fabic" for short.
-
-The Fabrication Engine represents and interacts with objects in HTML, XHTML and 
-XML documents using DOM and XPath its "Elements" are addressed and manipulated 
-within the syntax of public interface, direct XPath queries can be executed on 
-the Document Object Model or simply use one of the many built in query methods.
-
-The FabricationEngine is not like most of the other templating engine's on the 
-market, maily because the engine has no concept of place holders, it is only 
-concerned with elements and attributes, structures, expressions and instructions 
-for content that requires processing.
+The FabricationEngine engine is not like most of the other templating engine's 
+on the market, mainly because the engine has no concept of place holders, it is 
+only concerned with elements and attributes, structures, expressions and 
+instructions for content that requires processing.
 
 Structures are the templates and expressions are paths to the elements contained
 within the Document Object Model. The FabricationEngine extends the PHP builtin 
@@ -143,18 +136,6 @@ into known patterns on the fly cool huh!
     # ?>
     #
 
-    ?>
-```
-
-Output method using a standard php array.
-
-```php
-    <?php
-    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
-
-    $engine = new Fabrication\Library\FabricationEngine();
-    $engine->input('hello', 'world');
-
     echo $engine->output('hello', 'php.array');
     #
     # <?php
@@ -164,18 +145,6 @@ Output method using a standard php array.
     # ?>
     #
 
-    ?>
-```
-
-Output method using standard php class.
-
-```php
-    <?php
-    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
-
-    $engine = new Fabrication\Library\FabricationEngine();
-    $engine->input('hello', 'world');
-
     echo $engine->output('hello', 'php.class');
     #
     # <?php
@@ -184,16 +153,6 @@ Output method using standard php class.
     # ?>
     #
 
-    ?>
-```
-
-Output method using css template.
-
-```php
-    <?php
-    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
-
-    $engine = new Fabrication\Library\FabricationEngine();
     $engine->input('body', array('bgcolor'=>'#999999'));
 
     echo $engine->output('body', 'css');
@@ -309,8 +268,6 @@ bump an integer value for display auto incrementing dataset.
 Create method extends the builtin method createElement adding attribute 
 functionality and the ability to recursively add children to the element 
 style and script elements.
-
-NOTE: this method is experimental.
 
 ```php
     <?php
