@@ -5,8 +5,8 @@ namespace Fabrication\Tests;
 use Fabrication\Library\Fabrication;
 use Fabrication\Library\FabricationEngine;
 
-require_once(dirname(dirname(__FILE__)).'/lib/Fabrication.php');
-require_once(dirname(dirname(__FILE__)).'/lib/FabricationEngine.php');
+require_once(dirname(dirname(__FILE__)).'/library/Fabrication.php');
+require_once(dirname(dirname(__FILE__)).'/library/FabricationEngine.php');
 
 /**
  * Testing W3C

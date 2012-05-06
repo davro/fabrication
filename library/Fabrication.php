@@ -3,7 +3,7 @@ namespace Fabrication\Library;
 
 use Fabrication\Library\FabricationEngine;
 
-require_once(dirname(dirname(__FILE__)).'/lib/FabricationEngine.php');
+require_once(dirname(dirname(__FILE__)).'/library/FabricationEngine.php');
 
 /**
  * Base fabrication class. 

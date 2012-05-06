@@ -34,7 +34,7 @@ Simple example of Input/Output.
 
 ```php
     <?php
-    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
+    require_once(dirname(__FILE__) . '/library/FabricationEngine.php');
       
     $engine = new Fabrication\Library\FabricationEngine();
     $engine->input('hello', 'world');
@@ -52,7 +52,7 @@ ID keys are automatically mapped to elements with matching id identifiers.
 
 ```php
     <?php
-    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
+    require_once(dirname(__FILE__) . '/library/FabricationEngine.php');
       
     $template = '<html><head></head><body><div id="hello"></div></body></html>';
 
@@ -86,7 +86,7 @@ Class keys are automatically mapped to elements with matching class identifiers.
 
 ```php
     <?php
-    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
+    require_once(dirname(__FILE__) . '/library/FabricationEngine.php');
       
     $template = '<html><head></head><body><div class="hello"></div></body></html>';
 
@@ -124,7 +124,7 @@ into known patterns on the fly cool huh!
 
 ```php
     <?php
-    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
+    require_once(dirname(__FILE__) . '/library/FabricationEngine.php');
 
     $engine = new Fabrication\Library\FabricationEngine();
     $engine->input('hello', 'world');
@@ -170,7 +170,7 @@ Doctypes are selected from the current supported list.
 
 ```php
     <?php
-    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
+    require_once(dirname(__FILE__) . '/library/FabricationEngine.php');
       
     $template = '<html><head></head><body></body></html>';
 
@@ -195,7 +195,7 @@ bump an integer value for display auto incrementing dataset.
 
 ```php
     <?php
-    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
+    require_once(dirname(__FILE__) . '/library/FabricationEngine.php');
       
     $engine = new Fabrication\Library\FabricationEngine();
 
@@ -271,7 +271,7 @@ style and script elements.
 
 ```php
     <?php
-    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
+    require_once(dirname(__FILE__) . '/library/FabricationEngine.php');
       
     $engine = new Fabrication\Library\FabricationEngine();
 
@@ -313,7 +313,7 @@ NOTE: this method is experimental.
 
 ```php
     <?php
-    require_once(dirname(__FILE__) . '/lib/FabricationEngine.php');
+    require_once(dirname(__FILE__) . '/library/FabricationEngine.php');
       
     $engine = new Fabrication\Library\FabricationEngine();
 
