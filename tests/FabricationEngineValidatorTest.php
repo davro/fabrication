@@ -1,11 +1,12 @@
 <?php
 namespace Fabrication\Tests;
 
+
 use Fabrication\Library\Fabrication;
 use Fabrication\Library\FabricationEngine;
 
 require_once(dirname(dirname(__FILE__)).'/lib/Fabrication.php');
-//require_once(dirname(dirname(__FILE__)).'/lib/FabricationEngine.php');
+require_once(dirname(dirname(__FILE__)).'/lib/FabricationEngine.php');
 
 /**
  * Testing W3C
@@ -21,10 +22,7 @@ class FabricationEngineValidatorTest extends \PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf('Fabrication\Library\FabricationEngine', $this->engine);
 	}
 
-	public function testW3CValidatorLocalhost() {
-
-		// local fixture code change needed.
-		//$path = dirname(dirname(__FILE__)).'/tests/fixture/design.html';
+	public function XtestW3CValidatorLocalhost() {
 
 		$message = Fabrication::W3C('http://localhost/', 'xhtml');
 
@@ -36,21 +34,17 @@ class FabricationEngineValidatorTest extends \PHPUnit_Framework_TestCase {
 
 	public function XtestW3CValidatorBing() {
 
-		// local fixture code change needed.
-		//$path = dirname(dirname(__FILE__)).'/tests/fixture/design.html';
-
 		$message = Fabrication::W3C('http://bing.com/', 'xhtml');
 
 		$this->assertInternalType('object', $message);
 		$this->assertEquals('Fabrication\Library\FabricationEngine', get_class($message));
-
 		$this->assertEquals('env:Envelope', $message->getEngine()->getElementsByTagName('Envelope')->item(0)->nodeName);
 		$this->assertEquals('env:Body', $message->getEngine()->getElementsByTagName('Body')->item(0)->nodeName);
 
 		$validity = $message->getEngine()->getElementsByTagName('validity')->item(0);
-
 		$this->assertEquals('m:validity', $validity->nodeName);
 		$this->assertEquals('false', $validity->nodeValue);
+		//$this->assertEquals('true', $validity->nodeValue);
 
 		//$message->getEngine()->dump($validity);
 		//$path = $validity->getNodePath();

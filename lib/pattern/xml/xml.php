@@ -20,16 +20,7 @@ class Xml {
 	}
 
 	public function __toString() {
-
-		$xml = $this->engine->output('xml');
-		if ($xml) {
-			$this->pattern = $xml;
-		}
-
-		$result = $this->engine->specification(
-			$this->pattern, 'xml', array()
-		)->saveFabric();
-
-		return $result;
+		
+		return '';
 	}
 }

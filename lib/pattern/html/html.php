@@ -3,20 +3,26 @@ namespace Fabrication\Library\Pattern;
 
 class Html {
 
-	public $pattern = array(
-		'head' => array(), 
-		'body' => array()
-	);
+	protected $name  = 'table';
+	protected $value = '';
 
-		// move to the pattern html object
+	public $engine;
+	//public $data       = array();
+	//public $attributes = array();
+	
+	// http://www.w3.org/QA/2002/04/valid-dtd-list.html
 	public $doctypes = array(
-		'html.5'					=> '<!DOCTYPE HTML>', // HTML5 Experimental.
+		'html.5'					=> '<!DOCTYPE HTML>', // HTML5 Experimental, NOT a standard yet!.
 		'html.4.01.strict'			=> "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"\n   \"http://www.w3.org/TR/html4/strict.dtd\">",
 		'html.4.01.transitional'	=> "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n   \"http://www.w3.org/TR/html4/loose.dtd\">",
-//		'html.4.01.frameset'		=> '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"' . "\n" . '   "http://www.w3.org/TR/html4/frameset.dtd">',
-//		'xhtml.1.0.strict'			=> '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"' . "\n" . '   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">',
-//		'xhtml.1.0.transitional'	=> '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"' . "\n" . '   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
-//		'xhtml.1.0.frameset'		=> '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"' . "\n" . '   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">',
+		'html.4.01.frameset'		=> "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Frameset//EN\"\n   \"http://www.w3.org/TR/html4/frameset.dtd\">",
+		'xhtml.1.0.strict'			=> "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n   \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">",
+		'xhtml.1.0.transitional'	=> "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n   \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">",
+		'xhtml.1.0.frameset'		=> "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Frameset//EN\"\n   \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd\">",
+		// historical doctype declarations.
+		'html.2.0'					=> "<!DOCTYPE html PUBLIC \"-//IETF//DTD HTML 2.0//EN\">",
+		'html.3.2'					=> "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 3.2 Final//EN\">",
+		'xhtml.basic.1.0'			=> "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML Basic 1.0//EN\"\n    \"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">",
 	);
 
 	public $specification = array(
@@ -202,7 +208,14 @@ class Html {
 			
 		),
 
+		
+		//
+		// This spec is uncomplete !!
+		// 
+		// TODO add _global tag for shared attributes.
+		// TODO add every section from the w3c spec
 		// TODO add html global and remove global repetition.
+		//
 		'html.4.01.transitional' => array(
 			/**
 			 * http://www.w3.org/TR/html401/about.html
@@ -327,29 +340,97 @@ class Html {
 			'object'	=> array(),
 			'param'		=> array(),
 			'map'		=> array(),
-			// HTML 5 
-			'article'	=> array(),
+			
+			/**
+			 * 14	Style Sheets
+			 * http://www.w3.org/TR/html401/present/styles.html
+			 */
+			'style'		=> array(),
+			
+			
+			/**
+			 * 15.2.1	Font style elements: the TT, I, B, BIG, SMALL, STRIKE, S, and U elements
+			 * 
+			 */
+			'tt'		=> array(),
+			'i'			=> array(),
+			'b'			=> array(),
+			'big'		=> array(),
+			'small'		=> array(),			
+			'strike'	=> array(),			
+			'u'			=> array(),			
 		)
 	);
 
-	public function __construct($engine = array()) {
+	
+	/**
+	 * Main construction method.
+	 * 
+	 * @param type $engine	FabricationEngine
+	 */
+	public function __construct($engine) {
 
 		$this->engine = $engine;
-		//var_dump($input); exit;
 	}
 
+
+	/**
+	 * Main execution method for generating a HTML DOM structure. 
+	 * 
+	 * @return	void
+	 */
+	public function execute($row  = array('name'=>'tr'), $data = array('name'=>'td')) {
+		
+		$contract = array();
+		
+		if (!isset($this->name)) {
+			$this->name = strtolower(join('', array_slice(explode('\\', __CLASS__), -1)));
+		}
+		
+		if (sizeof($this->dataset) > 0) {
+			
+			foreach($this->dataset as $did => $drow) {
+				
+				if (is_array($drow)) {
+
+					$children = array();
+					
+					foreach($drow as $rid => $item) {
+
+						$children[] = array(
+							'name' => $data['name'], 
+							'value' => $item
+						);
+					}
+					
+					$contract[] = array(
+						'name' => $row['name'], 
+						'children' => $children
+					);
+				}
+			}
+		}
+	
+		$this->fabric = $this->engine->create($this->name, $this->value, 
+			$this->attributes, $contract
+		);
+	}
+
+
+	/**
+	 * HTML representation of the dataset
+	 * 
+	 * @return	string	The HTML structure.
+	 */
 	public function __toString() {
-
-		if (isset($this->engine->input['html.head'])) {
-			$this->pattern['head'] = $this->engine->input['html.head'];
+		
+		if (isset($this->fabric)) {
+			
+			$this->engine->appendChild($this->fabric);
+			
+			return $this->engine->saveHTML();
 		}
 
-		if (isset($this->engine->input['html.body'])) {
-			$this->pattern['body'] = $this->engine->input['html.body'];
-		}
-
-		return $this->engine->specification($this->pattern)->saveFabric();
-		//return $this->engine->saveFabric();
+		return $this->engine->specification()->saveFabric();
 	}
 }
-

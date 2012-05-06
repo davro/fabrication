@@ -28,5 +28,3 @@ class FabricationElement {
 		$element->appendChild($engine->create('div', 'ExecuteTest'));
 	}
 }
-
-
