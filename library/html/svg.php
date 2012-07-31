@@ -1,9 +1,0 @@
-<?php
-
-/**
- * 
- * SVG Doctype Declarations
- *
- *  
- * 
- */
