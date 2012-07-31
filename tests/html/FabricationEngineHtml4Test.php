@@ -3,7 +3,7 @@ namespace Fabrication\Tests;
 
 use Library\FabricationEngine;
 
-require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/library/FabricationEngine.php');
+require_once(dirname(dirname(dirname(__FILE__))).'/library/FabricationEngine.php');
 
 class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase {
 
@@ -119,7 +119,7 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase {
 
 		//$this->assertFalse($this->engine->run('missing.html', 'file'));
 		
-		$designPath = dirname(dirname(dirname(__FILE__))).'/fixture/design.html';
+		$designPath = dirname(dirname(__FILE__)).'/fixture/design.html';
 		$this->assertTrue($this->engine->run($designPath, 'html', 'file'));
 		
 		$nodeList=$this->engine->getHtml();

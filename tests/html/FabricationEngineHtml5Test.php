@@ -3,7 +3,7 @@ namespace Fabrication\Tests;
 
 use Library\FabricationEngine;
 
-require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/library/FabricationEngine.php');
+require_once(dirname(dirname(dirname(__FILE__))).'/library/FabricationEngine.php');
 
 class FabricationEngineHtml5Test extends \PHPUnit_Framework_TestCase {
 
