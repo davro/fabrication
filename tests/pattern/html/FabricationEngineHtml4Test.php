@@ -1,7 +1,7 @@
 <?php
 namespace Fabrication\Tests;
 
-use Fabrication\Library\FabricationEngine;
+use Library\FabricationEngine;
 
 require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/library/FabricationEngine.php');
 
@@ -56,7 +56,7 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase {
             "</html>\n";
 
         $this->assertInternalType('object', $this->engine);
-        $this->assertInstanceOf('Fabrication\Library\FabricationEngine', $this->engine);
+        $this->assertInstanceOf('Library\FabricationEngine', $this->engine);
     }
 
 	
@@ -120,7 +120,7 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase {
 		//$this->assertFalse($this->engine->run('missing.html', 'file'));
 		
 		$designPath = dirname(dirname(dirname(__FILE__))).'/fixture/design.html';
-		$this->assertTrue($this->engine->run($designPath, 'file'));
+		$this->assertTrue($this->engine->run($designPath, 'html', 'file'));
 		
 		$nodeList=$this->engine->getHtml();
 		$this->assertInstanceOf('DOMNodeList', $nodeList);
@@ -135,7 +135,7 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase {
 		//$webpage = file_get_contents('http://www.google.com/');
 		$webpage = file_get_contents('http://www.duckduckgo.com/');
 
-		$this->assertTrue($this->engine->run($webpage, 'string'));
+		$this->assertTrue($this->engine->run($webpage, 'html', 'string'));
 		
 		$NodeList=$this->engine->getHtml();
 		$this->assertInstanceOf('DOMNodeList', $NodeList);
@@ -146,7 +146,7 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase {
 
     public function testSanityCreateProcessingInstruction() {
 		
-        $this->assertTrue($this->engine->run('<html><head><body></html>', 'string'));
+        $this->assertTrue($this->engine->run('<html><head><body></html>', 'html', 'string'));
 
         $this->engine->getElementsByTagName('body')->item(0)->appendChild(
             $this->engine->createProcessingInstruction('php', 'echo PHP_VERSION; ?')
@@ -224,7 +224,7 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase {
 
     public function testHtmlHeadTitleGetValue() {    
 
-        $this->assertTrue($this->engine->run($this->design, 'string'));
+        $this->assertTrue($this->engine->run($this->design));
 
         $value = 'Fabrication';
         $this->engine->setHtml('/head/title', $value);
@@ -254,7 +254,7 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase {
 </html>
 ';
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
         $meta=$this->engine->getHtml('/head/meta');
         
         $this->assertInternalType('object', $meta);
@@ -292,7 +292,7 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase {
 </html>
 ';
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
         $link=$this->engine->getHtml('/head/link');
         
         $this->assertInternalType('object', $link);
@@ -346,7 +346,7 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase {
 </html>
 ';
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
         $style=$this->engine->getHtml('/head/style');
         
         $this->assertInternalType('object', $style);
@@ -417,7 +417,7 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase {
 ';
 
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
         $script=$this->engine->getHtml('/head/script');
         
         $this->assertInternalType('object', $script);
@@ -474,7 +474,7 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase {
 </html>
 FIXTURE;
 
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
         
         //$result=$this->engine->getHtml('/head/noscript'); // not working strange.
         //$result=$this->engine->query('//noscript'); // works
@@ -507,7 +507,7 @@ FIXTURE;
 </html>
 FIXTURE;
 
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
         //$result=$this->engine->getHtml('/head/base'); // not working strange.
         //$result=$this->engine->query('//base');
         $result=$this->engine->getBase();
@@ -578,7 +578,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
 
         // getter for all div's.
         $divs=$this->engine->getDiv();
@@ -657,7 +657,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
 
         $divs=$this->engine->getSpan();
         
@@ -706,7 +706,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
 
         $heading=$this->engine->getHeadings();
         
@@ -796,7 +796,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
 
         $heading=$this->engine->getAddress();
         $this->assertInternalType('object', $heading);
@@ -851,7 +851,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
 
         $heading=$this->engine->getEm();
         $this->assertInternalType('object', $heading);
@@ -885,7 +885,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
 
         $strong=$this->engine->getStrong();
         
@@ -920,7 +920,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
 
         $citation=$this->engine->getCite();
         
@@ -955,7 +955,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
 
         $definition=$this->engine->getDfn();
         
@@ -990,7 +990,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
 
         $code=$this->engine->getCode();
         
@@ -1025,7 +1025,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
 
         $sample=$this->engine->getSamp();
         
@@ -1060,7 +1060,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
 
         $keyboard=$this->engine->getKbd();
         
@@ -1096,7 +1096,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
 
         $variable=$this->engine->getVar();
         
@@ -1131,7 +1131,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
 
         $abbreviation=$this->engine->getAbbr();
         
@@ -1166,7 +1166,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
 
         $acronym=$this->engine->getAcronym();
         
@@ -1206,7 +1206,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
 
         $paragraph=$this->engine->getP();
         
@@ -1243,7 +1243,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
 
         $br=$this->engine->getBr();
         
@@ -1284,7 +1284,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
 
         $pre=$this->engine->getPre();
         
@@ -1324,7 +1324,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
 
         $inserted=$this->engine->getIns();
         
@@ -1365,7 +1365,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
 
         $deleted=$this->engine->getDel();
         
@@ -1426,7 +1426,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html));
 
         $deleted=$this->engine->getUl();
         
@@ -1487,7 +1487,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html, 'html', 'string'));
 
         $deleted=$this->engine->getOl();
         
@@ -1541,7 +1541,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html, 'html', 'string'));
 
         $dl=$this->engine->getDl();
         
@@ -1583,7 +1583,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html, 'html', 'string'));
 
         $dt=$this->engine->getDt();
         
@@ -1625,7 +1625,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html, 'html', 'string'));
 
         $dd=$this->engine->getDd();
         
@@ -1660,7 +1660,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html, 'html', 'string'));
 
         $result=$this->engine->getTable();
         
@@ -1728,7 +1728,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html, 'html', 'string'));
 
         //$result=$this->engine->getTable()->list();
         $result=$this->engine->getCaption('[@id="one"]');
@@ -1833,7 +1833,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html, 'html', 'string'));
 
         //$result=$this->engine->getTable()->list();
         $result=$this->engine->getTHead('[@id="table1-header"]');
@@ -1907,7 +1907,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html, 'html', 'string'));
 
         //$result=$this->engine->getTable()->list();
         $result=$this->engine->getTFoot('[@id="table1-footer"]');
@@ -1981,7 +1981,7 @@ FIXTURE;
 </html>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html, 'html', 'string'));
 
         $result=$this->engine->getTBody('[@id="table1-body"]');
         
@@ -2044,7 +2044,7 @@ FIXTURE;
 
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html, 'html', 'string'));
 
         $result=$this->engine->getColGroup('[@align="center"]');
         
@@ -2078,7 +2078,7 @@ FIXTURE;
 </TABLE>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html, 'html', 'string'));
 
         $result=$this->engine->getCol();
         
@@ -2119,7 +2119,7 @@ FIXTURE;
 </TABLE>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html, 'html', 'string'));
 
         $result=$this->engine->getTr();
         
@@ -2160,7 +2160,7 @@ FIXTURE;
 </TABLE>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html, 'html', 'string'));
 
         $result=$this->engine->getTh();
         
@@ -2204,7 +2204,7 @@ FIXTURE;
 </TABLE>
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html, 'html', 'string'));
 
         $result=$this->engine->getTd();
         
@@ -2238,7 +2238,7 @@ photo of my family at the lake.</A>.
 
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html, 'html', 'string'));
 
         $result=$this->engine->getA();
         $this->assertInternalType('object', $result);
@@ -2328,7 +2328,7 @@ FIXTURE;
 
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html, 'html', 'string'));
 
         $result=$this->engine->getObject();
         $this->assertInternalType('object', $result);
@@ -2373,7 +2373,7 @@ FIXTURE;
 
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html, 'html', 'string'));
 
         $result=$this->engine->getParam();
         $this->assertInternalType('object', $result);
@@ -2417,7 +2417,7 @@ FIXTURE;
 
 FIXTURE;
         
-        $this->assertTrue($this->engine->run($html, 'string'));
+        $this->assertTrue($this->engine->run($html, 'html', 'string'));
 
         $result=$this->engine->getMap();
         $this->assertInternalType('object', $result);

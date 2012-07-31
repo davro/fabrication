@@ -1,13 +1,13 @@
 <?php
-namespace Fabrication\Library;
+namespace Library;
+
+use Library\Fabrication;
+use Library\Html as Html;
+
 /**
  * Fabrication Engine
  * 
  * Document Object Model based template engine without placeholders.
- * 
- * Advanced features.
- *	Pattern Document Model
- * 
  * 
  * There are many words in English which end with -ation. This is a interesting 
  * and useful pattern to learn forming nouns Denoting an action or an instance 
@@ -22,26 +22,13 @@ namespace Fabrication\Library;
  * construction; manufacture, factory.
  * 
  * 
- * <code>
- * 
- * $engine = new FabricationEngine();
- * $engine->input('hello', 'world');
- * 
- * print $engine->output('hello');
- * 
- * // You can also use output templates, php strings, arrays, classes and more.
- * print $engine->output('hello', 'php.string');
- * print $engine->output('hello', 'php.array');
- * 
- * // Generates: class Hello { public $hello='world'; }
- * print $engine->output('hello', 'php.object');
- * 
- * </code>
- * 
- * @author David Stevens <mail.davro@gmail.com>
+ * @author David Stevens <davro@davro.net>
  * @license http://www.gnu.org/copyleft/lgpl.html
  * 
  */
+
+# Engine should be able to run without an autoloader, standalone mode.
+require_once(dirname(__FILE__) . '/Html.php');
 
 class FabricationEngine extends \DOMDocument {
 	
@@ -51,8 +38,8 @@ class FabricationEngine extends \DOMDocument {
 	 * @var type 
 	 */
 	public $symbols = array(
-		'id' => '#', 
-		'class' => '.'
+		'id'	=> '#', 
+		'class'	=> '.'
 	);
 	
 	/**
@@ -100,16 +87,6 @@ class FabricationEngine extends \DOMDocument {
 	 * @var object
 	 */
 	public $pattern;
-
-	// TODO remove autoloader as micro framework will handle autoloading.
-	public $cache = array(
-			'Fabrication\Library\Pattern\Xml'			=> 'pattern/xml/xml.php',
-			'Fabrication\Library\Pattern\Xml\Test'		=> 'pattern/xml/test.php',
-			'Fabrication\Library\Pattern\Html'			=> 'pattern/html/html.php',
-			'Fabrication\Library\Pattern\Html\Table'	=> 'pattern/html/table.php',
-			'Fabrication\Library\Pattern\Html\Form'		=> 'pattern/html/form.php',
-			'Fabrication\Library\Pattern\Html\Canvas'	=> 'pattern/html/canvas.php'
-	);
 		
 	/**
 	 * Control for automatic fixing of DOMDocument bugs before output.
@@ -124,8 +101,7 @@ class FabricationEngine extends \DOMDocument {
 	public $body;
 	public $styles = array();
 	private $scripts = array();
-
-
+	
 	/**
 	 * Main setup function for the Fabrication Engine.
 	 * 
@@ -134,35 +110,13 @@ class FabricationEngine extends \DOMDocument {
 	public function __construct($version = '1.0', $encoding = 'utf-8', $pattern = 'html') {
 
 		parent::__construct($version, $encoding);
-
-		//spl_autoload_register(array('\Fabrication\Library\FabricationEngine', 'autoloader'));
-		spl_autoload_register(array($this, 'autoloader'));
 		
-		// default pattern html, this can be changed at runtime, xml, javascript ...
-		$this->pattern = $this->createPattern($pattern);
-	}
-
-
-	/**
-	 * Fabrication class autoloader.
-	 * 
-	 * @param type $class
-	 * @return boolean 
-	 */
-	private function autoloader($class = NULL) {
-
-		// extended to include patterns from the this->cache and fabric framework.
-
-		if (isset($this->cache[$class])) {
-
-			include(dirname(__FILE__).'/'.$this->cache[$class]);
-			return true;
-		}
+//		$this->pattern = $this->createPattern($pattern);
 		
-		return false;
+		$objectName = 'Library\\' . ucfirst($pattern);
+		$this->pattern = new $objectName($this);
 	}
-
-
+	
 	/**
 	 * Register a prefix and uri to the xpath namespace.
 	 * 
@@ -175,7 +129,6 @@ class FabricationEngine extends \DOMDocument {
 		$this->xpath->registerNamespace($prefix, $uri);
 	}
 
-
 	/**
 	 * DOMDocument and XPath.
 	 * 
@@ -184,8 +137,7 @@ class FabricationEngine extends \DOMDocument {
 
 		$this->xpath = new \DomXpath($this);
 	}
-
-
+	
 	/**
 	 * Direct access to the Fabric of the engine.
 	 *
@@ -195,8 +147,7 @@ class FabricationEngine extends \DOMDocument {
 
 		return $this;
 	}
-
-
+	
 	/**
 	 * Getter for accessing an option value by key from the options array.
 	 * 
@@ -205,8 +156,7 @@ class FabricationEngine extends \DOMDocument {
 
 		return $this->options[$key];
 	}
-
-
+	
 	/**
 	 * Setter for inserting a key value pair into the options array.
 	 * Once a key value pair has been insert the updateOptions method is executed. 
@@ -218,8 +168,7 @@ class FabricationEngine extends \DOMDocument {
 		$this->options[$key] = $value;
 		return $this->options[$key];
 	}
-
-
+	
 	/**
 	 * Getter for returning the current doctype output <DOCTYPE...
 	 *
@@ -230,8 +179,7 @@ class FabricationEngine extends \DOMDocument {
 		return $this->pattern->doctypes[$this->getOption('doctype')];
 		//return $this->pattern->doctypes[$this->pattern->doctype];
 	}
-
-
+	
 	// NOTE signature will change.
 	public function getSpecification($element = '') {
 
@@ -243,42 +191,41 @@ class FabricationEngine extends \DOMDocument {
 		}
 		return $spec;
 	}
-
-
+	
 	/**
 	 * Run method once the all input have been set.
 	 * Then you will have a valid document with a searchable path.
 	 *
-	 * @param type $data
-	 * @param type $load
-	 * @param type $type
-	 * @return type 
+	 * @param	string	$data
+	 * @param	string	$load
+	 * @param	string	$type
+	 * @return	boolean
 	 */
-	public function run($data = '', $load = 'string', $type = 'html') {
+	public function run($data = '', $type = 'html', $load = 'string') {
 
 		if (!empty($data)) {
 
-			switch ($type . '.' . $load) {
+			switch ($type.'.'.$load) {
 
 				default: 
-					// allow for running symbol assignment without files.
-				break;
+					return false;
+					break;
 
 				case 'html.string':
-					// make error suppression optional.
 					if ($this->loadHTML($data)) {
-						// success.
-						$this->pattern = $this->createPattern('Html');
+						//$this->pattern = $this->createPattern('Html');
+						//$this->pattern = $this->createPattern('Html');
+						
+						$objectName = 'Library\\Html';
+						$this->pattern = new $objectName($this);
+						
 					} else {
-						//print "[FAIL] problem loading html string.\n";
 						return false;
 					}
 					break;
 
 				case 'html.file':
-					// make error suppression optional.
 					if ($this->loadHTMLFile($data)) {
-						// success.
 						// TODO create the pattern class etc..
 						//$this->pattern = $this->createPattern('HtmlFile');
 					} else {
@@ -287,18 +234,36 @@ class FabricationEngine extends \DOMDocument {
 					break;
 
 				case 'xml.string':
-					// make error suppression optional.
 					if ($this->loadXML($data)) {
-						// success.
-						$this->pattern = $this->createPattern('Xml');
+						//$this->pattern = $this->createPattern('Xml');
+						
+						$objectName = 'Library\\Xml';
+						$this->pattern = new $objectName($this);
+						
 					} else {
 						return false;
 					}
 					break;
+				
+				case 'xml.file':
+					return false;
+					break;
 			}
 		}
-
-		// symbol mapping loop
+		
+		$this->mapSymbols();
+		
+		return true;
+	}
+	
+	/**
+	 * Symbol mapper for elements values.
+	 * 
+	 * @return	void
+	 */
+	public function mapSymbols() {
+		// Input symbol mapping for builtin symbols.
+		// TODO add functionality for adding removing custom symbols.
 		foreach ($this->input as $key => $value) {
 			
 			foreach($this->symbols as $skey => $svalue) {
@@ -311,39 +276,8 @@ class FabricationEngine extends \DOMDocument {
 				}
 			}
 		}
-
-		return true;
 	}
-
-
-	/**
-	 * Return the engine output html view.
-	 * 
-	 * @deprecated
-	 */
-	public function outputHTML() {
-
-		$this->output['raw'] = parent::saveHTML();
-		$this->outputProcess();
-
-		return $this->getDoctype('doctype') . $this->output['raw'];
-	}
-
-
-	/**
-	 * Return the engine output xml view.
-	 * 
-	 * @deprecated
-	 */
-	public function outputXML() {
-
-		$this->output['raw'] = $this->saveXML();
-		$this->outputProcess();
-
-		return $this->output['raw'];
-	}
-
-
+	
 	/**
 	 * Extend the native saveHTML method.
 	 * Allow path search functionality.
@@ -353,12 +287,6 @@ class FabricationEngine extends \DOMDocument {
 	 * @return	string
 	 */
 	public function saveHTML($path='', $trim = true) {
-
-// DOMDocument::saveHTML() expects exactly 0 parameters, 1 given
-// DOMNode $node = NULL
-//		if (is_object($path)) {
-//			$this->output['raw'] = parent::saveHTML($path);
-//		}
 
 		if (is_string($path) && $path !=='') {
 			// no processing as just return xpath html result no adding doctype.
@@ -370,12 +298,10 @@ class FabricationEngine extends \DOMDocument {
 		$this->outputProcess();
 		
 		$raw = $this->output['raw'];
-		//$raw = $this->getDoctype('doctype') . $this->output['raw'];
 		
 		return $trim ? trim($raw) : $raw;
 	}
-
-
+	
 	/**
 	 * Return the engine output html view.
 	 * 
@@ -406,18 +332,15 @@ class FabricationEngine extends \DOMDocument {
 
 		return $this->getDoctype() . $this->output['raw'];
 	}
-
 	
 	public function bundleStyles() {
 		return;
 	}
-
-
+	
 	public function bundleScripts() {
 		return;
 	}
-
-
+	
 	/**
 	 * Time to sort out the plethora of DOMDocument bugs.
 	 * 
@@ -483,22 +406,7 @@ class FabricationEngine extends \DOMDocument {
 		}
 		return $this->outputProcess;
 	}
-
-
-	/**
-	 * Helper for checking server api command line interface.
-	 * 
-	 * @return boolean 
-	 */
-	public function isCli() {
-
-		if (PHP_SAPI === 'cli') {
-			return true;
-		}
-		return false;
-	}
-
-
+	
 	/**
 	 * Return a string representation of the data.
 	 * 
@@ -604,25 +512,25 @@ class FabricationEngine extends \DOMDocument {
 			print $result . $end;
 		}
 	}
-
-
+	
 	// TODO
 	public function getStyles() {
 
 		return $this->styles;
 	}
-
-
+	
 	// TODO
 	public function getScripts() {
 
 		return $this->scripts;
 	}
-
-
+	
 	/**
 	 * Create and element with a value and attributes including a mechanism for 
 	 * creating children elements recursively.
+	 * 
+	 * 
+	 * 
 	 * 
 	 * @param	string	$name			The name of the element to create.
 	 * @param	string	$value			The value to assign to the element.
@@ -635,36 +543,46 @@ class FabricationEngine extends \DOMDocument {
 	public function create($name, $value = '', $attributes = array() , 
 		$children = array(), $styles = array(), $scripts = array()) {
 
-		//if (empty($name)) { return false; }
+		if ($name == '') { return false; }
 		
 		try {
 
 			$doctype = $this->getOption('doctype');
-
+			
+			// check the name is allowed in the spec.
 			if (! isset($this->pattern->specification[$doctype][$name])) {
+				die('The name "'.$name.'" is not in the "'.$doctype.'" current fabrication specification.');
 				return false;
 			}
-
+	
+			// TODO debug this will eventually register/update all created elements.
+			//print "<p><strong>Fabric</strong> :: <strong>Name</strong>: $name <strong>Value:</strong> $value</p>";
+			
+			// Create the dom element.
 			$element = $this->createElement($name, $value);
-
+			
 			if (sizeof($attributes) > 0) {
-
 				foreach ($attributes as $key => $value) {
-
+					
+					if ($key == '') { continue; }
+					
 					$element->setAttribute($key, $value);
 				}
 			}		
 
 			if (count($children) > 0) {
-
-				foreach ($children as $child) {
+				
+//				var_dump($children);
+				if (is_array($children)) {
 					
-					$element->appendChild($this->create(
-						isset($child['name']) ? $child['name'] : '', 
-						isset($child['value']) ? $child['value'] : '', 
-						isset($child['attributes']) ? $child['attributes'] : array(), 
-						isset($child['children']) ? $child['children'] : array()
-					));
+					foreach ($children as $child) {
+						$element->appendChild($this->create(
+							isset($child['name'])       ? $child['name']       : '', 
+							isset($child['value'])      ? $child['value']      : '', 
+							isset($child['attributes']) ? $child['attributes'] : array(), 
+							isset($child['children'])   ? $child['children']   : array()
+						));
+					}
 				}
 			}
 
@@ -690,9 +608,7 @@ class FabricationEngine extends \DOMDocument {
 			 * </html>
 			 */
 			if (count($styles) > 0) {
-
 				foreach($styles as $style) {
-
 					if ($style instanceof \DOMElement) {
 						$this->styles[] = $style;
 					} 
@@ -708,36 +624,37 @@ class FabricationEngine extends \DOMDocument {
 					}
 				}
 			}
-
+			
+			// spl 
+//			print "[OBJECT] Hash: " . spl_object_hash($element) . " for name: $name value: $value<br />\n";
+			
 			return $element;
 
 		} catch(\Exception $e) {
 			die('Create :: Exception : ' . $e->getMessage());
 		}
 	}
-
-
-	/**
-	 * Pattern method for using standardized library patterns.
-	 * The goals of standardization are to help with independence of single 
-	 * suppliers, compatibility, interoperability, repeatability, and quality.
-	 * 
-	 * @param  string	$name	Object name to instantiate.
-	 * @return object			Product object.
-	 */
-	public function createPattern($name = 'html', $attributes = array(), 
-			$data = array()
-		) {
-
-		$name = ucfirst($name);
-		
-		$objectName = 'Fabrication\Library\Pattern\\' . $name;
-		$pattern = new $objectName($this, $attributes, $data);
-
-		return $pattern;
-	}
-
-
+	
+//	/**
+//	 * Pattern method for using standardized library patterns.
+//	 * The goals of standardization are to help with independence of single 
+//	 * suppliers, compatibility, interoperability, repeatability, and quality.
+//	 * 
+//	 * @param	string	$name		Object $name to instantiate.
+//	 * @param	type	$attributes	
+//	 * @param	type	$data
+//	 * @return	object	\Library\Pattern\objectName 
+//	 */
+//	public function createPattern($name = 'html', $attributes = array(), $data = array() ) {
+//
+//		$name = ucfirst($name);
+//		
+//		$objectName = 'Library\Pattern\\' . $name;
+//		$pattern = new $objectName($this, $attributes, $data);
+//
+//		return $pattern;
+//	}
+	
 	/**
 	 * Document specification pattern.
 	 * 
@@ -750,26 +667,22 @@ class FabricationEngine extends \DOMDocument {
 	 * @param	type	$value			Pattern value.
 	 * @param	type	$attributes		Pattern attributes.
 	 * @param	type	$contract		Pattern children recursion.
-	 * @return \Fabrication\Library\FabricationEngine 
+	 * @return \Library\FabricationEngine 
 	 */
 	public function specification($pattern = 'html', $value = '', 
-			$attributes = array(), $contract = array(), $options = array()
+			$attributes = array(), $contract = array()
 		) {
 
 		if (!is_array($contract)) { return; }
 
 		// create the root specification element.
-		$product = $this->create($pattern, $value, $attributes, $contract);
-
-		// 
-		// load assets depending on the 
-		//
-		$this->appendChild($product);
+		$this->appendChild(
+			$this->create($pattern, $value, $attributes, $contract)
+		);
 
 		return $this;
 	}
-
-
+	
 	/**
 	 * Template method allows for an element and its children to be used as the 
 	 * pattern for an array dataset, the default map for the element children 
@@ -814,10 +727,7 @@ class FabricationEngine extends \DOMDocument {
 			// process the template child nodes.
 			foreach ($template->childNodes as $child) {
 
-				if ($child->nodeName == '#text') {	
-					//var_dump($child->nodeValue); die;
-					continue;
-				}
+				if ($child->nodeName == '#text') { continue; }
 
 				if (is_object($child->attributes->getNamedItem($map))) {
 
@@ -847,8 +757,7 @@ class FabricationEngine extends \DOMDocument {
 		
 		return $container;
 	}
-
-
+	
 	/**
 	 * View the DOMTree in HTML either in full or search using XPath for the 
 	 * first argument, also trim, return and change the output type, html, xml.
@@ -894,8 +803,7 @@ class FabricationEngine extends \DOMDocument {
 
 		print $buffer;
 	}
-
-
+	
 	/**
 	 * Main XPath query method.
 	 * 
@@ -912,8 +820,7 @@ class FabricationEngine extends \DOMDocument {
 		}
 		return false;
 	}
-
-
+	
 	/**
 	 * Input key pair value into the input array.
 	 *
@@ -927,8 +834,7 @@ class FabricationEngine extends \DOMDocument {
 		
 		return true;
 	}
-
-
+	
 	/**
 	 * Output key value from the input array.
 	 * 
@@ -960,8 +866,7 @@ class FabricationEngine extends \DOMDocument {
 			return false;
 		}
 	}
-
-
+	
 	/**
 	 * Magic method for handling specification and helper based method these 
 	 * each method has a configuration array for the helper xpath query. 
@@ -1036,7 +941,11 @@ class FabricationEngine extends \DOMDocument {
 			$find = preg_replace('/^get/U', '', $method);
 
 			// Change specification depending on doctype.
-			$doctype = $this->pattern->specification[$this->getOption('doctype')];
+			$doctype = (
+				isset($this->pattern->specification[$this->getOption('doctype')]) ? 
+				$this->pattern->specification[$this->getOption('doctype')] : array()
+			);
+			
 			if (array_key_exists($find, $doctype)) {
 				$path = '//' . $find . $argString;
 				return $this->query($path);
@@ -1066,8 +975,7 @@ class FabricationEngine extends \DOMDocument {
 			die("__CALL SETTERS Not Implemented.\n");
 		}
 	}
-
-
+	
 	/**
 	 * Setter for changing a element  
 	 * 
@@ -1079,8 +987,19 @@ class FabricationEngine extends \DOMDocument {
 		
 		return $this->query($xql)->item(0)->nodeValue = $nodeValue;
 	}
+	
+	/**
+	 * Setter for changing a element  
+	 * 
+	 * TODO put in __call
+	 */
+	public function getElementBy($element, $value) {
 
-
+		$xql = "//*[@$element='$value']";
+		
+		return $this->query($xql)->item(0);
+	}
+	
 	/**
 	 * Setter for changing HTML element.
 	 * 
@@ -1091,17 +1010,41 @@ class FabricationEngine extends \DOMDocument {
 		$this->getHtml($q)->item(0)->nodeValue = "$value";
 		return $this->getHtml($q)->item(0);
 	}
-
-
-	/**
-	 * @deprecated for setElementBy
-	 */
-	public function setElementById($id, $value) {
-
-		return $this->query("//*[@id='$id']")->item(0)->nodeValue = "$value";
-	}
-
-
+	
+//	/**
+//	 * @deprecated for setElementBy
+//	 */
+//	public function setElementById($id, $value) {
+//
+//		return $this->query("//*[@id='$id']")->item(0)->nodeValue = "$value";
+//	}
+//	
+//	/**
+//	 * Return the engine output html view.
+//	 * 
+//	 * @deprecated
+//	 */
+//	public function outputHTML() {
+//
+//		$this->output['raw'] = parent::saveHTML();
+//		$this->outputProcess();
+//
+//		return $this->getDoctype('doctype') . $this->output['raw'];
+//	}
+//	
+//	/**
+//	 * Return the engine output xml view.
+//	 * 
+//	 * @deprecated
+//	 */
+//	public function outputXML() {
+//
+//		$this->output['raw'] = $this->saveXML();
+//		$this->outputProcess();
+//
+//		return $this->output['raw'];
+//	}
+//	
 	// TESTING
 	public function templateTextElement($key, $query, $options) {
 
@@ -1296,7 +1239,5 @@ class FabricationEngine extends \DOMDocument {
 		}
 
 		return $output;
-
 	}
-
 }

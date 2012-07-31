@@ -1,5 +1,5 @@
 <?php
-namespace Fabrication\Library\Pattern;
+namespace Library;
 
 class Html {
 
@@ -203,14 +203,109 @@ class Html {
 			// 4.10 Forms
 			//
 			// 4.10.3 The form element
+			'form'		=> array(),
+			// 4.10.4 The fieldset element
+			'fieldset'	=> array(),
+			// 4.10.5 The legend element
+			'legend'	=> array(),
+			// 4.10.6 The label element
+			'label'		=> array(),
+			// 4.10.7 The input element
+			'input'		=> array(
+				'type'=>array('hidden', 'text', 'search', 'tel', 'url', 'email', 'password','datetime', 'date', 'month', 'week', 'time', 'datetime-local', 'number', 'range', 'color', 'checkbox', 'radio', 'file', 'submit', 'image', 'reset', 'button'), 
+				'autocomplete', 
+				'dirname', 
+				'list', 
+				'readonly', 
+				'size', 
+				'required', 
+				'multiple', 
+				'maxlength', 
+				'pattern', 
+				'min', 
+				'max', 
+				'step', 
+				'placeholder'
+			),
 			//
-			// TODO
-			
+			//4.10.7.1 States of the type attribute
+			//	4.10.7.1.1 Hidden state (type=hidden)
+    		//	4.10.7.1.2 Text (type=text) state and Search state (type=search)
+			//	4.10.7.1.3 Telephone state (type=tel)4.10.7.1.4 URL state (type=url)
+			//	4.10.7.1.5 E-mail state (type=email)
+			//	4.10.7.1.6 Password state (type=password)
+			//	4.10.7.1.7 Date and Time state (type=datetime)
+			//	4.10.7.1.8 Date state (type=date)
+			//	4.10.7.1.9 Month state (type=month)
+			//	4.10.7.1.10 Week state (type=week)
+			//	4.10.7.1.11 Time state (type=time)
+			//	4.10.7.1.12 Local Date and Time state (type=datetime-local)
+			//	4.10.7.1.13 Number state (type=number)
+			//	4.10.7.1.14 Range state (type=range)
+			//	4.10.7.1.15 Color state (type=color)
+			//  4.10.7.1.16 Checkbox state (type=checkbox)
+			//	4.10.7.1.17 Radio Button state (type=radio)
+			//	4.10.7.1.18 File Upload state (type=file)
+			//	4.10.7.1.19 Submit Button state (type=submit)
+			//	4.10.7.1.20 Image Button state (type=image)
+			//	4.10.7.1.21 Reset Button state (type=reset)
+			//	4.10.7.1.22 Button state (type=button)
+			//4.10.7.2 Implemention notes regarding localization of form controls
+			//
+			//4.10.7.3 Common input element attributes
+			//
+			//	4.10.7.3.1 The autocomplete attribute
+			//	4.10.7.3.2 The dirname attribute
+			//	4.10.7.3.3 The list attribute
+			//	4.10.7.3.4 The readonly attribute
+			//	4.10.7.3.5 The size attribute
+			//	4.10.7.3.6 The required attribute
+			//	4.10.7.3.7 The multiple attribute
+			//	4.10.7.3.8 The maxlength attribute
+			//	4.10.7.3.9 The pattern attribute
+			//	4.10.7.3.10 The min and max attributes
+			//	4.10.7.3.11 The step attribute
+			//	4.10.7.3.12 The placeholder attribute
+			//
+			//	4.10.7.4 Common input element APIs
+			//	4.10.7.5 Common event behaviors
+			//
+			//	4.10.8 The button element
+			'button'		=> array(),
+			//	4.10.9 The select element
+			'select'		=> array(),
+			//	4.10.10 The datalist element
+			'datalist'		=> array(),
+			//	4.10.11 The optgroup element
+			'optgroup'		=> array(),
+			//	4.10.12 The option element
+			'option'		=> array(),
+			//	4.10.13 The textarea element
+			'textarea'		=> array(),
+			//	4.10.14 The keygen element
+			'keygen'		=> array(),
+			//	4.10.15 The output element
+			'output'		=> array(),
+			//	4.10.16 The progress element
+			'progress'		=> array(),
+			//	4.10.17 The meter element
+			'meter'			=> array(),
+			//
+			//	4.11 Interactive elements
+			//	4.11.1 The details element
+			'details'		=> array(),
+			//	4.11.2 The summary element
+			'summary'		=> array(),
+			//	4.11.3 The command element
+			'command'		=> array(),
+			//	4.11.4 The menu element
+			'menu'			=> array(),
+
 		),
 
 		
 		//
-		// This spec is uncomplete !!
+		// This HTML4 transitional specification is uncomplete !!
 		// 
 		// TODO add _global tag for shared attributes.
 		// TODO add every section from the w3c spec

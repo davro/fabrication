@@ -1,13 +1,12 @@
 <?php
-namespace Fabrication\Library\Pattern\Html;
+namespace Library\Html;
 
-use Fabrication\Library\FabricationEngine as FabricationEngine;
-use Fabrication\Library\Pattern\Html;
+use Library\FabricationEngine as FabricationEngine;
 
 /**
  * HTML Form 
  * 
- * @author	David Stevens <mail.davro@gmail.com> 
+ * @author	David Stevens <davro@davro.net> 
  */
 class Form extends Html {
 
