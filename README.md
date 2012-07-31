@@ -36,7 +36,7 @@ Simple example of Input/Output.
     <?php
     require_once(dirname(__FILE__) . '/library/FabricationEngine.php');
       
-    $engine = new Fabrication\Library\FabricationEngine();
+    $engine = new Library\FabricationEngine();
     $engine->input('hello', 'world');
 
     echo $engine->output('hello');
@@ -56,7 +56,7 @@ ID keys are automatically mapped to elements with matching id identifiers.
       
     $template = '<html><head></head><body><div id="hello"></div></body></html>';
 
-    $engine = new Fabrication\Library\FabricationEngine();
+    $engine = new Library\FabricationEngine();
     $engine->input('#hello', 'world');
 
     $engine->run($template);
@@ -90,7 +90,7 @@ Class keys are automatically mapped to elements with matching class identifiers.
       
     $template = '<html><head></head><body><div class="hello"></div></body></html>';
 
-    $engine = new Fabrication\Library\FabricationEngine();
+    $engine = new Library\FabricationEngine();
     $engine->input('.hello', 'world');
 
     $engine->run($template);
@@ -126,7 +126,7 @@ into known patterns on the fly cool huh!
     <?php
     require_once(dirname(__FILE__) . '/library/FabricationEngine.php');
 
-    $engine = new Fabrication\Library\FabricationEngine();
+    $engine = new Library\FabricationEngine();
     $engine->input('hello', 'world');
 
     echo $engine->output('hello', 'php');
@@ -174,7 +174,7 @@ Doctypes are selected from the current supported list.
       
     $template = '<html><head></head><body></body></html>';
 
-    $engine = new Fabrication\Library\FabricationEngine();
+    $engine = new Library\FabricationEngine();
     $engine->run($template);
 
     $engine->setOption('doctype', 'html.5');
@@ -197,7 +197,7 @@ bump an integer value for display auto incrementing dataset.
     <?php
     require_once(dirname(__FILE__) . '/library/FabricationEngine.php');
       
-    $engine = new Fabrication\Library\FabricationEngine();
+    $engine = new Library\FabricationEngine();
 
     $pattern = 
         '<div>PatternTemplate:'.
@@ -273,7 +273,7 @@ style and script elements.
     <?php
     require_once(dirname(__FILE__) . '/library/FabricationEngine.php');
       
-    $engine = new Fabrication\Library\FabricationEngine();
+    $engine = new Library\FabricationEngine();
 
     $hi = $engine->create('div', 'Hello World', array('id'=>'hello-world'));
 
@@ -315,7 +315,7 @@ NOTE: this method is experimental.
     <?php
     require_once(dirname(__FILE__) . '/library/FabricationEngine.php');
       
-    $engine = new Fabrication\Library\FabricationEngine();
+    $engine = new Library\FabricationEngine();
 
 
     $hi = $engine->create('div', '', array('id'=>'hello-world'),
