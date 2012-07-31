@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Next generation template engine based on the Document Object Model
+Template engine based on the Document Object Model.
 
 The FabricationEngine engine is not like most of the other templating engine's 
 on the market, mainly because the engine has no concept of place holders, it is 
