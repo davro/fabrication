@@ -2,6 +2,7 @@
 namespace Library;
 
 use Library\Fabrication;
+use Library\FabricationElement;
 use Library\Html as Html;
 
 /**
@@ -197,15 +198,15 @@ class FabricationEngine extends \DOMDocument {
 	 * Then you will have a valid document with a searchable path.
 	 *
 	 * @param	string	$data
-	 * @param	string	$load
 	 * @param	string	$type
+	 * @param	string	$load
 	 * @return	boolean
 	 */
 	public function run($data = '', $type = 'html', $load = 'string') {
 
 		if (!empty($data)) {
 
-			switch ($type.'.'.$load) {
+			switch ($type . '.' . $load) {
 
 				default: 
 					return false;
@@ -220,15 +221,18 @@ class FabricationEngine extends \DOMDocument {
 						$this->pattern = new $objectName($this);
 						
 					} else {
+						
 						return false;
 					}
 					break;
 
 				case 'html.file':
-					if ($this->loadHTMLFile($data)) {
+					if (@$this->loadHTMLFile($data)) {
+						
 						// TODO create the pattern class etc..
 						//$this->pattern = $this->createPattern('HtmlFile');
 					} else {
+						
 						return false;
 					}
 					break;
@@ -257,22 +261,32 @@ class FabricationEngine extends \DOMDocument {
 	}
 	
 	/**
-	 * Symbol mapper for elements values.
+	 * Symbol mapper for engine input symbolic values to engine element 
+	 * attribute values for a basic mapping sub-system.
+	 * 
+	 * @todo add functionality for adding removing custom symbols.
 	 * 
 	 * @return	void
 	 */
 	public function mapSymbols() {
-		// Input symbol mapping for builtin symbols.
-		// TODO add functionality for adding removing custom symbols.
+		
 		foreach ($this->input as $key => $value) {
 			
 			foreach($this->symbols as $skey => $svalue) {
 				
 				if (substr($key, 0, 1) == $svalue) {
-
-					$this->setElementBy($skey, str_replace($svalue, '', $key)
-						, $value
-					);
+					
+					if (is_string($value)) {
+						$this->setElementBy($skey
+							, str_replace($svalue, '', $key)
+							, $value
+						);
+					}
+					
+					if (is_array($value)) {
+						$this->setElementBy($skey, '', $value
+						);						
+					}
 				}
 			}
 		}
@@ -526,107 +540,124 @@ class FabricationEngine extends \DOMDocument {
 	}
 	
 	/**
-	 * Create and element with a value and attributes including a mechanism for 
+	 * Create an element with a value and attributes including a mechanism for 
 	 * creating children elements recursively.
-	 * 
-	 * 
-	 * 
 	 * 
 	 * @param	string	$name			The name of the element to create.
 	 * @param	string	$value			The value to assign to the element.
 	 * @param	array	$attributes		The attributes to place into the element.
 	 * @param	array	$children		The children to create within the element.
-	 * @param	array	$styles			The styles to consider when using element.
-	 * @param	array	$scripts		The styles to consider when using element.
 	 * @return	mixed 	DOMElement on success or boolean false.
 	 */
-	public function create($name, $value = '', $attributes = array() , 
-		$children = array(), $styles = array(), $scripts = array()) {
+	public function create($name, $value = '', $attributes = array(), $children = array(), $fluentInterface = false) {
 
 		if ($name == '') { return false; }
+		
+		// Attermpt to call convert object to a string.
+		if (is_object($value)) {
+			$value = (string) $value;
+		}
 		
 		try {
 
 			$doctype = $this->getOption('doctype');
+
+			// Allowed internal types.
+			$internalTypes = array(
+				'fabric'		=> ''
+				, 'fabrication'	=> ''
+			);
 			
-			// check the name is allowed in the spec.
-			if (! isset($this->pattern->specification[$doctype][$name])) {
-				die('The name "'.$name.'" is not in the "'.$doctype.'" current fabrication specification.');
-				return false;
+			// Ensure the constant is defined.
+			if (defined('TEMPLATE_ENGINE_W3C')) {
+
+				// Only proceed if the constant is correctly set.
+				if (TEMPLATE_ENGINE_W3C) {
+					
+					// Check the name is allowed in the selected W3C doctype specification.
+					if (! isset($this->pattern->specification[$doctype]['_body'][$name]) &&
+						! isset($this->pattern->specification[$doctype]['_head'][$name])
+							) {
+						
+						// 
+						if (! isset($internalTypes[$name])) {
+
+							die("The '$name' is not in the '$doctype' current fabrication specification");
+
+						} else {
+							//
+							// @TODO Create objectCache subsystem for application unique model objects.
+							// 
+							// Create object from element id attribute name.
+							// Example Fabric{attributeID}
+							//
+							if (isset($attributes['id'])) {
+								
+								$uniqueComponent = 'Applications\\Components\\' . ucfirst($attributes['id']);
+								
+								if (class_exists($uniqueComponent)) {
+									
+									$component = new $uniqueComponent($this, $name, $value, $attributes, $children);
+//									var_dump($component);
+									
+									return $component->execute();
+								}
+							}
+						}
+					}
+				}
 			}
-	
-			// TODO debug this will eventually register/update all created elements.
-			//print "<p><strong>Fabric</strong> :: <strong>Name</strong>: $name <strong>Value:</strong> $value</p>";
 			
 			// Create the dom element.
 			$element = $this->createElement($name, $value);
 			
 			if (sizeof($attributes) > 0) {
+				
 				foreach ($attributes as $key => $value) {
 					
 					if ($key == '') { continue; }
 					
 					$element->setAttribute($key, $value);
 				}
-			}		
+			}
 
 			if (count($children) > 0) {
 				
-//				var_dump($children);
 				if (is_array($children)) {
-					
+								
 					foreach ($children as $child) {
-						$element->appendChild($this->create(
-							isset($child['name'])       ? $child['name']       : '', 
-							isset($child['value'])      ? $child['value']      : '', 
-							isset($child['attributes']) ? $child['attributes'] : array(), 
-							isset($child['children'])   ? $child['children']   : array()
-						));
+						
+						if (is_object($child)) {
+							
+//							$this->dump($child);
+							
+							$newChild = $child;
+							$element->appendChild($newChild);
+						}
+						
+						if (is_array($child)) {
+							
+//							$this->dump($child);
+							
+							$newChild = $this->create(
+								isset($child['name'])       ? $child['name']       : '', 
+								isset($child['value'])      ? $child['value']      : '', 
+								isset($child['attributes']) ? $child['attributes'] : array(),
+								isset($child['children'])   ? $child['children']   : array()
+							);
+							$element->appendChild($newChild);
+						}
 					}
 				}
-			}
-
-			/**
-			 * Styles and Scripts.
-			 * When page is rendered the default behaviour is to load the CSS at
-			 * the top of the page and any javascript at the bottom of the page.
-			 * This behaviour should be configurable.
-			 * Styles and Scripts will be compiled into fabric.css, fabric.js 
-			 * on save. 
-			 *
-			 * Basic template concept.
-			 * <html>
-			 *   <head>
-			 *   <!-- content -->
-			 *   <link type="text/css" rel="stylesheet" href="fabric.css" media="all" />
-			 *   </head>
-			 *
-			 *   <body>
-			 *   <!-- content -->
-			 *   <script type="text/javascript" src="fabric.js"></script>
-			 *   </body>
-			 * </html>
-			 */
-			if (count($styles) > 0) {
-				foreach($styles as $style) {
-					if ($style instanceof \DOMElement) {
-						$this->styles[] = $style;
-					} 
-				}
-			}
-
-			if (count($scripts) > 0) {
-
-				foreach($scripts as $script) {
-
-					if ($script instanceof \DOMElement) {
-						$this->scripts[] = $script;
-					}
-				}
-			}
+			} 
 			
-			// spl 
-//			print "[OBJECT] Hash: " . spl_object_hash($element) . " for name: $name value: $value<br />\n";
+			// Return a fabrication element as the fluent interface.
+			if ($fluentInterface) {
+				
+				$fabricationElement = new FabricationElement($this);
+				$fabricationElement->execute($element);
+				return $fabricationElement;
+			}
 			
 			return $element;
 
@@ -637,8 +668,6 @@ class FabricationEngine extends \DOMDocument {
 	
 //	/**
 //	 * Pattern method for using standardized library patterns.
-//	 * The goals of standardization are to help with independence of single 
-//	 * suppliers, compatibility, interoperability, repeatability, and quality.
 //	 * 
 //	 * @param	string	$name		Object $name to instantiate.
 //	 * @param	type	$attributes	
@@ -868,6 +897,34 @@ class FabricationEngine extends \DOMDocument {
 	}
 	
 	/**
+	 * Import a html string into the current engine, without causing DOM
+	 * hierarchy errors.
+	 * 
+	 * @param type $xpath
+	 * @param type $html
+	 * @return type
+	 */
+	public function importHtml($xpath, $html) {
+		
+		// Buffer engine used to convert the html string into DOMElements,
+		$fabrication = new FabricationEngine;
+		$fabrication->run($html);
+		
+		// Retrive xpath element from the FabricationEngine.
+		$element = $this->query($xpath)->item(0);
+		
+		// Append the new DOM Element(s) to the found DOMElement.
+		$element->appendChild(
+			$this->importNode(
+				$fabrication->query($xpath . '/*')->item(0)
+				, true
+			)
+		);
+		
+		return $element;
+	}
+	
+	/**
 	 * Magic method for handling specification and helper based method these 
 	 * each method has a configuration array for the helper xpath query. 
 	 * 
@@ -877,7 +934,35 @@ class FabricationEngine extends \DOMDocument {
 	 */
 	public function __call($method, $args) {
 
-		// TODO move the helpers to the pattern objects for flexiability,
+		// process arguments.
+		$argString = '';
+		$argContainer = array();
+		
+		if (count($args) > 0) {
+			
+			// check the args and collect info for xpath conversion.
+			foreach ($args as $key => $arg) {
+
+				if(is_string($arg) ) {
+					
+					if (preg_match('/^([a-zA-Z]{1})/U', $arg, $matches)) {
+						
+						$argContainer[] = $arg;
+						
+					} else {
+						
+						$argString.= $arg;
+					}
+				}
+
+				if (is_array($arg) ) {
+					// TODO
+				}
+			}
+		}
+
+		// GETTERS.
+		// @todo move the helper array to the pattern objects eg Html, Xml.
 		$helpers = array(
 			// helpers general
 			'gethtml'					=> array(
@@ -908,32 +993,7 @@ class FabricationEngine extends \DOMDocument {
 			//'getallwith'		=> array('pattern'=>'^(\w+)', 'replacement'=>'//*[@($1)]'),
 			//'getallwith'		=> array('pattern'=>'^(\w+)', 'replacement'=>'//*[@id="($1)"]'),
 		);
-
-		// process arguments.
-		$argString = '';
-		$argContainer = array();
 		
-		if (count($args) > 0) {
-			
-			// check the args and collect info for xpath conversion.
-			foreach ($args as $key => $arg) {
-
-				if(is_string($arg) ) {
-					
-					if (preg_match('/^([a-zA-Z]{1})/U', $arg, $matches)) {
-						$argContainer[] = $arg;
-					} else {
-						$argString.= $arg;
-					}
-				}
-
-				if (is_array($arg) ) {
-						// TODO
-				}
-			}
-		}
-
-		// GETTERS
 		if (preg_match('/^get(.*)/U', $method, $matches)) {
 
 			$method = strtolower($method);
@@ -951,7 +1011,7 @@ class FabricationEngine extends \DOMDocument {
 				return $this->query($path);
 			}
 
-			// helpers.
+			// @todo move the helpers to the pattern objects eg Html, Xml.
 			$find = $method;
 			if (array_key_exists($find, $helpers)) {
 
@@ -966,13 +1026,14 @@ class FabricationEngine extends \DOMDocument {
 			return false;
 		}
 
-		// SETTERS
+		// SETTERS.
+		// @todo Call setter methods.
 		if (preg_match('/^set(.*)/U', $method, $matches)) {
 			
 			var_dump("Method: $method");
 			var_dump("ARGS: ".var_export($args,true));
 			
-			die("__CALL SETTERS Not Implemented.\n");
+			die("__CALL Setters are not implemented, use native DOM elements.\n");
 		}
 	}
 	
@@ -1011,18 +1072,11 @@ class FabricationEngine extends \DOMDocument {
 		return $this->getHtml($q)->item(0);
 	}
 	
-//	/**
-//	 * @deprecated for setElementBy
-//	 */
-//	public function setElementById($id, $value) {
-//
-//		return $this->query("//*[@id='$id']")->item(0)->nodeValue = "$value";
-//	}
 //	
 //	/**
 //	 * Return the engine output html view.
 //	 * 
-//	 * @deprecated
+//	 * @deprecated for function saveHTML
 //	 */
 //	public function outputHTML() {
 //
@@ -1035,7 +1089,7 @@ class FabricationEngine extends \DOMDocument {
 //	/**
 //	 * Return the engine output xml view.
 //	 * 
-//	 * @deprecated
+//	 * @deprecated for native function saveXML
 //	 */
 //	public function outputXML() {
 //
@@ -1050,20 +1104,20 @@ class FabricationEngine extends \DOMDocument {
 
 		$output = '';
 		
-		$query_parts = (array)  explode('.', $query);
-		$language    = (string) isset($query_parts[0]) ? $query_parts[0] : '';
-		$template    = (string) isset($query_parts[1]) ? $query_parts[1] : '';
+		$parts = (array)  explode('.', $query);
+		$language    = (string) isset($parts[0]) ? $parts[0] : '';
+		$template    = (string) isset($parts[1]) ? $parts[1] : '';
 		$result      = (string) '';
 
 		switch ($language) {
 			case 'php':
 				/**
-					* PHP 
-					* Language generation is all done in one switch based 
-					* loosely on php datatypes, template, class, array, string
-					* need to implement rest.
-					* 
-					*/
+				 * PHP 
+				 * Language generation is all done in one switch based 
+				 * loosely on php datatypes, template, class, array, string
+				 * need to implement rest.
+				 * 
+				 */
 				switch ($template) {
 
 					case 'array':
@@ -1142,28 +1196,28 @@ class FabricationEngine extends \DOMDocument {
 							}
 
 						}
-	//                            // assignment.
-	//                            if (array_key_exists('class', $options)) {
-	//                                if  ($options['class']) {
-	//                                    $class=$options['class'];
-	//                                    foreach($this->input as $k => $v) {
-	//                                        if ($key !== '' && $key !== $k) { continue; }
-	//                                        $result.='$object'.$class."->".$k."=".var_export($v,true).";\n";
-	//                                    }
-	//                                }
-	//                            } else {                                
-	//                                foreach($this->input as $k => $v) {
-	//                                    if ($key !== '' && $k !== $k) { continue; }
-	//                                    $result.='$data->'.$k.'='.var_export($v,true).";\n";
-	//                                }
-	//                            }
-	//                            // echo, implementation.
-	//                            if (array_key_exists('echo', $options) && array_key_exists('class', $options)) { 
-	//                                if ($options['echo'] === true) {
-	//                                    $class=$options['class'];
-	//                                    $result.='echo $object'.$class.';';
-	//                                }
-	//                            }
+//						// assignment.
+//						if (array_key_exists('class', $options)) {
+//							if  ($options['class']) {
+//								$class=$options['class'];
+//								foreach($this->input as $k => $v) {
+//									if ($key !== '' && $key !== $k) { continue; }
+//									$result.='$object'.$class."->".$k."=".var_export($v,true).";\n";
+//								}
+//							}
+//						} else {                                
+//							foreach($this->input as $k => $v) {
+//								if ($key !== '' && $k !== $k) { continue; }
+//								$result.='$data->'.$k.'='.var_export($v,true).";\n";
+//							}
+//						}
+//						// echo, implementation.
+//						if (array_key_exists('echo', $options) && array_key_exists('class', $options)) { 
+//							if ($options['echo'] === true) {
+//								$class=$options['class'];
+//								$result.='echo $object'.$class.';';
+//							}
+//						}
 						break;
 
 					default:
@@ -1203,18 +1257,18 @@ class FabricationEngine extends \DOMDocument {
 
 			case 'css':
 				/**
-					*  Generate CSS structure.
-					* 
-					*  section, or, sections {
-					*    name1: value1;
-					*    name2: value2;
-					*  }
-					* 
-					*  section, or, sections {
-					*    name1: value1;
-					*    name2: value2;
-					*  }
-					*/
+				 *  Generate CSS structure.
+				 * 
+				 *  section, or, sections {
+				 *    name1: value1;
+				 *    name2: value2;
+				 *  }
+				 * 
+				 *  section, or, sections {
+				 *    name1: value1;
+				 *    name2: value2;
+				 *  }
+				 */
 				if (array_key_exists('header', $options)) {
 					if ($options['header'] === true) {
 						$result.="/**\n";
