@@ -2,8 +2,8 @@
 namespace Library;
 
 use Library\Fabrication;
-use Library\FabricationElement;
-use Library\Html as Html;
+use Library\FabricationEngine;
+
 
 /**
  * Fabrication Engine
@@ -32,6 +32,13 @@ use Library\Html as Html;
 require_once(dirname(__FILE__) . '/Html.php');
 
 class FabricationEngine extends \DOMDocument {
+	
+	/**
+	 * The current loaded document type, html, xml.
+	 * 
+	 * @var type 
+	 */
+	public $type;
 	
 	/**
 	 * Symbol container for attributes assignment.
@@ -95,7 +102,7 @@ class FabricationEngine extends \DOMDocument {
 	 * @var boolean		True process and clean output, False do nothing. 
 	 */
 	private $outputProcess = false;
-
+	
 	// house keeping needed for these variables.
 	public $head;
 	public $title = 'FABRIC';
@@ -176,7 +183,12 @@ class FabricationEngine extends \DOMDocument {
 	 * @return string
 	 */
 	public function getDoctype() {
-
+		
+		if ($this->type == 'xml') {
+			// Disable any xml doctype for the time being.
+			return false;
+		}
+		
 		return $this->pattern->doctypes[$this->getOption('doctype')];
 		//return $this->pattern->doctypes[$this->pattern->doctype];
 	}
@@ -205,8 +217,21 @@ class FabricationEngine extends \DOMDocument {
 	public function run($data = '', $type = 'html', $load = 'string') {
 
 		if (!empty($data)) {
-
-			switch ($type . '.' . $load) {
+			
+			//
+			// Sniff the type to ensure xml does not get loaded as html.
+			// The FabricationEngine default is to assume everything is html 
+			// untill it can disprove that assumption, with a simple check.
+			//
+			$this->type = preg_match('/^<!DOCTYPE HTML/i', $data) ? 'html' : $type;
+//			
+			if (! $this->type) {
+				$this->type = preg_match('/^<\?xml/i', $data, $matches) ? 'xml' : $type;
+			}
+			
+//			var_dump($this->type);
+			
+			switch ($this->type . '.' . $load) {
 
 				default: 
 					return false;
@@ -344,7 +369,7 @@ class FabricationEngine extends \DOMDocument {
 		// TODO script the output, bundle all the elements scripts, to fabric.js
 		$this->bundleScripts();
 
-		return $this->getDoctype() . $this->output['raw'];
+		return $this->getDoctype() . trim($this->output['raw']);
 	}
 	
 	public function bundleStyles() {
@@ -433,7 +458,9 @@ class FabricationEngine extends \DOMDocument {
 
 		$result = '';
 		
-		if ($this->isCli()) {
+//		var_dump(Fabrication::isCli());
+		
+		if (Fabrication::isCli()) {
 			$end = "\n";
 		} else {
 			$end = "<br />\n";
@@ -447,30 +474,29 @@ class FabricationEngine extends \DOMDocument {
 		}
 
 		if (is_object($data)) {
+			
 			$classname = get_class($data);
 
-			$result = $end .
+			$result =
 				str_repeat('-', 80) . $end .
-				"\tDUMP Type:" . gettype($data) . "\tReturn:" . var_export($return, true) . $end .
+				"\t" . __METHOD__ . ' Type: '. gettype($data) . "\tReturn:" . var_export($return, true) . $end .
 				str_repeat('-', 80) . $end .
-				$end .
-				"ClassName: of $classname: $end" .
-				$end .
-				"MethodList $end";
+				"Object Instance: $classname: $end" .
+				"Object Methods $end";
 
 			$class_methods = get_class_methods($data);
 			if (count($class_methods) > 0) {
 				foreach ($class_methods as $method) {
-					$result.="Method:\t" . $method . $end;
+					$result.="\t" . $method . $end;
 				}
 			} else {
 				$result.="No methods found.$end";
 			}
 
-			$result.=$end;
-			$result.="NodeList:$end";
-			$result.="Instance: " . $classname . $end;
-
+			$result.= $end;
+			$result.= "Object XPath:$end";
+			$result.= $end;
+			
 			switch ($classname) {
 
 				case 'DOMAttr':
@@ -549,7 +575,8 @@ class FabricationEngine extends \DOMDocument {
 	 * @param	array	$children		The children to create within the element.
 	 * @return	mixed 	DOMElement on success or boolean false.
 	 */
-	public function create($name, $value = '', $attributes = array(), $children = array(), $fluentInterface = false) {
+//	public function create($name, $value = '', $attributes = array(), $children = array(), $fluentInterface = false) {
+	public function create($name, $value = '', $attributes = array(), $children = array()) {
 
 		if ($name == '') { return false; }
 		
@@ -608,16 +635,31 @@ class FabricationEngine extends \DOMDocument {
 				}
 			}
 			
-			// Create the dom element.
-			$element = $this->createElement($name, $value);
+			// Create the DOM element.
+//			$element = $this->createElement($name, $value);
+			$element = self::createElement($name, $value);
 			
-			if (sizeof($attributes) > 0) {
-				
-				foreach ($attributes as $key => $value) {
-					
-					if ($key == '') { continue; }
-					
-					$element->setAttribute($key, $value);
+			if (is_array($attributes)) {
+				if (sizeof($attributes) > 0) {
+
+					foreach ($attributes as $key => $value) {
+
+						if ($key == '') { continue; }
+
+						$element->setAttribute($key, $value);
+					}
+				}
+			}
+			if (is_object($attributes)) {
+				if (sizeof($attributes) > 0) {
+
+					foreach ($attributes as $key => $domAttr) {
+
+						if ($key == '') { continue; }
+
+						$element->setAttribute($key, $domAttr->value);
+					}
+
 				}
 			}
 
@@ -629,10 +671,31 @@ class FabricationEngine extends \DOMDocument {
 						
 						if (is_object($child)) {
 							
-//							$this->dump($child);
+							if(get_class($child) == 'stdClass') {
+								
+								// Debug
+//								$this->dump($child);
+								
+								// import stdClass.
+								$newChild = $this->create(
+									isset($child->name)       ? $child->name       : '', 
+									isset($child->value)      ? $child->value      : '', 
+									isset($child->attributes) ? $child->attributes : array(),
+									isset($child->children)   ? $child->children   : array()
+								);
+								
+//								exit;
+								$element->appendChild($newChild);
+								
+							} else {
 							
-							$newChild = $child;
-							$element->appendChild($newChild);
+								$newChild = $child;
+								
+//								var_dump(get_class($child));
+//								var_dump(var_export($child));
+								
+								$element->appendChild($newChild);
+							}
 						}
 						
 						if (is_array($child)) {
@@ -651,20 +714,44 @@ class FabricationEngine extends \DOMDocument {
 				}
 			} 
 			
-			// Return a fabrication element as the fluent interface.
-			if ($fluentInterface) {
-				
-				$fabricationElement = new FabricationElement($this);
-				$fabricationElement->execute($element);
-				return $fabricationElement;
-			}
+//			// Return a fabrication element as the fluent interface.
+//			if ($fluentInterface) {
+//
+//				$fabricationElement = new FabricationElement($this);
+//				$fabricationElement->execute($element);
+//				
+////				var_dump($fabricationElement);
+//				
+//				return $fabricationElement;
+//			}
 			
 			return $element;
 
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			die('Create :: Exception : ' . $e->getMessage());
 		}
 	}
+
+	/**
+	 * Create comment 
+	 * To prevent a parser error when the comment string contains this character 
+	 * sequence "--", This will insert a Soft Hyphen in between the two hyphens 
+	 * which will not cause the parser to error out.
+	 * 
+	 * @param	string	$value
+	 * @return	object	DOMComment
+	 */
+	public function createComment($value) {
+		
+		// Keep a space either side of the comment.
+		$value = ' ' . str_replace('--', '-'.chr(194).chr(173).'-', $value) . ' ';
+		
+		$comment = parent::createComment($value);
+//		var_dump($comment);
+		
+		return $comment;
+		
+	} // end function createComment
 	
 //	/**
 //	 * Pattern method for using standardized library patterns.
@@ -696,7 +783,7 @@ class FabricationEngine extends \DOMDocument {
 	 * @param	type	$value			Pattern value.
 	 * @param	type	$attributes		Pattern attributes.
 	 * @param	type	$contract		Pattern children recursion.
-	 * @return \Library\FabricationEngine 
+	 * @return FabricationEngine 
 	 */
 	public function specification($pattern = 'html', $value = '', 
 			$attributes = array(), $contract = array()
@@ -723,8 +810,6 @@ class FabricationEngine extends \DOMDocument {
 	 * @return DOMElement
 	 */
 	public function template($pattern, $dataset = array(), $map = 'id') {
-
-		//$this->outputProcess = false;
 		
 		if (sizeof($dataset) == 0) { return false; }
 
@@ -737,54 +822,61 @@ class FabricationEngine extends \DOMDocument {
 			//$template = $engine->query('//*')->item(0);
 			$template = $engine->getDiv()->item(0);
 			
-			if (!$template instanceof \DOMElement) {
-				throw new \Exception(
+			if (!$template instanceof DOMElement) {
+				throw new Exception(
 					'First div item should be an instance of the DOMElement.'
 				);
 			}
 		}
 
-		if ($pattern instanceof \DOMElement) {
+		if (is_object($pattern)) {
 			$template = $pattern;
 		}
+		
+		//
+		// Create an empty container, from the template node details.
+		//
+		if (is_object($template)) {
+			
+			$container = $this->create($template->nodeName, $template->nodeValue);
 
-		// create an empty container, from the template node details.
-		$container = $this->create($template->nodeName, $template->nodeValue);
+			foreach ($dataset as $key => $row) {
 
-		foreach ($dataset as $key => $row) {
+				// process the template child nodes.
+				foreach ($template->childNodes as $child) {
 
-			// process the template child nodes.
-			foreach ($template->childNodes as $child) {
+					if ($child->nodeName == '#text') { continue; }
 
-				if ($child->nodeName == '#text') { continue; }
+					if (is_object($child->attributes->getNamedItem($map))) {
 
-				if (is_object($child->attributes->getNamedItem($map))) {
+						$mappedName  = $child->attributes->getNamedItem($map)->nodeName;
+						$mappedValue = $child->attributes->getNamedItem($map)->nodeValue;
 
-					$mappedName  = $child->attributes->getNamedItem($map)->nodeName;
-					$mappedValue = $child->attributes->getNamedItem($map)->nodeValue;
+						$nodeAttributes = array();
+						foreach($child->attributes as $attribute) {
+							$nodeAttributes[$attribute->nodeName] = $attribute->nodeValue;
+						}
 
-					$nodeAttributes = array();
-					foreach($child->attributes as $attribute) {
-						$nodeAttributes[$attribute->nodeName] = $attribute->nodeValue;
-					}
+						if (in_array($mappedValue, array_keys($row))) {
 
-					if (in_array($mappedValue, array_keys($row))) {
+							// create the mapped node attribute with updated numeric key.
+							$nodeAttributes[$mappedName] = $mappedValue.'_'.($key + 1);
 
-						// create the mapped node attribute with updated numeric key.
-						$nodeAttributes[$mappedName] = $mappedValue.'_'.($key + 1);
-						
-						// fabricate the new child nodes.
-						$node = $this->create($child->nodeName,
-							$row[$mappedValue], $nodeAttributes
-						);
-						
-						$container->appendChild($node);
+							// fabricate the new child nodes.
+							$node = $this->create($child->nodeName,
+								$row[$mappedValue], $nodeAttributes
+							);
+
+							$container->appendChild($node);
+						}
 					}
 				}
 			}
+
+			return $container;
 		}
 		
-		return $container;
+		return false;
 	}
 	
 	/**
@@ -896,6 +988,71 @@ class FabricationEngine extends \DOMDocument {
 		}
 	}
 	
+	
+	public function appendHead($element, $debug=false) {
+		
+		$this->query('/html/head')->item(0)->appendChild($element);
+		
+	}
+	
+	/**
+	 * Helper to allow the import of a html string into the current engine, 
+	 * without causing DOM hierarchy errors.
+	 * 
+	 * This method generate's a temporary engine DOM structure from the data 
+	 * Will return the body first child, if null the head first child.
+	 * Then the engine will call importNode using the found node and return the
+	 * DOM structure.
+	 * 
+	 * @param type $data
+	 * @param type $options
+	 * @return type
+	 */
+	public function convert($data, $options = array()) {
+		
+		$data = trim($data);
+		
+		try {
+
+			// Buffer engine used to convert the html string into DOMElements,
+			$engine = new FabricationEngine;
+
+			// Suppress errors, until html5 becomes a standard.
+			@$engine->run($data);
+			
+			// Check if the body is null, so use the head if avaliable.
+			if ($engine->getBody()->item(0) == null) {
+
+//				var_dump($engine->getHead()->item(0));
+//				var_dump($engine->getHead()->item(0)->childNodes->item(0)->nodeName);
+				
+				$node = $engine->getHead()->item(0)->childNodes->item(0);
+				
+				return $this->importNode($node, true);
+			}
+			
+			if ($engine->getBody()->item(0) !== null) {
+				
+//				var_dump($engine->getHead()->item(0));
+//				var_dump($engine->getBody()->item(0)->childNodes->item(0));
+//				var_dump($engine->getBody()->item(0)->childNodes->item(0)->nodeName);
+//				
+				 // body first item.
+				$node = $engine->getBody()->item(0)->childNodes->item(0);
+				
+//				debug($engine->getBody()->item(0)->childNodes->length);
+				
+				return $this->importNode($node, true);
+			}
+			
+			return false;
+			
+		} catch(Exception $e) {
+			
+			exit('FabricationEngine :: convert : ' . $e->getMessage());
+		}
+	}
+
 	/**
 	 * Import a html string into the current engine, without causing DOM
 	 * hierarchy errors.
@@ -904,14 +1061,14 @@ class FabricationEngine extends \DOMDocument {
 	 * @param type $html
 	 * @return type
 	 */
-	public function importHtml($xpath, $html) {
+	public function htmlToElement($html) {
 		
 		// Buffer engine used to convert the html string into DOMElements,
 		$fabrication = new FabricationEngine;
 		$fabrication->run($html);
 		
 		// Retrive xpath element from the FabricationEngine.
-		$element = $this->query($xpath)->item(0);
+		$element = $this->query('//html/body')->item(0);
 		
 		// Append the new DOM Element(s) to the found DOMElement.
 		$element->appendChild(
@@ -998,27 +1155,37 @@ class FabricationEngine extends \DOMDocument {
 
 			$method = strtolower($method);
 
-			$find = preg_replace('/^get/U', '', $method);
-
 			// Change specification depending on doctype.
 			$doctype = (
 				isset($this->pattern->specification[$this->getOption('doctype')]) ? 
 				$this->pattern->specification[$this->getOption('doctype')] : array()
 			);
 			
-			if (array_key_exists($find, $doctype)) {
-				$path = '//' . $find . $argString;
-				return $this->query($path);
+			// Attempt to find the doctype.
+			$nodeName = preg_replace('/^get/U', '', $method);
+			$xpath = '//' . $nodeName . $argString;
+			if (array_key_exists($nodeName, $doctype)) {
+				
+				return $this->query($xpath);
+				
+			} else {
+				
+				print "\n";
+				print "The 'FabricationEngine' misfired, failed to find an expected element. \n";
+				print "The means the request element name is not in the current doctype specification.\n";
+				print "Doctype:  " . $this->getOption('doctype') . "\n";
+				print "Method:   $method \n";
+				print "NodeName: $nodeName \n";
+				print "XPath:    $xpath \n";
 			}
 
 			// @todo move the helpers to the pattern objects eg Html, Xml.
-			$find = $method;
-			if (array_key_exists($find, $helpers)) {
+			if (array_key_exists($method, $helpers)) {
 
-				if (array_key_exists('path', $helpers[$find])) {
-					$path = $helpers[$find]['path'] . $argString;
+				if (array_key_exists('path', $helpers[$method])) {
+					$path = $helpers[$method]['path'] . $argString;
 				} else {
-					$path = $find . $argString;
+					$path = $method . $argString;
 				}
 				return $this->query($path);
 			}
