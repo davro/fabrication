@@ -27,6 +27,7 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 
 	public function setUp() {
 		
+		// Setup fabrication engine for following test cases.
 		$this->engine = new FabricationEngine();
 		
 	} // end function setUp
@@ -35,14 +36,16 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		
 		$this->assertInternalType('object', $this->engine);
 		$this->assertInstanceOf('Library\FabricationEngine', $this->engine);
-	}
+		
+	} // end function testInstance
 	
 	public function testGetEngine() {
 		
 		$engine = $this->engine->getEngine();
 		$this->assertInternalType('object', $engine);
 		$this->assertInstanceOf('Library\FabricationEngine', $engine);
-	}
+		
+	} // end function testGetEngine
 	
 	public function testAttributes() {
 		

@@ -581,7 +581,11 @@ class FabricationEngine extends \DOMDocument {
 		if ($name == '') { return false; }
 		
 		// Attermpt to call convert object to a string.
-		if (is_object($value)) {
+		if (!is_object($value)) {
+			
+			//return;
+			
+		} else {
 			$value = (string) $value;
 		}
 		
