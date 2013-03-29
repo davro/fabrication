@@ -2,27 +2,6 @@
 namespace Library;
 
 class Html {
-
-//	/**
-//	 * Deprecated.
-//	 * 
-//	 * @var string
-//	 */
-//	protected $name  = 'table';
-	
-//	/**
-//	 * Deprecated.
-//	 * 
-//	 * @var string
-//	 */	
-//	protected $value = '';
-	
-	/**
-	 * FabricationEngine object holder.
-	 * 
-	 * @var	object 
-	 */
-	public $engine;
 	
 	/**
 	 * List of supported doctypes.
@@ -488,32 +467,4 @@ class Html {
 			),
 		),
 	);
-	
-//	/**
-//	 * Main construction method.
-//	 * 
-//	 * @param type $engine	FabricationEngine
-//	 */
-//	public function __construct($engine = '') {
-//
-//		$this->engine = $engine;
-//	}
-//
-//	/**
-//	 * TESTING Representation of the dataset
-//	 * 
-//	 * @return	string	The HTML structure.
-//	 */
-//	public function __toString() {
-//		
-////		if (isset($this->fabric)) {
-////			
-////			$this->engine->appendChild($this->fabric);
-////			
-////			return $this->engine->saveHTML();
-////		}
-////
-////		return $this->engine->specification()->saveFabric();
-//		
-//	}
 }
