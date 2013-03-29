@@ -52,14 +52,14 @@ class FabricationEngine extends \DOMDocument {
 	/**
 	 * Input container.
 	 * 
-	 * @var type 
+	 * @var	array
 	 */
 	public $input = array();
 
 	/**
 	 * Output container.
 	 * 
-	 * @var type 
+	 * @var	array
 	 */
 	public $output = array();
 
@@ -74,7 +74,7 @@ class FabricationEngine extends \DOMDocument {
 	 * process.body.hr          hr tags to be valid depending on doctype option.
 	 * process.body.a           A tags and match a tags with #name to #anchors.
 	 *
-	 * @var array       Doctypes avaliable.
+	 * @var array		Doctypes avaliable.
 	 */
 	public $options = array(
 		//'doctype'				=> 'html.5',
@@ -756,23 +756,24 @@ class FabricationEngine extends \DOMDocument {
 		
 	} // end function createComment
 	
-//	/**
-//	 * Pattern method for using standardized library patterns.
-//	 * 
-//	 * @param	string	$name		Object $name to instantiate.
-//	 * @param	type	$attributes	
-//	 * @param	type	$data
-//	 * @return	object	\Library\Pattern\objectName 
-//	 */
-//	public function createPattern($name = 'html', $attributes = array(), $data = array() ) {
-//
-//		$name = ucfirst($name);
-//		
-//		$objectName = 'Library\Pattern\\' . $name;
-//		$pattern = new $objectName($this, $attributes, $data);
-//
-//		return $pattern;
-//	}
+	/**
+	 * Pattern method for fabrication-framework standardized patterns.
+	 * 
+	 * @param	string	$name							Object $name to instantiate.
+	 * @param	type	$attributes						Object attributes.
+	 * @param	type	$data							Object data.
+	 * @return	object	\Library\Pattern\objectName 
+	 */
+	public function createPattern($name = 'html', $attributes = array(), $data = array() ) {
+
+		$patternName = ucfirst($name);
+		
+		$objectName = 'Library\Pattern\\' . $patternName;
+		$pattern = new $objectName($this, $attributes, $data);
+
+		return $pattern;
+		
+	} // end function createPattern
 	
 	/**
 	 * Document specification pattern.
