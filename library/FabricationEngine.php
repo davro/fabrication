@@ -110,6 +110,7 @@ class FabricationEngine extends \DOMDocument {
 	private $scripts = array();
 	private $views = array();
 	
+	
 	/**
 	 * Main setup function for the Fabrication Engine.
 	 * 
@@ -123,7 +124,9 @@ class FabricationEngine extends \DOMDocument {
 		
 		$objectName = 'Library\\' . ucfirst($pattern);
 		$this->pattern = new $objectName($this);
-	}
+		
+	} // end function __construct
+	
 	
 	/**
 	 * Register a prefix and uri to the xpath namespace.
@@ -135,8 +138,10 @@ class FabricationEngine extends \DOMDocument {
 
 		$this->initializeXPath();
 		$this->xpath->registerNamespace($prefix, $uri);
-	}
-
+		
+	} // end function registerNamespace
+	
+	
 	/**
 	 * DOMDocument and XPath.
 	 * 
@@ -144,7 +149,9 @@ class FabricationEngine extends \DOMDocument {
 	public function initializeXPath() {
 
 		$this->xpath = new \DomXpath($this);
-	}
+		
+	} // end function registerNamespace
+	
 	
 	/**
 	 * Direct access to the Fabric of the engine.
@@ -154,7 +161,9 @@ class FabricationEngine extends \DOMDocument {
 	public function getEngine() {
 
 		return $this;
-	}
+		
+	} // end function getEngine
+	
 	
 	/**
 	 * Getter for accessing an option value by key from the options array.
@@ -163,7 +172,9 @@ class FabricationEngine extends \DOMDocument {
 	public function getOption($key) {
 
 		return $this->options[$key];
-	}
+		
+	} // end function getOption
+	
 	
 	/**
 	 * Setter for inserting a key value pair into the options array.
@@ -175,7 +186,9 @@ class FabricationEngine extends \DOMDocument {
 
 		$this->options[$key] = $value;
 		return $this->options[$key];
-	}
+		
+	} // end function setOption
+	
 	
 	/**
 	 * Getter for returning the current doctype output <DOCTYPE...
@@ -191,7 +204,9 @@ class FabricationEngine extends \DOMDocument {
 		
 		return $this->pattern->doctypes[$this->getOption('doctype')];
 		//return $this->pattern->doctypes[$this->pattern->doctype];
-	}
+		
+	} // end function getDoctype
+	
 	
 	public function getSpecification($element = '') {
 
@@ -812,7 +827,8 @@ class FabricationEngine extends \DOMDocument {
 		);
 
 		return $this;
-	}
+		
+	} // end function specification
 	
 	/**
 	 * Template method allows for an element and its children to be used as the 
@@ -892,7 +908,8 @@ class FabricationEngine extends \DOMDocument {
 		}
 		
 		return false;
-	}
+		
+	} // end function template
 	
 	/**
 	 * View the DOMTree in HTML either in full or search using XPath for the 
@@ -938,7 +955,9 @@ class FabricationEngine extends \DOMDocument {
 		}
 
 		print $buffer;
-	}
+		
+	} // end function view
+	
 	
 	/**
 	 * Main XPath query method.
@@ -947,7 +966,7 @@ class FabricationEngine extends \DOMDocument {
 	 * @return	boolean 
 	 */
 	public function query($path) {
-
+		
 		$this->initializeXPath();
 		
 		if ($path) {
@@ -955,7 +974,9 @@ class FabricationEngine extends \DOMDocument {
 			return $this->xpath->query($path);
 		}
 		return false;
-	}
+		
+	} // end function query
+	
 	
 	/**
 	 * Input key pair value into the input array.
@@ -965,11 +986,13 @@ class FabricationEngine extends \DOMDocument {
 	 * @return	boolean 
 	 */
 	public function input($key, $value) {
-
+		
 		$this->input[$key] = $value;
 		
 		return true;
-	}
+		
+	} // end function input
+	
 	
 	/**
 	 * Output key value from the input array.
@@ -1001,14 +1024,21 @@ class FabricationEngine extends \DOMDocument {
 		} else {
 			return false;
 		}
-	}
+		
+	} // end function output
 	
-	
+	/**
+	 * Append element to the html head element of the document.
+	 * 
+	 * @param type $element
+	 * @param type $debug
+	 */
 	public function appendHead($element, $debug=false) {
 		
 		$this->query('/html/head')->item(0)->appendChild($element);
 		
-	}
+	} // end function appendHead
+	
 	
 	/**
 	 * Helper to allow the import of a html string into the current engine, 
@@ -1037,9 +1067,6 @@ class FabricationEngine extends \DOMDocument {
 			
 			// Check if the body is null, so use the head if avaliable.
 			if ($engine->getBody()->item(0) == null) {
-
-//				var_dump($engine->getHead()->item(0));
-//				var_dump($engine->getHead()->item(0)->childNodes->item(0)->nodeName);
 				
 				$node = $engine->getHead()->item(0)->childNodes->item(0);
 				
@@ -1066,8 +1093,10 @@ class FabricationEngine extends \DOMDocument {
 			
 			exit('FabricationEngine :: convert : ' . $e->getMessage());
 		}
-	}
-
+		
+	} // end function convert
+	
+	
 	/**
 	 * Import a html string into the current engine, without causing DOM
 	 * hierarchy errors.
@@ -1094,7 +1123,9 @@ class FabricationEngine extends \DOMDocument {
 		);
 		
 		return $element;
-	}
+		
+	} // end function htmlToElement
+	
 	
 	/**
 	 * Magic method for handling specification and helper based method these 
@@ -1217,7 +1248,8 @@ class FabricationEngine extends \DOMDocument {
 			
 			die("__CALL Setters are not implemented, use native DOM elements.\n");
 		}
-	}
+	} // end function __call
+	
 	
 	/**
 	 * Setter for changing a element  
@@ -1225,11 +1257,13 @@ class FabricationEngine extends \DOMDocument {
 	 * TODO put in __call
 	 */
 	public function setElementBy($element, $value, $nodeValue) {
-
+		
 		$xql = "//*[@$element='$value']";
 		
 		return $this->query($xql)->item(0)->nodeValue = $nodeValue;
-	}
+		
+	} // end function setElementBy
+	
 	
 	/**
 	 * Setter for changing a element  
@@ -1237,11 +1271,13 @@ class FabricationEngine extends \DOMDocument {
 	 * TODO put in __call
 	 */
 	public function getElementBy($element, $value) {
-
+		
 		$xql = "//*[@$element='$value']";
 		
 		return $this->query($xql)->item(0);
-	}
+		
+	} // end function getElementBy
+	
 	
 	/**
 	 * Setter for changing HTML element.
@@ -1252,7 +1288,9 @@ class FabricationEngine extends \DOMDocument {
 
 		$this->getHtml($q)->item(0)->nodeValue = "$value";
 		return $this->getHtml($q)->item(0);
-	}
+		
+	} // end function setHtml
+	
 	
 //	
 //	/**
@@ -1281,7 +1319,14 @@ class FabricationEngine extends \DOMDocument {
 //		return $this->output['raw'];
 //	}
 //	
-	// TESTING
+	/**
+	 * TemplateTextElement
+	 * 
+	 * @param type $key
+	 * @param type $query
+	 * @param type $options
+	 * @return string
+	 */
 	public function templateTextElement($key, $query, $options) {
 
 		$output = '';
@@ -1475,5 +1520,7 @@ class FabricationEngine extends \DOMDocument {
 		}
 
 		return $output;
-	}
-}
+		
+	} // end function templateTextElement	
+	
+} // end class FabricationEngine
