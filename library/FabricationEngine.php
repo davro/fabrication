@@ -108,6 +108,7 @@ class FabricationEngine extends \DOMDocument {
 	public $body;
 	public $styles = array();
 	private $scripts = array();
+	private $views = array();
 	
 	/**
 	 * Main setup function for the Fabrication Engine.
@@ -192,7 +193,6 @@ class FabricationEngine extends \DOMDocument {
 		//return $this->pattern->doctypes[$this->pattern->doctype];
 	}
 	
-	// NOTE signature will change.
 	public function getSpecification($element = '') {
 
 		if (isset($element) && $element !== '') {
@@ -202,6 +202,11 @@ class FabricationEngine extends \DOMDocument {
 
 		}
 		return $spec;
+	}
+	
+	public function getViews() {
+		
+		return $this->views;
 	}
 	
 	/**
@@ -215,15 +220,24 @@ class FabricationEngine extends \DOMDocument {
 	 */
 	public function run($data = '', $type = 'html', $load = 'string') {
 
-		if (!empty($data)) {
+		if (! empty($data)) {
 			
+			// Check if data is a path to a valid file then load into buffer.
+			if (file_exists($data)) {
+				
+				$pathHash = md5($data);
+				
+				$this->views[$pathHash] = $data; 
+			}
+//			debug($this->getViews());
+								
 			//
 			// Sniff the type to ensure xml does not get loaded as html.
 			// The FabricationEngine default is to assume everything is html 
-			// untill it can disprove that assumption, with a simple check.
+			// untill it can disprove that assumption.
 			//
 			$this->type = preg_match('/^<!DOCTYPE HTML/i', $data) ? 'html' : $type;
-//			
+			
 			if (! $this->type) {
 				$this->type = preg_match('/^<\?xml/i', $data, $matches) ? 'xml' : $type;
 			}
@@ -234,21 +248,19 @@ class FabricationEngine extends \DOMDocument {
 
 				default: 
 					return false;
-					break;
+				break;
 
 				case 'html.string':
 					if ($this->loadHTML($data)) {
 						//$this->pattern = $this->createPattern('Html');
 						//$this->pattern = $this->createPattern('Html');
-						
 						$objectName = 'Library\\Html';
 						$this->pattern = new $objectName($this);
 						
 					} else {
-						
 						return false;
 					}
-					break;
+				break;
 
 				case 'html.file':
 					if (@$this->loadHTMLFile($data)) {
@@ -256,10 +268,9 @@ class FabricationEngine extends \DOMDocument {
 						// TODO create the pattern class etc..
 						//$this->pattern = $this->createPattern('HtmlFile');
 					} else {
-						
 						return false;
 					}
-					break;
+				break;
 
 				case 'xml.string':
 					if ($this->loadXML($data)) {
@@ -271,11 +282,11 @@ class FabricationEngine extends \DOMDocument {
 					} else {
 						return false;
 					}
-					break;
+				break;
 				
 				case 'xml.file':
 					return false;
-					break;
+				break;
 			}
 		}
 		
@@ -453,7 +464,7 @@ class FabricationEngine extends \DOMDocument {
 	 * @param	array	$options
 	 * @return	string 
 	 */
-	function dump($data, $return=false, $options=array()) {
+	public static function dump($data, $return=false, $options=array()) {
 
 		$result = '';
 		
