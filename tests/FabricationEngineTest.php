@@ -5,14 +5,13 @@ use Library\FabricationEngine;
 use Library\Html\Table;
 use Library\Html\Form;
 
-// Configuration framework.
+// Fabrication Framework minimum configuration.
 define('FRAMEWORK_ROOT_DIR',	'/home/davro/workspace/project-fabrication');
 define('FRAMEWORK_ROOT_PHAR',	false);  // testing phar archive.
 define('FRAMEWORK_VERSION',	    0.1);
 define('FRAMEWORK_ENVIRONMENT',	'dev');
 define('FRAMEWORK_DISPATCHER',	false);
-
-// Configuration project.
+// Fabrication Project minimum configuration.
 define('PROJECT_HOSTNAME',	'localhost');
 define('PROJECT_NAME',		'workspace');
 define('PROJECT_ROOT_DIR',	realpath(dirname(dirname(__FILE__))));
@@ -27,7 +26,6 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 
 	public function setUp() {
 		
-		// Setup fabrication engine for following test cases.
 		$this->engine = new FabricationEngine();
 		
 	} // end function setUp
@@ -42,6 +40,7 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 	public function testGetEngine() {
 		
 		$engine = $this->engine->getEngine();
+		
 		$this->assertInternalType('object', $engine);
 		$this->assertInstanceOf('Library\FabricationEngine', $engine);
 		
@@ -144,8 +143,6 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 
 		$this->assertEquals('html.5', $engine->setOption('doctype', 'html.5'));
 		$this->assertEquals('<!DOCTYPE HTML>', $engine->getDoctype());
-
-
 	}
 	
 	public function testReadmeExampleTemplateDataset() {
