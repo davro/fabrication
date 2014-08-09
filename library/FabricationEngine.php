@@ -30,19 +30,19 @@ namespace Library;
 # Engine should be able to run without an autoloader, standalone mode.
 require_once(dirname(__FILE__) . '/Html.php');
 
-class FabricationEngine extends \DOMDocument {
-	
+class FabricationEngine extends \DOMDocument 
+{	
 	/**
 	 * The current loaded document type, html, xml.
 	 * 
-	 * @var type 
+	 * @var string 
 	 */
 	public $type;
 	
 	/**
 	 * Symbol container for attributes assignment.
 	 * 
-	 * @var type 
+	 * @var array
 	 */
 	public $symbols = array(
 		'id'	=> '#', 
@@ -116,8 +116,8 @@ class FabricationEngine extends \DOMDocument {
 	 * 
 	 * Examples from http://www.w3.org/QA/2002/04/valid-dtd-list.html
 	 */
-	public function __construct($version = '1.0', $encoding = 'utf-8', $pattern = 'html') {
-
+	public function __construct($version = '1.0', $encoding = 'utf-8', $pattern = 'html') 
+	{
 		parent::__construct($version, $encoding);
 		
 //		$this->pattern = $this->createPattern($pattern);
@@ -134,8 +134,8 @@ class FabricationEngine extends \DOMDocument {
 	 * @param type $prefix
 	 * @param type $uri
 	 */
-	public function registerNamespace($prefix, $uri) {
-
+	public function registerNamespace($prefix, $uri) 
+	{
 		$this->initializeXPath();
 		$this->xpath->registerNamespace($prefix, $uri);
 		
@@ -146,8 +146,8 @@ class FabricationEngine extends \DOMDocument {
 	 * DOMDocument and XPath.
 	 * 
 	 */
-	public function initializeXPath() {
-
+	public function initializeXPath() 
+	{
 		$this->xpath = new \DomXpath($this);
 		
 	} // end function registerNamespace
@@ -158,8 +158,8 @@ class FabricationEngine extends \DOMDocument {
 	 *
 	 * @return object           This current FabricationEngine object.
 	 */
-	public function getEngine() {
-
+	public function getEngine() 
+	{
 		return $this;
 		
 	} // end function getEngine
@@ -169,8 +169,8 @@ class FabricationEngine extends \DOMDocument {
 	 * Getter for accessing an option value by key from the options array.
 	 * 
 	 */
-	public function getOption($key) {
-
+	public function getOption($key) 
+	{
 		return $this->options[$key];
 		
 	} // end function getOption
@@ -182,8 +182,8 @@ class FabricationEngine extends \DOMDocument {
 	 * 
 	 * @return boolean      True on success.
 	 */
-	public function setOption($key, $value) {
-
+	public function setOption($key, $value) 
+	{
 		$this->options[$key] = $value;
 		return $this->options[$key];
 		
@@ -195,8 +195,8 @@ class FabricationEngine extends \DOMDocument {
 	 *
 	 * @return string
 	 */
-	public function getDoctype() {
-		
+	public function getDoctype() 
+	{
 		if ($this->type == 'xml') {
 			// Disable any xml doctype for the time being.
 			return false;
@@ -207,9 +207,14 @@ class FabricationEngine extends \DOMDocument {
 		
 	} // end function getDoctype
 	
-	
-	public function getSpecification($element = '') {
-
+	/**
+	 * TESTING Getter for retriving the specification in the current context.
+	 * 
+	 * @param type $element
+	 * @return type
+	 */
+	public function getSpecification($element = '') 
+	{
 		if (isset($element) && $element !== '') {
 			$spec = $this->pattern->specification[$this->getOption('doctype')][$element];
 		}  else {
@@ -219,8 +224,13 @@ class FabricationEngine extends \DOMDocument {
 		return $spec;
 	}
 	
-	public function getViews() {
-		
+	/**
+	 * Getter for retriving the current views.
+	 * 
+	 * @return array
+	 */
+	public function getViews() 
+	{	
 		return $this->views;
 	}
 	
@@ -233,8 +243,8 @@ class FabricationEngine extends \DOMDocument {
 	 * @param	string	$load
 	 * @return	boolean
 	 */
-	public function run($data = '', $type = 'html', $load = 'string') {
-
+	public function run($data = '', $type = 'html', $load = 'string') 
+	{
 		if (! empty($data)) {
 			
 			// Check if data is a path to a valid file then load into buffer.
@@ -318,8 +328,8 @@ class FabricationEngine extends \DOMDocument {
 	 * 
 	 * @return	void
 	 */
-	public function mapSymbols() {
-		
+	public function mapSymbols() 
+	{	
 		foreach ($this->input as $key => $value) {
 			
 			foreach($this->symbols as $skey => $svalue) {
@@ -350,8 +360,8 @@ class FabricationEngine extends \DOMDocument {
 	 * @param	boolean	$trim	Trim the output of surrounding space.
 	 * @return	string
 	 */
-	public function saveHTML($path='', $trim = true) {
-
+	public function saveHTML($path='', $trim = true) 
+	{
 		if (is_string($path) && $path !=='') {
 			// no processing as just return xpath html result no adding doctype.
 			$this->output['raw'] = $this->view($path);
@@ -373,8 +383,8 @@ class FabricationEngine extends \DOMDocument {
 	 * scripts 
 	 * 
 	 */
-	public function saveFabric($type = 'html', $xpath = '') {
-
+	public function saveFabric($type = 'html', $xpath = '') 
+	{
 		switch($type) {
 			case 'html':
 				$this->output['raw'] = parent::saveHTML();
@@ -397,11 +407,13 @@ class FabricationEngine extends \DOMDocument {
 		return $this->getDoctype() . trim($this->output['raw']);
 	}
 	
-	public function bundleStyles() {
+	public function bundleStyles() 
+	{
 		return;
 	}
 	
-	public function bundleScripts() {
+	public function bundleScripts() 
+	{
 		return;
 	}
 	
@@ -412,8 +424,8 @@ class FabricationEngine extends \DOMDocument {
 	 * TODO Script create compiled JS file, insert into the page footer.
 	 * TODO Both should be configurable using options.
 	 */
-	public function outputProcess() {
-
+	public function outputProcess() 
+	{
 		// remove doctype.
 		$this->output['raw'] = preg_replace(
 			'/^<!DOCTYPE[^>]+>/U', 
@@ -479,8 +491,8 @@ class FabricationEngine extends \DOMDocument {
 	 * @param	array	$options
 	 * @return	string 
 	 */
-	public static function dump($data, $return=false, $options=array()) {
-
+	public static function dump($data, $return=false, $options=array()) 
+	{
 		$result = '';
 		
 //		var_dump(Fabrication::isCli());
@@ -579,14 +591,14 @@ class FabricationEngine extends \DOMDocument {
 	}
 	
 	// TODO
-	public function getStyles() {
-
+	public function getStyles() 
+	{
 		return $this->styles;
 	}
 	
 	// TODO
-	public function getScripts() {
-
+	public function getScripts() 
+	{
 		return $this->scripts;
 	}
 	
@@ -600,9 +612,8 @@ class FabricationEngine extends \DOMDocument {
 	 * @param	array	$children		The children to create within the element.
 	 * @return	mixed 	DOMElement on success or boolean false.
 	 */
-//	public function create($name, $value = '', $attributes = array(), $children = array(), $fluentInterface = false) {
-	public function create($name, $value = '', $attributes = array(), $children = array()) {
-
+	public function create($name, $value = '', $attributes = array(), $children = array()) 
+	{
 		if ($name == '') { return false; }
 		
 		// Attermpt to call convert object to a string.
@@ -737,7 +748,11 @@ class FabricationEngine extends \DOMDocument {
 								isset($child['attributes']) ? $child['attributes'] : array(),
 								isset($child['children'])   ? $child['children']   : array()
 							);
-							$element->appendChild($newChild);
+							if (! $newChild) {
+								//
+							} else {
+								$element->appendChild($newChild);
+							}
 						}
 					}
 				}
@@ -770,8 +785,8 @@ class FabricationEngine extends \DOMDocument {
 	 * @param	string	$value
 	 * @return	object	DOMComment
 	 */
-	public function createComment($value) {
-		
+	public function createComment($value) 
+	{	
 		// Keep a space either side of the comment.
 		$value = ' ' . str_replace('--', '-'.chr(194).chr(173).'-', $value) . ' ';
 		
@@ -790,8 +805,8 @@ class FabricationEngine extends \DOMDocument {
 	 * @param	type	$data							Object data.
 	 * @return	object	\Library\Pattern\objectName 
 	 */
-	public function createPattern($name = 'html', $attributes = array(), $data = array() ) {
-
+	public function createPattern($name = 'html', $attributes = array(), $data = array() ) 
+	{
 		$patternName = ucfirst($name);
 		
 		$objectName = 'Library\Pattern\\' . $patternName;
@@ -817,7 +832,8 @@ class FabricationEngine extends \DOMDocument {
 	 */
 	public function specification($pattern = 'html', $value = '', 
 			$attributes = array(), $contract = array()
-		) {
+		) 
+	{
 
 		if (!is_array($contract)) { return; }
 
@@ -840,8 +856,8 @@ class FabricationEngine extends \DOMDocument {
 	 * @param string		$map		Identifier.
 	 * @return DOMElement
 	 */
-	public function template($pattern, $dataset = array(), $map = 'id') {
-		
+	public function template($pattern, $dataset = array(), $map = 'id') 
+	{	
 		if (sizeof($dataset) == 0) { return false; }
 
 		if (is_string($pattern)) {
@@ -920,8 +936,8 @@ class FabricationEngine extends \DOMDocument {
 	 * @param	boolean	$return		Return or Print the output string.
 	 * @return	string
 	 */
-	public function view($path = '', $trim = true, $return = true) {
-		
+	public function view($path = '', $trim = true, $return = true) 
+	{	
 		$buffer = '';
 
 		if (!empty($path)) {
@@ -965,8 +981,8 @@ class FabricationEngine extends \DOMDocument {
 	 * @param	string	$path	The xpath query to run on the current DOM
 	 * @return	boolean 
 	 */
-	public function query($path) {
-		
+	public function query($path) 
+	{	
 		$this->initializeXPath();
 		
 		if ($path) {
@@ -985,8 +1001,8 @@ class FabricationEngine extends \DOMDocument {
 	 * @param	mixed	$value	The value associated with the key.
 	 * @return	boolean 
 	 */
-	public function input($key, $value) {
-		
+	public function input($key, $value) 
+	{	
 		$this->input[$key] = $value;
 		
 		return true;
@@ -1002,8 +1018,8 @@ class FabricationEngine extends \DOMDocument {
 	 * @param	array	$options	Options for the template text element.
 	 * @return	mixed
 	 */
-	public function output($key = '', $query='', $options = array()) {
-
+	public function output($key = '', $query='', $options = array()) 
+	{
 		// ensure key based retrievals are returned first/fast if empty query.
 		if (empty($query) && isset($this->input[$key])) {
 			return $this->input[$key];
@@ -1033,8 +1049,8 @@ class FabricationEngine extends \DOMDocument {
 	 * @param type $element
 	 * @param type $debug
 	 */
-	public function appendHead($element, $debug=false) {
-		
+	public function appendHead($element, $debug=false) 
+	{	
 		$this->query('/html/head')->item(0)->appendChild($element);
 		
 	} // end function appendHead
@@ -1053,8 +1069,8 @@ class FabricationEngine extends \DOMDocument {
 	 * @param type $options
 	 * @return type
 	 */
-	public function convert($data, $options = array()) {
-		
+	public function convert($data, $options = array()) 
+	{	
 		$data = trim($data);
 		
 		try {
@@ -1105,8 +1121,8 @@ class FabricationEngine extends \DOMDocument {
 	 * @param type $html
 	 * @return type
 	 */
-	public function htmlToElement($html) {
-		
+	public function htmlToElement($html) 
+	{	
 		// Buffer engine used to convert the html string into DOMElements,
 		$fabrication = new FabricationEngine;
 		$fabrication->run($html);
@@ -1135,8 +1151,8 @@ class FabricationEngine extends \DOMDocument {
 	 * @param	array	$args		The arguments passed with the method call.
 	 * @return	mixed.
 	 */
-	public function __call($method, $args) {
-
+	public function __call($method, $args) 
+	{
 		// process arguments.
 		$argString = '';
 		$argContainer = array();
@@ -1250,14 +1266,13 @@ class FabricationEngine extends \DOMDocument {
 		}
 	} // end function __call
 	
-	
 	/**
 	 * Setter for changing a element  
 	 * 
 	 * TODO put in __call
 	 */
-	public function setElementBy($element, $value, $nodeValue) {
-		
+	public function setElementBy($element, $value, $nodeValue) 
+	{	
 		$xql = "//*[@$element='$value']";
 		
 		return $this->query($xql)->item(0)->nodeValue = $nodeValue;
@@ -1270,8 +1285,8 @@ class FabricationEngine extends \DOMDocument {
 	 * 
 	 * TODO put in __call
 	 */
-	public function getElementBy($element, $value) {
-		
+	public function getElementBy($element, $value) 
+	{	
 		$xql = "//*[@$element='$value']";
 		
 		return $this->query($xql)->item(0);
@@ -1284,8 +1299,8 @@ class FabricationEngine extends \DOMDocument {
 	 * 
 	 * TODO put in __call
 	 */
-	public function setHtml($q, $value) {
-
+	public function setHtml($q, $value) 
+	{
 		$this->getHtml($q)->item(0)->nodeValue = "$value";
 		return $this->getHtml($q)->item(0);
 		
@@ -1327,8 +1342,8 @@ class FabricationEngine extends \DOMDocument {
 	 * @param type $options
 	 * @return string
 	 */
-	public function templateTextElement($key, $query, $options) {
-
+	public function templateTextElement($key, $query, $options) 
+	{
 		$output = '';
 		
 		$parts = (array)  explode('.', $query);
