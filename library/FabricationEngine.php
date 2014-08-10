@@ -1,9 +1,6 @@
 <?php
 namespace Library;
 
-//use Library\Fabrication;
-//use Library\FabricationEngine;
-
 /**
  * Fabrication Engine
  * 
@@ -110,7 +107,6 @@ class FabricationEngine extends \DOMDocument
 	private $scripts = array();
 	private $views = array();
 	
-	
 	/**
 	 * Main setup function for the Fabrication Engine.
 	 * 
@@ -121,12 +117,10 @@ class FabricationEngine extends \DOMDocument
 		parent::__construct($version, $encoding);
 		
 //		$this->pattern = $this->createPattern($pattern);
-		
 		$objectName = 'Library\\' . ucfirst($pattern);
 		$this->pattern = new $objectName($this);
 		
 	} // end function __construct
-	
 	
 	/**
 	 * Register a prefix and uri to the xpath namespace.
@@ -141,7 +135,6 @@ class FabricationEngine extends \DOMDocument
 		
 	} // end function registerNamespace
 	
-	
 	/**
 	 * DOMDocument and XPath.
 	 * 
@@ -151,7 +144,6 @@ class FabricationEngine extends \DOMDocument
 		$this->xpath = new \DomXpath($this);
 		
 	} // end function registerNamespace
-	
 	
 	/**
 	 * Direct access to the Fabric of the engine.
@@ -164,7 +156,6 @@ class FabricationEngine extends \DOMDocument
 		
 	} // end function getEngine
 	
-	
 	/**
 	 * Getter for accessing an option value by key from the options array.
 	 * 
@@ -174,7 +165,6 @@ class FabricationEngine extends \DOMDocument
 		return $this->options[$key];
 		
 	} // end function getOption
-	
 	
 	/**
 	 * Setter for inserting a key value pair into the options array.
@@ -188,7 +178,6 @@ class FabricationEngine extends \DOMDocument
 		return $this->options[$key];
 		
 	} // end function setOption
-	
 	
 	/**
 	 * Getter for returning the current doctype output <DOCTYPE...
@@ -256,18 +245,14 @@ class FabricationEngine extends \DOMDocument
 			}
 //			debug($this->getViews());
 								
-			//
 			// Sniff the type to ensure xml does not get loaded as html.
 			// The FabricationEngine default is to assume everything is html 
 			// untill it can disprove that assumption.
-			//
 			$this->type = preg_match('/^<!DOCTYPE HTML/i', $data) ? 'html' : $type;
 			
 			if (! $this->type) {
 				$this->type = preg_match('/^<\?xml/i', $data, $matches) ? 'xml' : $type;
 			}
-			
-//			var_dump($this->type);
 			
 			switch ($this->type . '.' . $load) {
 
@@ -331,18 +316,14 @@ class FabricationEngine extends \DOMDocument
 	public function mapSymbols() 
 	{	
 		foreach ($this->input as $key => $value) {
-			
 			foreach($this->symbols as $skey => $svalue) {
-				
 				if (substr($key, 0, 1) == $svalue) {
-					
 					if (is_string($value)) {
 						$this->setElementBy($skey
 							, str_replace($svalue, '', $key)
 							, $value
 						);
 					}
-					
 					if (is_array($value)) {
 						$this->setElementBy($skey, '', $value
 						);						
@@ -494,8 +475,6 @@ class FabricationEngine extends \DOMDocument
 	public static function dump($data, $return=false, $options=array()) 
 	{
 		$result = '';
-		
-//		var_dump(Fabrication::isCli());
 		
 		if (Fabrication::isCli()) {
 			$end = "\n";
@@ -676,7 +655,6 @@ class FabricationEngine extends \DOMDocument
 			}
 			
 			// Create the DOM element.
-//			$element = $this->createElement($name, $value);
 			$element = self::createElement($name, $value);
 			
 			if (is_array($attributes)) {
@@ -713,9 +691,6 @@ class FabricationEngine extends \DOMDocument
 							
 							if(get_class($child) == 'stdClass') {
 								
-								// Debug
-//								$this->dump($child);
-								
 								// import stdClass.
 								$newChild = $this->create(
 									isset($child->name)       ? $child->name       : '', 
@@ -724,23 +699,16 @@ class FabricationEngine extends \DOMDocument
 									isset($child->children)   ? $child->children   : array()
 								);
 								
-//								exit;
 								$element->appendChild($newChild);
 								
 							} else {
 							
 								$newChild = $child;
-								
-//								var_dump(get_class($child));
-//								var_dump(var_export($child));
-								
 								$element->appendChild($newChild);
 							}
 						}
 						
 						if (is_array($child)) {
-							
-//							$this->dump($child);
 							
 							$newChild = $this->create(
 								isset($child['name'])       ? $child['name']       : '', 
@@ -880,9 +848,7 @@ class FabricationEngine extends \DOMDocument
 			$template = $pattern;
 		}
 		
-		//
 		// Create an empty container, from the template node details.
-		//
 		if (is_object($template)) {
 			
 			$container = $this->create($template->nodeName, $template->nodeValue);
@@ -986,7 +952,6 @@ class FabricationEngine extends \DOMDocument
 		$this->initializeXPath();
 		
 		if ($path) {
-			//var_dump($path); die;
 			return $this->xpath->query($path);
 		}
 		return false;
@@ -1091,14 +1056,8 @@ class FabricationEngine extends \DOMDocument
 			
 			if ($engine->getBody()->item(0) !== null) {
 				
-//				var_dump($engine->getHead()->item(0));
-//				var_dump($engine->getBody()->item(0)->childNodes->item(0));
-//				var_dump($engine->getBody()->item(0)->childNodes->item(0)->nodeName);
-//				
 				 // body first item.
 				$node = $engine->getBody()->item(0)->childNodes->item(0);
-				
-//				debug($engine->getBody()->item(0)->childNodes->length);
 				
 				return $this->importNode($node, true);
 			}
@@ -1264,6 +1223,7 @@ class FabricationEngine extends \DOMDocument
 			
 			die("__CALL Setters are not implemented, use native DOM elements.\n");
 		}
+		
 	} // end function __call
 	
 	/**
@@ -1279,7 +1239,6 @@ class FabricationEngine extends \DOMDocument
 		
 	} // end function setElementBy
 	
-	
 	/**
 	 * Setter for changing a element  
 	 * 
@@ -1293,7 +1252,6 @@ class FabricationEngine extends \DOMDocument
 		
 	} // end function getElementBy
 	
-	
 	/**
 	 * Setter for changing HTML element.
 	 * 
@@ -1305,7 +1263,6 @@ class FabricationEngine extends \DOMDocument
 		return $this->getHtml($q)->item(0);
 		
 	} // end function setHtml
-	
 	
 //	
 //	/**
@@ -1483,7 +1440,7 @@ class FabricationEngine extends \DOMDocument
 							}
 						}
 						break;
-				} // if 
+				}
 
 				// option :: language tags.
 				if (array_key_exists('tags', $options)) {

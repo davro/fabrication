@@ -360,8 +360,6 @@ NOTE: this method is experimental.
 
 ### Example: View                    (paths)
 
-### Example: Dump and Debug          (types)
-
 
 ## Contributors
 

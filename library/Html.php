@@ -1,8 +1,8 @@
 <?php
 namespace Library;
 
-class Html {
-	
+class Html 
+{	
 	/**
 	 * List of supported doctypes.
 	 * 
