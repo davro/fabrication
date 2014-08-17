@@ -119,20 +119,18 @@ class FabricationEngine extends \DOMDocument
 //		$this->pattern = $this->createPattern($pattern);
 		$objectName = 'Library\\' . ucfirst($pattern);
 		$this->pattern = new $objectName($this);
-		
 	}
 	
 	/**
 	 * Register a prefix and uri to the xpath namespace.
 	 * 
-	 * @param type $prefix
-	 * @param type $uri
+	 * @param	string	$prefix		The namespace prefix.
+	 * @param	string	$uri			The namespace uri.
 	 */
 	public function registerNamespace($prefix, $uri) 
 	{
 		$this->initializeXPath();
 		$this->xpath->registerNamespace($prefix, $uri);
-		
 	}
 	
 	/**
@@ -142,7 +140,6 @@ class FabricationEngine extends \DOMDocument
 	public function initializeXPath() 
 	{
 		$this->xpath = new \DomXpath($this);
-		
 	}
 	
 	/**
@@ -153,7 +150,6 @@ class FabricationEngine extends \DOMDocument
 	public function getEngine() 
 	{
 		return $this;
-		
 	}
 	
 	/**
@@ -163,7 +159,6 @@ class FabricationEngine extends \DOMDocument
 	public function getOption($key) 
 	{
 		return $this->options[$key];
-		
 	}
 	
 	/**
@@ -176,7 +171,6 @@ class FabricationEngine extends \DOMDocument
 	{
 		$this->options[$key] = $value;
 		return $this->options[$key];
-		
 	}
 	
 	/**
@@ -186,14 +180,12 @@ class FabricationEngine extends \DOMDocument
 	 */
 	public function getDoctype() 
 	{
+		// Disable any xml doctype for the time being.
 		if ($this->type == 'xml') {
-			// Disable any xml doctype for the time being.
 			return false;
 		}
 		
 		return $this->pattern->doctypes[$this->getOption('doctype')];
-		//return $this->pattern->doctypes[$this->pattern->doctype];
-		
 	}
 	
 	/**
@@ -238,9 +230,7 @@ class FabricationEngine extends \DOMDocument
 			
 			// Check if data is a path to a valid file then load into buffer.
 			if (file_exists($data)) {
-				
 				$pathHash = md5($data);
-				
 				$this->views[$pathHash] = $data; 
 			}
 //			debug($this->getViews());
@@ -662,7 +652,6 @@ class FabricationEngine extends \DOMDocument
 								if (class_exists($uniqueComponent)) {
 									
 									$component = new $uniqueComponent($this, $name, $value, $attributes, $children);
-//									var_dump($component);
 									
 									return $component->execute();
 								}
@@ -777,10 +766,8 @@ class FabricationEngine extends \DOMDocument
 		$value = ' ' . str_replace('--', '-'.chr(194).chr(173).'-', $value) . ' ';
 		
 		$comment = parent::createComment($value);
-//		var_dump($comment);
 		
 		return $comment;
-		
 	}
 	
 	/**
@@ -799,7 +786,6 @@ class FabricationEngine extends \DOMDocument
 		$pattern = new $objectName($this, $attributes, $data);
 
 		return $pattern;
-		
 	}
 	
 	/**
@@ -829,7 +815,6 @@ class FabricationEngine extends \DOMDocument
 		);
 
 		return $this;
-		
 	}
 	
 	/**
@@ -908,7 +893,6 @@ class FabricationEngine extends \DOMDocument
 		}
 		
 		return false;
-		
 	}
 	
 	/**
@@ -972,7 +956,6 @@ class FabricationEngine extends \DOMDocument
 			return $this->xpath->query($path);
 		}
 		return false;
-		
 	}
 	
 	/**
@@ -987,7 +970,6 @@ class FabricationEngine extends \DOMDocument
 		$this->input[$key] = $value;
 		
 		return true;
-		
 	}
 	
 	/**
@@ -1019,8 +1001,7 @@ class FabricationEngine extends \DOMDocument
 			}
 		} else {
 			return false;
-		}
-		
+		}		
 	}
 	
 	/**
@@ -1032,7 +1013,6 @@ class FabricationEngine extends \DOMDocument
 	public function appendHead($element, $debug=false) 
 	{	
 		$this->query('/html/head')->item(0)->appendChild($element);
-		
 	}
 	
 	/**
@@ -1082,7 +1062,6 @@ class FabricationEngine extends \DOMDocument
 			
 			exit('FabricationEngine :: convert : ' . $e->getMessage());
 		}
-		
 	}
 	
 	/**
@@ -1234,7 +1213,6 @@ class FabricationEngine extends \DOMDocument
 			
 			die("__CALL Setters are not implemented, use native DOM elements.\n");
 		}
-		
 	}
 	
 	/**
@@ -1247,7 +1225,6 @@ class FabricationEngine extends \DOMDocument
 		$xql = "//*[@$element='$value']";
 		
 		return $this->query($xql)->item(0)->nodeValue = $nodeValue;
-		
 	}
 	
 	/**
@@ -1260,7 +1237,6 @@ class FabricationEngine extends \DOMDocument
 		$xql = "//*[@$element='$value']";
 		
 		return $this->query($xql)->item(0);
-		
 	}
 	
 	/**
@@ -1272,7 +1248,6 @@ class FabricationEngine extends \DOMDocument
 	{
 		$this->getHtml($q)->item(0)->nodeValue = "$value";
 		return $this->getHtml($q)->item(0);
-		
 	}
 	
 //	
