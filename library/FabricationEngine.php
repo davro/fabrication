@@ -120,7 +120,7 @@ class FabricationEngine extends \DOMDocument
 		$objectName = 'Library\\' . ucfirst($pattern);
 		$this->pattern = new $objectName($this);
 		
-	} // end function __construct
+	}
 	
 	/**
 	 * Register a prefix and uri to the xpath namespace.
@@ -133,7 +133,7 @@ class FabricationEngine extends \DOMDocument
 		$this->initializeXPath();
 		$this->xpath->registerNamespace($prefix, $uri);
 		
-	} // end function registerNamespace
+	}
 	
 	/**
 	 * DOMDocument and XPath.
@@ -143,7 +143,7 @@ class FabricationEngine extends \DOMDocument
 	{
 		$this->xpath = new \DomXpath($this);
 		
-	} // end function registerNamespace
+	}
 	
 	/**
 	 * Direct access to the Fabric of the engine.
@@ -154,7 +154,7 @@ class FabricationEngine extends \DOMDocument
 	{
 		return $this;
 		
-	} // end function getEngine
+	}
 	
 	/**
 	 * Getter for accessing an option value by key from the options array.
@@ -164,7 +164,7 @@ class FabricationEngine extends \DOMDocument
 	{
 		return $this->options[$key];
 		
-	} // end function getOption
+	}
 	
 	/**
 	 * Setter for inserting a key value pair into the options array.
@@ -177,7 +177,7 @@ class FabricationEngine extends \DOMDocument
 		$this->options[$key] = $value;
 		return $this->options[$key];
 		
-	} // end function setOption
+	}
 	
 	/**
 	 * Getter for returning the current doctype output <DOCTYPE...
@@ -194,7 +194,7 @@ class FabricationEngine extends \DOMDocument
 		return $this->pattern->doctypes[$this->getOption('doctype')];
 		//return $this->pattern->doctypes[$this->pattern->doctype];
 		
-	} // end function getDoctype
+	}
 	
 	/**
 	 * TESTING Getter for retriving the specification in the current context.
@@ -388,16 +388,6 @@ class FabricationEngine extends \DOMDocument
 		return $this->getDoctype() . trim($this->output['raw']);
 	}
 	
-	public function bundleStyles() 
-	{
-		return;
-	}
-	
-	public function bundleScripts() 
-	{
-		return;
-	}
-	
 	/**
 	 * Time to sort out the plethora of DOMDocument bugs.
 	 * 
@@ -569,16 +559,44 @@ class FabricationEngine extends \DOMDocument
 		}
 	}
 	
-	// TODO
+	/**
+	 * Getter for retriving styles.
+	 * 
+	 * @return array
+	 */
 	public function getStyles() 
 	{
 		return $this->styles;
 	}
 	
-	// TODO
+	/**
+	 * Getter for retriving scripts.
+	 * 
+	 * @return array
+	 */
 	public function getScripts() 
 	{
 		return $this->scripts;
+	}
+	
+	/**
+	 * Bundle Styles.
+	 * 
+	 * @return void
+	 */
+	public function bundleStyles() 
+	{
+		return;
+	}
+	
+	/**
+	 * Bundle scripts.
+	 * 
+	 * @return void
+	 */
+	public function bundleScripts() 
+	{
+		return;
 	}
 	
 	/**
@@ -763,7 +781,7 @@ class FabricationEngine extends \DOMDocument
 		
 		return $comment;
 		
-	} // end function createComment
+	}
 	
 	/**
 	 * Pattern method for fabrication-framework standardized patterns.
@@ -782,7 +800,7 @@ class FabricationEngine extends \DOMDocument
 
 		return $pattern;
 		
-	} // end function createPattern
+	}
 	
 	/**
 	 * Document specification pattern.
@@ -812,7 +830,7 @@ class FabricationEngine extends \DOMDocument
 
 		return $this;
 		
-	} // end function specification
+	}
 	
 	/**
 	 * Template method allows for an element and its children to be used as the 
@@ -891,7 +909,7 @@ class FabricationEngine extends \DOMDocument
 		
 		return false;
 		
-	} // end function template
+	}
 	
 	/**
 	 * View the DOMTree in HTML either in full or search using XPath for the 
@@ -938,8 +956,7 @@ class FabricationEngine extends \DOMDocument
 
 		print $buffer;
 		
-	} // end function view
-	
+	}
 	
 	/**
 	 * Main XPath query method.
@@ -956,8 +973,7 @@ class FabricationEngine extends \DOMDocument
 		}
 		return false;
 		
-	} // end function query
-	
+	}
 	
 	/**
 	 * Input key pair value into the input array.
@@ -972,8 +988,7 @@ class FabricationEngine extends \DOMDocument
 		
 		return true;
 		
-	} // end function input
-	
+	}
 	
 	/**
 	 * Output key value from the input array.
@@ -1006,7 +1021,7 @@ class FabricationEngine extends \DOMDocument
 			return false;
 		}
 		
-	} // end function output
+	}
 	
 	/**
 	 * Append element to the html head element of the document.
@@ -1018,8 +1033,7 @@ class FabricationEngine extends \DOMDocument
 	{	
 		$this->query('/html/head')->item(0)->appendChild($element);
 		
-	} // end function appendHead
-	
+	}
 	
 	/**
 	 * Helper to allow the import of a html string into the current engine, 
@@ -1069,8 +1083,7 @@ class FabricationEngine extends \DOMDocument
 			exit('FabricationEngine :: convert : ' . $e->getMessage());
 		}
 		
-	} // end function convert
-	
+	}
 	
 	/**
 	 * Import a html string into the current engine, without causing DOM
@@ -1098,9 +1111,7 @@ class FabricationEngine extends \DOMDocument
 		);
 		
 		return $element;
-		
-	} // end function htmlToElement
-	
+	}
 	
 	/**
 	 * Magic method for handling specification and helper based method these 
@@ -1224,7 +1235,7 @@ class FabricationEngine extends \DOMDocument
 			die("__CALL Setters are not implemented, use native DOM elements.\n");
 		}
 		
-	} // end function __call
+	}
 	
 	/**
 	 * Setter for changing a element  
@@ -1237,7 +1248,7 @@ class FabricationEngine extends \DOMDocument
 		
 		return $this->query($xql)->item(0)->nodeValue = $nodeValue;
 		
-	} // end function setElementBy
+	}
 	
 	/**
 	 * Setter for changing a element  
@@ -1250,7 +1261,7 @@ class FabricationEngine extends \DOMDocument
 		
 		return $this->query($xql)->item(0);
 		
-	} // end function getElementBy
+	}
 	
 	/**
 	 * Setter for changing HTML element.
@@ -1262,7 +1273,7 @@ class FabricationEngine extends \DOMDocument
 		$this->getHtml($q)->item(0)->nodeValue = "$value";
 		return $this->getHtml($q)->item(0);
 		
-	} // end function setHtml
+	}
 	
 //	
 //	/**
@@ -1493,6 +1504,6 @@ class FabricationEngine extends \DOMDocument
 
 		return $output;
 		
-	} // end function templateTextElement	
+	}
 	
 } // end class FabricationEngine
