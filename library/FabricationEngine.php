@@ -30,13 +30,6 @@ require_once(dirname(__FILE__) . '/Html.php');
 class FabricationEngine extends \DOMDocument 
 {	
 	/**
-	 * The current loaded document type, html, xml.
-	 * 
-	 * @var string 
-	 */
-	public $type;
-	
-	/**
 	 * Symbol container for attributes assignment.
 	 * 
 	 * @var array
@@ -220,51 +213,37 @@ class FabricationEngine extends \DOMDocument
 	 * Then you will have a valid document with a searchable path.
 	 *
 	 * @param	string	$data
-	 * @param	string	$type
 	 * @param	string	$load
+	 * @param	string	$type
 	 * @return	boolean
 	 */
-	public function run($data = '', $type = 'html', $load = 'string') 
+	public function run($data = '', $load = 'string', $type = 'html') 
 	{
 		if (! empty($data)) {
-			
 			// Check if data is a path to a valid file then load into buffer.
 			if (file_exists($data)) {
 				$pathHash = md5($data);
 				$this->views[$pathHash] = $data; 
 			}
-//			debug($this->getViews());
-								
-			// Sniff the type to ensure xml does not get loaded as html.
-			// The FabricationEngine default is to assume everything is html 
-			// untill it can disprove that assumption.
-			$this->type = preg_match('/^<!DOCTYPE HTML/i', $data) ? 'html' : $type;
+//			debug($this->getViews());			
 			
-			if (! $this->type) {
-				$this->type = preg_match('/^<\?xml/i', $data, $matches) ? 'xml' : $type;
-			}
-			
-			switch ($this->type . '.' . $load) {
-
+			switch ($load . '.' . $type) {
 				default: 
 					return false;
 				break;
-
-				case 'html.string':
+				
+				case 'string.html':
 					if ($this->loadHTML($data)) {
-						//$this->pattern = $this->createPattern('Html');
 						//$this->pattern = $this->createPattern('Html');
 						$objectName = 'Library\\Html';
 						$this->pattern = new $objectName($this);
-						
 					} else {
 						return false;
 					}
 				break;
 
-				case 'html.file':
+				case 'file.html':
 					if (@$this->loadHTMLFile($data)) {
-						
 						// TODO create the pattern class etc..
 						//$this->pattern = $this->createPattern('HtmlFile');
 					} else {
@@ -272,19 +251,17 @@ class FabricationEngine extends \DOMDocument
 					}
 				break;
 
-				case 'xml.string':
+				case 'string.xml':
 					if ($this->loadXML($data)) {
 						//$this->pattern = $this->createPattern('Xml');
-						
 						$objectName = 'Library\\Xml';
 						$this->pattern = new $objectName($this);
-						
 					} else {
 						return false;
 					}
 				break;
 				
-				case 'xml.file':
+				case 'file.xml':
 					return false;
 				break;
 			}
@@ -327,8 +304,9 @@ class FabricationEngine extends \DOMDocument
 	 * Extend the native saveHTML method.
 	 * Allow path search functionality.
 	 * 
-	 * @param	string	$path	Output file path.
-	 * @param	boolean	$trim	Trim the output of surrounding space.
+	 * @param string	$path	Output file path.
+	 * @param boolean	$trim	Trim the output of surrounding space.
+	 * 
 	 * @return	string
 	 */
 	public function saveHTML($path='', $trim = true) 
@@ -350,9 +328,10 @@ class FabricationEngine extends \DOMDocument
 	/**
 	 * Return the engine output html view.
 	 * 
-	 * styles
-	 * scripts 
+	 * @param string $type  The run type 
+	 * @param string $xpath The xpath
 	 * 
+	 * @return type
 	 */
 	public function saveFabric($type = 'html', $xpath = '') 
 	{
