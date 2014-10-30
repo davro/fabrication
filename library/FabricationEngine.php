@@ -30,6 +30,11 @@ require_once(dirname(__FILE__) . '/Html.php');
 class FabricationEngine extends \DOMDocument 
 {	
 	/**
+	 * Time the fabrication engine was started.
+	 */
+	protected $timeStarted = 0;
+	
+	/**
 	 * Symbol container for attributes assignment.
 	 * 
 	 * @var array
@@ -114,6 +119,8 @@ class FabricationEngine extends \DOMDocument
 	 */
 	public function __construct($version = '1.0', $encoding = 'utf-8', $pattern = 'html') 
 	{
+		$this->timeStarted = microtime(true);
+		
 		parent::__construct($version, $encoding);
 		
 //		$this->pattern = $this->createPattern($pattern);
@@ -292,19 +299,21 @@ class FabricationEngine extends \DOMDocument
 	 * @return void
 	 */
 	public function mapSymbols() 
-	{	
-		foreach ($this->input as $key => $value) {
+	{
+		foreach ($this->input as $key => $input) {
 			foreach($this->symbols as $skey => $svalue) {
 				if (substr($key, 0, 1) == $svalue) {
-					if (is_string($value)) {
-						$this->setElementBy($skey
-							, str_replace($svalue, '', $key)
-							, $value
-						);
+					
+					$keyWithoutSymbol = str_replace($svalue, '', $key);
+					
+					if (is_string($input)) {
+						$this->setElementBy($skey, $keyWithoutSymbol, $input);
 					}
-					if (is_array($value)) {
-						$this->setElementBy($skey, '', $value
-						);						
+					if (is_array($input)) {
+						$this->setElementBy($skey, $keyWithoutSymbol, $input);						
+					}
+					if (is_object($input)) {
+						$this->setElementBy($skey, $keyWithoutSymbol, $input);						
 					}
 				}
 			}
@@ -598,7 +607,7 @@ class FabricationEngine extends \DOMDocument
 		// Attermpt to call convert object to a string.
 		if (!is_object($value)) {
 			
-			return;
+			//return;
 			
 		} else {
 			$value = (string) $value;
@@ -683,9 +692,6 @@ class FabricationEngine extends \DOMDocument
 								isset($child->attributes) ? $child->attributes : array(),
 								isset($child->children)   ? $child->children   : array()
 							);
-							$element->appendChild($newChild);
-						} else {
-							$newChild = $child;
 							$element->appendChild($newChild);
 						}
 						
@@ -806,69 +812,80 @@ class FabricationEngine extends \DOMDocument
 	public function template($pattern, $dataset = array(), $map = 'id') 
 	{	
 		if (sizeof($dataset) == 0) { return false; }
-
-		if (is_string($pattern)) {
-			
-			$engine = new FabricationEngine();
-			$engine->loadXML($pattern);
-			
-			//$template = $engine->query('/*')->item(0);
-			//$template = $engine->query('//*')->item(0);
-			$template = $engine->getDiv()->item(0);
-			
-			if (!$template instanceof DOMElement) {
-				throw new Exception(
-					'First div item should be an instance of the DOMElement.'
-				);
-			}
-		}
-
-		if (is_object($pattern)) {
-			$template = $pattern;
-		}
 		
-		// Create an empty container, from the template node details.
-		if (is_object($template)) {
+		try {
 			
-			$container = $this->create($template->nodeName, $template->nodeValue);
+			if (is_string($pattern)) {	
+				$engine = new FabricationEngine();
+				$engine->setOption('doctype', 'html.5');
+				$engine->loadHTML($pattern);
 
-			foreach ($dataset as $key => $row) {
+				//$template = $engine->query('/*')->item(0);
+				//$template = $engine->query('//*')->item(0);
 
-				// process the template child nodes.
-				foreach ($template->childNodes as $child) {
+				$template = '';
+				$templateDiv = $engine->getDiv();
 
-					if ($child->nodeName == '#text') { continue; }
+				if ($templateDiv) { 
+					$template = $templateDiv->item(0);
+				}
 
-					if (is_object($child->attributes->getNamedItem($map))) {
+	//			if (!$template instanceof DOMElement) {
+	//				throw new \Exception(
+	//					'First item should be an instance of the DOMElement.'
+	//				);
+	//			}
+			}
 
-						$mappedName  = $child->attributes->getNamedItem($map)->nodeName;
-						$mappedValue = $child->attributes->getNamedItem($map)->nodeValue;
+			if (is_object($pattern)) {
+				$template = $pattern;
+			}
 
-						$nodeAttributes = array();
-						foreach($child->attributes as $attribute) {
-							$nodeAttributes[$attribute->nodeName] = $attribute->nodeValue;
-						}
+			// Create an empty container, from the template node details.
+			if (is_object($template)) {
 
-						if (in_array($mappedValue, array_keys($row))) {
+				$container = $this->create($template->nodeName, $template->nodeValue);
 
-							// create the mapped node attribute with updated numeric key.
-							$nodeAttributes[$mappedName] = $mappedValue.'_'.($key + 1);
+				foreach ($dataset as $key => $row) {
 
-							// fabricate the new child nodes.
-							$node = $this->create($child->nodeName,
-								$row[$mappedValue], $nodeAttributes
-							);
+					// process the template child nodes.
+					foreach ($template->childNodes as $child) {
 
-							$container->appendChild($node);
+						if ($child->nodeName == '#text') { continue; }
+
+						if (is_object($child->attributes->getNamedItem($map))) {
+
+							$mappedName  = $child->attributes->getNamedItem($map)->nodeName;
+							$mappedValue = $child->attributes->getNamedItem($map)->nodeValue;
+
+							$nodeAttributes = array();
+							foreach($child->attributes as $attribute) {
+								$nodeAttributes[$attribute->nodeName] = $attribute->nodeValue;
+							}
+
+							if (in_array($mappedValue, array_keys($row))) {
+
+								// create the mapped node attribute with updated numeric key.
+								$nodeAttributes[$mappedName] = $mappedValue.'_'.($key + 1);
+
+								// fabricate the new child nodes.
+								$node = $this->create($child->nodeName,
+									$row[$mappedValue], $nodeAttributes
+								);
+
+								$container->appendChild($node);
+							}
 						}
 					}
 				}
+				return $container;
 			}
-
-			return $container;
+			
+			return false;
+			
+		} catch (\Exception $ex) {
+			echo $ex->getMessage();
 		}
-		
-		return false;
 	}
 	
 	/**
@@ -1046,6 +1063,29 @@ class FabricationEngine extends \DOMDocument
 	}
 	
 	/**
+	 * 
+	 * 
+	 * @staticvar array $unit
+	 * @param type $size
+	 * @param type $precision
+	 * @return type
+	 */
+	public function convertNumber($value, $precision=2) 
+	{
+		// Every days a school day!
+		// In binary notation, 1024 is represented as 10000000000, making it a 
+		// simple round number. So 1024 is the maximum number of computer memory 
+		// addresses that can be referenced with ten binary switches.
+		$memoryAddresses = 1024;
+
+		static $unit = array('b','kb','mb','gb','tb','pb');
+		$unitIndex  = floor(log($value, $memoryAddresses));
+		$unitResult = $value/pow($memoryAddresses, $unitIndex);
+
+		return round($unitResult, $precision) . ' ' . $unit[$unitIndex];
+	}
+	
+	/**
 	 * Import a html string into the current engine, without causing DOM
 	 * hierarchy errors.
 	 * 
@@ -1158,7 +1198,9 @@ class FabricationEngine extends \DOMDocument
 			// Attempt to find the doctype.
 			$nodeName = preg_replace('/^get/U', '', $method);
 			$xpath = '//' . $nodeName . $argString;
-			if (array_key_exists($nodeName, $doctype)) {
+
+//			if (array_key_exists($nodeName, $doctype)) {
+			if (array_key_exists($nodeName, $doctype['_body'])) {
 				
 				return $this->query($xpath);
 				
@@ -1207,7 +1249,13 @@ class FabricationEngine extends \DOMDocument
 	{	
 		$xql = "//*[@$element='$value']";
 		
-		return $this->query($xql)->item(0)->nodeValue = $nodeValue;
+		if (is_object($nodeValue)) {
+			$result = $this->query($xql)->item(0)->appendChild($this->importNode($nodeValue, true ));
+		} else {
+			$result = $this->query($xql)->item(0)->nodeValue = $nodeValue;
+		}
+		
+		return $result;
 	}
 	
 	/**
@@ -1436,5 +1484,17 @@ class FabricationEngine extends \DOMDocument
 
 		return $output;
 		
-	}	
+	}
+	
+	/**
+	 * Generate the amount of time taken since the object was contructed.
+	 * 
+	 * @return string
+	 */
+	public function timeTaken() 
+	{
+		$timeStop  = microtime(true);
+		$timeTaken = (float) substr(-($this->timeStarted - $timeStop), 0, 5);
+		return $timeTaken;
+	}
 }

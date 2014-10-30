@@ -137,7 +137,7 @@ into known patterns on the fly cool huh!
     #
 
     echo $engine->output('hello', 'php.array');
-    #
+    #	
     # <?php
     # $data=array(
     # 'hello'=>'world',
@@ -264,101 +264,7 @@ bump an integer value for display auto incrementing dataset.
     ?>
 ```
 
-### Example: Create an element with attributes and children, recursively.
-Create method extends the builtin method createElement adding attribute 
-functionality and the ability to recursively add children to the element 
-style and script elements.
 
-```php
-    <?php
-    require_once(dirname(__FILE__) . '/library/FabricationEngine.php');
-      
-    $engine = new Library\FabricationEngine();
-
-    $hi = $engine->create('div', 'Hello World', array('id'=>'hello-world'));
-
-    echo $hi->nodeName;
-    #
-    # div
-    #
-
-    echo $hi->nodeValue;
-    #
-    # Hello World
-    #
-
-	echo $hi->attributes->getNamedItem('id')->nodeName;
-    #
-    # id
-    #
-
-    echo $hi->attributes->getNamedItem('id')->nodeValue;
-    #
-    # hello-world
-    #
-
-
-    $engine->appendChild($hi);
-    echo $engine->saveHTML();
-    #
-    # <div id="hello-world">Hello World</div>
-    #
-
-    ?>
-```
-
-Create method with children and recursion.
-
-NOTE: this method is experimental.
-
-```php
-    <?php
-    require_once(dirname(__FILE__) . '/library/FabricationEngine.php');
-      
-    $engine = new Library\FabricationEngine();
-
-
-    $hi = $engine->create('div', '', array('id'=>'hello-world'),
-        array(
-            array('name'=>'u', 'value'=>'Hello', 
-                'attributes'=>array('id'=>'hello'), 
-                'children'=>array()
-            ),
-            array('name'=>'strong', 
-                'attributes'=>array('id'=>'world'), 
-                'children'=>array(
-                    array('name'=>'i', 'value'=>'W'),
-                    array('name'=>'i', 'value'=>'o'),
-                    array('name'=>'i', 'value'=>'r'),
-                    array('name'=>'i', 'value'=>'l'),
-                    array('name'=>'i', 'value'=>'d')
-                )
-            )
-        )
-    );
-
-    $engine->appendChild($hi);
-
-    echo $engine->saveHTML()
-    # 
-    # <div id="hello-world">
-    # <u id="hello">Hello</u>
-    # <strong id="world">
-    # <i>W</i><i>o</i><i>r</i><i>l</i><i>d</i>
-    # </strong>
-    # </div>
-    #
-
-    ?>
-```
-
-## TODO
-
-### Example: Specification           (types)
-
-### Example: Query                   (paths)
-
-### Example: View                    (paths)
 
 
 ## Contributors

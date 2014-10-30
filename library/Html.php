@@ -93,6 +93,7 @@ class Html
 				'onscroll', 'onstorage', 'onundo', 'onunload'
 			),
 			'_body' => array(
+				'body'		=> array(),
 				'section'	=> array(),
 				'nav'		=> array(),
 				'article'	=> array(),
@@ -362,6 +363,7 @@ class Html
 			'_body' => array(
 
 				// 7.5.4 Grouping elements: the DIV and SPAN elements
+				'body'		=> array(),
 				'div'		=> array(),
 				'span'		=> array(),
 
