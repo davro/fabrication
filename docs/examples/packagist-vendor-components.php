@@ -12,7 +12,6 @@ $channelDescription = $engine->query('//rss/channel/description');
 $channelGenerator   = $engine->query('//rss/channel/generator');
 $channelItems       = $engine->query('//rss/channel/item');
 //$channelItems       = $engine->getElementsByTagName('item');
-//print $channelTitle->item(0)->nodeValue . "\n";
 
 $output="{\n";
 foreach($channelItems as $item) {
@@ -28,4 +27,3 @@ foreach($channelItems as $item) {
 $output.="}\n\n";
 
 print $output;
-
