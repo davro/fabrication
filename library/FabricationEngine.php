@@ -272,15 +272,25 @@ class FabricationEngine extends \DOMDocument
 				case 'string.xml':
 					if ($this->loadXML($data)) {
 						//$this->pattern = $this->createPattern('Xml');
-						$objectName = 'Library\\Xml';
-						$this->pattern = new $objectName($this);
+//						$objectName = 'Library\\Xml';
+//						$this->pattern = new $objectName($this);
 					} else {
 						return false;
 					}
 				break;
 				
 				case 'file.xml':
-					return false;
+					$contents = file_get_contents($data);
+//					var_dump($data);
+//					var_export($contents);
+					if (@$this->loadXML($contents)) {
+//						var_dump('OK');
+						//$this->pattern = $this->createPattern('Xml');
+//						$objectName = 'Library\\Xml';
+//						$this->pattern = new $objectName($this);
+					} else {
+						return false;
+					}
 				break;
 			}
 		}
