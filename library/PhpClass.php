@@ -48,13 +48,15 @@ class PhpClass extends \Library\Fabricator
 	{
 		$uses='';
 		if ($this->stereotype) {
-			$uses.="use Application\\{$this->stereotype};\n";
+
+            // TODO check first character in stereotype for a backslash.
+            // if exist don't add Application prefix or backslash.
+			$uses.="use Application\\" . $this->stereotype . ";\n";
 		}
 		
 		$classSignature  = $this->getSignature();
-//		$classSignature  = stripcslashes($this->getSignature());
 		$classProperties = $this->getProperties();
-		$classFunctions = $this->getFunctions();
+		$classFunctions  = $this->getFunctions();
 		
 		$propertyString='';
 		if ($classProperties > 0) {
