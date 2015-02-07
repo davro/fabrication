@@ -2,7 +2,7 @@
 
 require dirname(__FILE__) . '/../../library/FabricationEngine.php';
 
-$engine = new \Library\FabricationEngine();
+$engine = new \Fabrication\FabricationEngine();
 $engine->input('#hello', 'world');
 $template = '<html><head></head><body><div id="hello"></div></body></html>';
 $engine->run($template);

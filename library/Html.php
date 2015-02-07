@@ -1,8 +1,9 @@
 <?php
-namespace Library;
 
-class Html 
-{	
+namespace Fabrication;
+
+class Html
+{
 	/**
 	 * List of supported doctypes.
 	 * 
@@ -12,22 +13,21 @@ class Html
 	 */
 	public $doctypes = array(
 		// HTML
-		'html.5'					=> '<!DOCTYPE HTML>', // Experimental, not a standard yet.
-		'html.4.01.strict'			=> "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"\n   \"http://www.w3.org/TR/html4/strict.dtd\">",
-		'html.4.01.transitional'	=> "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n   \"http://www.w3.org/TR/html4/loose.dtd\">",
-		'html.4.01.frameset'		=> "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Frameset//EN\"\n   \"http://www.w3.org/TR/html4/frameset.dtd\">",
+		'html.5' => '<!DOCTYPE HTML>',
+		'html.4.01.strict' => "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"\n   \"http://www.w3.org/TR/html4/strict.dtd\">",
+		'html.4.01.transitional' => "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n   \"http://www.w3.org/TR/html4/loose.dtd\">",
+		'html.4.01.frameset' => "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Frameset//EN\"\n   \"http://www.w3.org/TR/html4/frameset.dtd\">",
 		// HTML Historical doctypes.
-		'html.3.2'					=> "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 3.2 Final//EN\">",		
-		'html.2.0'					=> "<!DOCTYPE html PUBLIC \"-//IETF//DTD HTML 2.0//EN\">",
-		
+		'html.3.2' => "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 3.2 Final//EN\">",
+		'html.2.0' => "<!DOCTYPE html PUBLIC \"-//IETF//DTD HTML 2.0//EN\">",
 		// XHTML 
-		'xhtml.1.0.strict'			=> "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n   \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">",
-		'xhtml.1.0.transitional'	=> "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n   \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">",
-		'xhtml.1.0.frameset'		=> "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Frameset//EN\"\n   \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd\">",
+		'xhtml.1.0.strict' => "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n   \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">",
+		'xhtml.1.0.transitional' => "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n   \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">",
+		'xhtml.1.0.frameset' => "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Frameset//EN\"\n   \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd\">",
 		// XHTML Historical doctypes.
-		'xhtml.basic.1.0'			=> "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML Basic 1.0//EN\"\n    \"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">",
+		'xhtml.basic.1.0' => "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML Basic 1.0//EN\"\n    \"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">",
 	);
-	
+
 	/**
 	 * Html specification
 	 * 
@@ -52,192 +52,193 @@ class Html
 			 * accesskey, class, contenteditable, contextmenu, dir, draggable
 			 * dropzone, hidden, id, lang, spellcheck, style, tabindex, title
 			 */
-			'_global' => array('accesskey', 'class', 'contenteditable', 
-				'contextmenu', 'dir', 'draggable', 'dropzone', 'hidden', 'id', 
+			'_global' => array('accesskey', 'class', 'contenteditable',
+				'contextmenu', 'dir', 'draggable', 'dropzone', 'hidden', 'id',
 				'lang', 'spellcheck', 'style', 'tabindex', 'title'
 			),
 			//
 			// 4.1.1 The root element.
 			//
 			'html' => array('manifest'),
-			
 			//
 			// 4.2.* Document metadata
 			// head, title, base, link, meta, style
 			// 
-			'head'	=> array(),
+			'head' => array(),
 			'_head' => array(
-				'title'	=> array(),
-				'base'	=> array('href', 'target'),
-				'link'	=> array('href', 'rel', 'media', 'hreflang', 'type', 'sizes'),
-				'meta'	=> array('name', 'http-equiv', 'content', 'charset'),
-				'style'	=> array('media', 'type', 'scoped', 'title'),
+				'title' => array(),
+				'base' => array('href', 'target'),
+				'link' => array('href', 'rel', 'media', 'hreflang', 'type', 'sizes'),
+				'meta' => array('name', 'http-equiv', 'content', 'charset'),
+				'style' => array('media', 'type', 'scoped', 'title'),
 				//
 				// 4.3.* Scripting.
 				// script, noscript
 				//  
-				'script'	=> array('src', 'async', 'defer', 'type', 'charset'),
-				'noscript'	=> array(),
+				'script' => array('src', 'async', 'defer', 'type', 'charset'),
+				'noscript' => array(),
 			),
-			
 			//
 			// 4.4 Sections
 			// 4.4.* The body element.
 			// body, section, nav, article, aside, h1, h2, h3, h4, h5, h6,
 			// hgroup, header, footer, address
 			//
-			'body'		=> array('onafterprint', 'onb/eforeprint', 
-				'onbeforeunload', 'onblur', 'onerror', 'onfocus', 
-				'onhashchange', 'onload', 'onmessage', 'onoffline', 'ononline', 
-				'onpagehide', 'onpageshow', 'onpopstate', 'onredo', 'onresize', 
+			'body' => array('onafterprint', 'onb/eforeprint',
+				'onbeforeunload', 'onblur', 'onerror', 'onfocus',
+				'onhashchange', 'onload', 'onmessage', 'onoffline', 'ononline',
+				'onpagehide', 'onpageshow', 'onpopstate', 'onredo', 'onresize',
 				'onscroll', 'onstorage', 'onundo', 'onunload'
 			),
 			'_body' => array(
-				'body'		=> array(),
-				'section'	=> array(),
-				'nav'		=> array(),
-				'article'	=> array(),
-				'aside'		=> array(),
-				'h1'		=> array(),
-				'h2'		=> array(),
-				'h3'		=> array(),
-				'h4'		=> array(),
-				'h5'		=> array(),
-				'h6'		=> array(),
-				'hgroup'	=> array(),
-				'header'	=> array(),
-				'footer'	=> array(),
-				'address'	=> array(),
+				'body' => array(),
+				'section' => array(),
+				'nav' => array(),
+				'article' => array(),
+				'aside' => array(),
+				'h1' => array(),
+				'h2' => array(),
+				'h3' => array(),
+				'h4' => array(),
+				'h5' => array(),
+				'h6' => array(),
+				'hgroup' => array(),
+				'header' => array(),
+				'footer' => array(),
+				'address' => array(),
 				//
 				// 4.5.* Grouping content
 				// p, hr, pre, blockquote, ol, ul, li, dl, dt, dd
 				// figure, figcaption, div
 				// 
-				'p'				=> array(),
-				'hr'			=> array(),
-				'pre'			=> array(),
-				'blockquote'	=> array(),
-				'ol'			=> array(),
-				'ul'			=> array(),
-				'li'			=> array(),
-				'dl'			=> array(),
-				'dt'			=> array(),
-				'dd'			=> array(),
-				'figure'		=> array(),
-				'figcaption'	=> array(),
-				'div'			=> array(),
+				'p' => array(),
+				'hr' => array(),
+				'pre' => array(),
+				'blockquote' => array(),
+				'ol' => array(),
+				'ul' => array(),
+				'li' => array(),
+				'dl' => array(),
+				'dt' => array(),
+				'dd' => array(),
+				'figure' => array(),
+				'figcaption' => array(),
+				'div' => array(),
 				//
 				// 4.6.* Text-level semantics
 				// a, em, strong, small, s, cite, q, dfn, abbr, time, code, var
 				// samp, kbd, sub, sup, i, b, u, mark, ruby, rt, rp, bdi ,bdo
 				// span, br, wbr
 				//
-				'a'			=> array('href', 'target', 'rel', 'media', 'hreflang',
+				'a' => array('href', 'target', 'rel', 'media', 'hreflang',
 					'type'
 				),
-				'em'		=> array(),
-				'strong'	=> array(),
-				'small'		=> array(),
-				's'			=> array(),
-				'cite'		=> array(),
-				'q'			=> array('cite'),
-				'dfn'		=> array('title'),
-				'abbr'		=> array('title'),
-				'time'		=> array('datetime', 'pubdate'),
-				'code'		=> array(),
-				'var'		=> array(),
-				'samp'		=> array(),
-				'kbd'		=> array(),
-				'sub'		=> array(),
-				'sup'		=> array(),
-				'i'			=> array(),
-				'b'			=> array(),
-				'u'			=> array(),
-				'mark'		=> array(),
-				'ruby'		=> array(),
-				'rt'		=> array(),
-				'rp'		=> array(),
-				'bdi'		=> array('dir'),
-				'bdo'		=> array('dir'),
-				'span'		=> array(),
-				'br'		=> array(),
-				'wbr'		=> array(),
+				'em' => array(),
+				'strong' => array(),
+				'small' => array(),
+				's' => array(),
+				'cite' => array(),
+				'q' => array('cite'),
+				'dfn' => array('title'),
+				'abbr' => array('title'),
+				'time' => array('datetime', 'pubdate'),
+				'code' => array(),
+				'var' => array(),
+				'samp' => array(),
+				'kbd' => array(),
+				'sub' => array(),
+				'sup' => array(),
+				'i' => array(),
+				'b' => array(),
+				'u' => array(),
+				'mark' => array(),
+				'ruby' => array(),
+				'rt' => array(),
+				'rp' => array(),
+				'bdi' => array('dir'),
+				'bdo' => array('dir'),
+				'span' => array(),
+				'br' => array(),
+				'wbr' => array(),
 				//
 				// 4.7 Edits
 				// ins, del
+				//
 				'ins' => array('cite', 'datetime'),
-				'del' => array('cite', 'datetime' ),
+				'del' => array('cite', 'datetime'),
 				//
 				// 4.8.* Embedded content
 				// img, iframe, embed, object, param, video, audio, source, track
 				//
-				'img'		=> array('alt', 'src', 'usemap', 'ismap', 'width', 
+				'img' => array('alt', 'src', 'usemap', 'ismap', 'width',
 					'height'
 				),
-				'iframe'	=> array('src', 'srcdoc', 'name', 'sandbox', 'seamless',
+				'iframe' => array('src', 'srcdoc', 'name', 'sandbox', 'seamless',
 					'width', 'height'
 				),
-				'embed'		=> array('src', 'type', 'width', 'height'),
-				'object'	=> array('data', 'type', 'name', 'usemap', 'form', 
+				'embed' => array('src', 'type', 'width', 'height'),
+				'object' => array('data', 'type', 'name', 'usemap', 'form',
 					'width', 'height'
 				),
-				'param'		=> array('name', 'value'),
-				'video'		=> array('src', 'poster', 'preload', 'autoplay', 
+				'param' => array('name', 'value'),
+				'video' => array('src', 'poster', 'preload', 'autoplay',
 					'mediagroup', 'loop', 'muted', 'controls', 'width', 'height'
 				),
-				'audio'		=> array('src', 'preload', 'autoplay', 'mediagroup', 
+				'audio' => array('src', 'preload', 'autoplay', 'mediagroup',
 					'loop', 'muted', 'controls'
 				),
-				'source'	=> array('src', 'type', 'media'),
-				'track'		=> array('kind', 'src', 'srclang', 'label', 'default'),
+				'source' => array('src', 'type', 'media'),
+				'track' => array('kind', 'src', 'srclang', 'label', 'default'),
+				//
 				// 4.8.10 Media elements
 				// 4.8.11 The canvas element
 				// map, area
-				'canvas'	=> array('width', 'height'),
-				'map'		=> array('name'),
-				'area'		=> array('alt', 'coords', 'shape', 'href', 'target', 
+				//
+				'canvas' => array('width', 'height'),
+				'map' => array('name'),
+				'area' => array('alt', 'coords', 'shape', 'href', 'target',
 					'rel', 'media', 'hreflang', 'type'
 				),
 				//
 				// 4.9.* Tabular data
 				// table, caption, colgroup, col, tbody, thead, tfoot, tr, td, th
 				//  
-				'table'		=> array('border'),
-				'caption'	=> array(),
-				'colgroup'	=> array('span'),
-				'col'		=> array('span'),
-				'tbody'		=> array(),
-				'thead'		=> array(),
-				'tfoot'		=> array(),
-				'tr'		=> array(),
-				'td'		=> array('colspan', 'rowspan', 'headers'),
-				'th'		=> array('colspan', 'rowspan', 'headers', 'scope'),
+				'table' => array('border'),
+				'caption' => array(),
+				'colgroup' => array('span'),
+				'col' => array('span'),
+				'tbody' => array(),
+				'thead' => array(),
+				'tfoot' => array(),
+				'tr' => array(),
+				'td' => array('colspan', 'rowspan', 'headers'),
+				'th' => array('colspan', 'rowspan', 'headers', 'scope'),
 				//
 				// 4.10 Forms
 				//
 				// 4.10.3 The form element
-				'form'		=> array(),
+				'form' => array(),
 				// 4.10.4 The fieldset element
-				'fieldset'	=> array(),
+				'fieldset' => array(),
 				// 4.10.5 The legend element
-				'legend'	=> array(),
+				'legend' => array(),
 				// 4.10.6 The label element
-				'label'		=> array(),
+				'label' => array(),
 				// 4.10.7 The input element
-				'input'		=> array(
-					'type'=>array('hidden', 'text', 'search', 'tel', 'url', 'email', 'password','datetime', 'date', 'month', 'week', 'time', 'datetime-local', 'number', 'range', 'color', 'checkbox', 'radio', 'file', 'submit', 'image', 'reset', 'button'), 
-					'autocomplete', 
-					'dirname', 
-					'list', 
-					'readonly', 
-					'size', 
-					'required', 
-					'multiple', 
-					'maxlength', 
-					'pattern', 
-					'min', 
-					'max', 
-					'step', 
+				'input' => array(
+					'type' => array('hidden', 'text', 'search', 'tel', 'url', 'email', 'password', 'datetime', 'date', 'month', 'week', 'time', 'datetime-local', 'number', 'range', 'color', 'checkbox', 'radio', 'file', 'submit', 'image', 'reset', 'button'),
+					'autocomplete',
+					'dirname',
+					'list',
+					'readonly',
+					'size',
+					'required',
+					'multiple',
+					'maxlength',
+					'pattern',
+					'min',
+					'max',
+					'step',
 					'placeholder'
 				),
 				//
@@ -284,39 +285,37 @@ class Html
 				//	4.10.7.5 Common event behaviors
 				//
 				//	4.10.8 The button element
-				'button'		=> array(),
+				'button' => array(),
 				//	4.10.9 The select element
-				'select'		=> array(),
+				'select' => array(),
 				//	4.10.10 The datalist element
-				'datalist'		=> array(),
+				'datalist' => array(),
 				//	4.10.11 The optgroup element
-				'optgroup'		=> array(),
+				'optgroup' => array(),
 				//	4.10.12 The option element
-				'option'		=> array(),
+				'option' => array(),
 				//	4.10.13 The textarea element
-				'textarea'		=> array(),
+				'textarea' => array(),
 				//	4.10.14 The keygen element
-				'keygen'		=> array(),
+				'keygen' => array(),
 				//	4.10.15 The output element
-				'output'		=> array(),
+				'output' => array(),
 				//	4.10.16 The progress element
-				'progress'		=> array(),
+				'progress' => array(),
 				//	4.10.17 The meter element
-				'meter'			=> array(),
+				'meter' => array(),
 				//
 				//	4.11 Interactive elements
 				//	4.11.1 The details element
-				'details'		=> array(),
+				'details' => array(),
 				//	4.11.2 The summary element
-				'summary'		=> array(),
+				'summary' => array(),
 				//	4.11.3 The command element
-				'command'		=> array(),
+				'command' => array(),
 				//	4.11.4 The menu element
-				'menu'			=> array(),
+				'menu' => array(),
 			)
 		),
-
-		
 		//
 		// This HTML4 transitional specification is uncomplete !!
 		// 
@@ -340,7 +339,6 @@ class Html
 				, 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress'
 				, 'onkeydown', 'onkeyup'
 			),
-			
 			/**
 			 * http://www.w3.org/TR/html401/struct/global.html
 			 * 
@@ -349,41 +347,34 @@ class Html
 			 * 7.2 HTML version information
 			 * 7.3 The HTML element
 			 */
-			'html'		=> array('lang'),
-			
+			'html' => array('lang'),
 			// 7.4 The document head
-		   'head'		=> array('profile', 'lang'),
+			'head' => array('profile', 'lang'),
 			'_head' => array(
-			   'title'		=> array('lang'),
-			   'meta'		=> array('name', 'content', 'scheme', 'http-equiv', 'lang'),
+				'title' => array('lang'),
+				'meta' => array('name', 'content', 'scheme', 'http-equiv', 'lang'),
 			),
-			
 			// 7.5 The document body
-			'body'		=> array(),
+			'body' => array(),
 			'_body' => array(
-
 				// 7.5.4 Grouping elements: the DIV and SPAN elements
-				'body'		=> array(),
-				'div'		=> array(),
-				'span'		=> array(),
-
+				'body' => array(),
+				'div' => array(),
+				'span' => array(),
 				// 7.5.5 Headings: The H1, H2, H3, H4, H5, H6 elements
-				'h1'		=> array(),
-				'h2'		=> array(),
-				'h3'		=> array(),
-				'h4'		=> array(),
-				'h5'		=> array(),
-				'h6'		=> array(),
-
+				'h1' => array(),
+				'h2' => array(),
+				'h3' => array(),
+				'h4' => array(),
+				'h5' => array(),
+				'h6' => array(),
 				// 7.5.6 The ADDRESS element
-				'address'	=> array(),
-
+				'address' => array(),
 				/**
 				 * http://www.w3.org/TR/html401/struct/dirlang.html
 				 * 
 				 * 8 Language information and text direction
 				 */
-
 				/**
 				 * http://www.w3.org/TR/html401/struct/text.html
 				 * 
@@ -391,81 +382,76 @@ class Html
 				 * 9.2 Structured text
 				 * 9.2.1 Phrase elements: EM, STRONG, DFN, CODE, SAMP, KBD, VAR, CITE, ABBR, and ACRONYM
 				 */
-				'em'		=> array(),
-				'strong'	=> array(),
-				'dfn'		=> array(),
-				'code'		=> array(),
-				'samp'		=> array(),
-				'kbd'		=> array(),
-				'var'		=> array(),
-				'cite'		=> array(),
-				'abbr'		=> array(),
-				'acronym'	=> array(),
+				'em' => array(),
+				'strong' => array(),
+				'dfn' => array(),
+				'code' => array(),
+				'samp' => array(),
+				'kbd' => array(),
+				'var' => array(),
+				'cite' => array(),
+				'abbr' => array(),
+				'acronym' => array(),
 				// 9.2.2 Quotations: The BLOCKQUOTE and Q elements.
-				'blockquote'=> array(),
-				'q'			=> array(),
+				'blockquote' => array(),
+				'q' => array(),
 				/**
 				 * 9.3 Lines and Paragraphs.
 				 */
-				'p'			=> array(),
+				'p' => array(),
 				// 9.3.2 Controlling line breaks.
-				'br'		=> array(),
+				'br' => array(),
 				// 9.3.3 Hyphenation
 				// 9.3.4 Preformatted text: The PRE element
-				'pre'		=> array(),
+				'pre' => array(),
 				// 9.3.5 Visual rendering of paragraphs
 				/**
 				 * 9.4 Marking document changes: The INS and DEL elements
 				 */
-				'ins'		=> array(),
-				'del'		=> array(),
-
+				'ins' => array(),
+				'del' => array(),
 				// TODO
-				'form'		=> array(),
-				'base'		=> array(),
-				'script'	=> array(),
-				'noscript'	=> array(),
-
-				'ul'		=> array(),
-				'ol'		=> array(),
-				'dl'		=> array(),
-				'dt'		=> array(),
-				'dd'		=> array(),
-				'meta'		=> array('name', 'content', 'scheme', 'http-equiv'),
-				'table'		=> array(),
-				'caption'	=> array(),
-				'thead'		=> array(),
-				'tbody'		=> array(),
-				'tfoot'		=> array(),
-				'colgroup'	=> array(),
-				'col'		=> array(),
-				'tr'		=> array(),
-				'th'		=> array(),
-				'td'		=> array(),
-				'a'			=> array(),
-				'img'		=> array(),
-				'object'	=> array(),
-				'param'		=> array(),
-				'map'		=> array(),
-
+				'form' => array(),
+				'base' => array(),
+				'script' => array(),
+				'noscript' => array(),
+				'ul' => array(),
+				'ol' => array(),
+				'dl' => array(),
+				'dt' => array(),
+				'dd' => array(),
+				'meta' => array('name', 'content', 'scheme', 'http-equiv'),
+				'table' => array(),
+				'caption' => array(),
+				'thead' => array(),
+				'tbody' => array(),
+				'tfoot' => array(),
+				'colgroup' => array(),
+				'col' => array(),
+				'tr' => array(),
+				'th' => array(),
+				'td' => array(),
+				'a' => array(),
+				'img' => array(),
+				'object' => array(),
+				'param' => array(),
+				'map' => array(),
 				/**
 				 * 14	Style Sheets
 				 * http://www.w3.org/TR/html401/present/styles.html
 				 */
-				'style'		=> array(),
-
-
+				'style' => array(),
 				/**
 				 * 15.2.1	Font style elements: the TT, I, B, BIG, SMALL, STRIKE, S, and U elements
 				 * 
 				 */
-				'tt'		=> array(),
-				'i'			=> array(),
-				'b'			=> array(),
-				'big'		=> array(),
-				'small'		=> array(),
-				'strike'	=> array(),
-				'u'			=> array(),
+				'tt' => array(),
+				'i' => array(),
+				'b' => array(),
+				'big' => array(),
+				'small' => array(),
+				'strike' => array(),
+				'u' => array(),
 			),
 		),
 	);

@@ -2,7 +2,7 @@
 
 require dirname(__FILE__) . '/../../library/FabricationEngine.php';
 
-$engine = new \Library\FabricationEngine();
+$engine = new \Fabrication\FabricationEngine();
 echo $engine->getDoctype() . "\n";
 $engine->setOption('doctype', 'html.5');
 echo $engine->getDoctype() . "\n";

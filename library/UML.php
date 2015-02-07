@@ -1,5 +1,6 @@
 <?php
-namespace Library;
+
+namespace Fabrication;
 
 /**
  * Unified Modeling Language

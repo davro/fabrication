@@ -1,5 +1,6 @@
 <?php
-namespace Library;
+
+namespace Fabrication;
 
 /**
  * Fabrication Engine
@@ -124,7 +125,7 @@ class FabricationEngine extends \DOMDocument
 		parent::__construct($version, $encoding);
 		
 //		$this->pattern = $this->createPattern($pattern);
-		$objectName = 'Library\\' . ucfirst($pattern);
+		$objectName = 'Fabrication\\' . ucfirst($pattern);
 		$this->pattern = new $objectName($this);
 	}
 	
@@ -253,7 +254,7 @@ class FabricationEngine extends \DOMDocument
 				case 'string.html':
 					if ($this->loadHTML($data)) {
 						//$this->pattern = $this->createPattern('Html');
-						$objectName = 'Library\\Html';
+						$objectName = 'Fabrication\\Html';
 						$this->pattern = new $objectName($this);
 					} else {
 						return false;

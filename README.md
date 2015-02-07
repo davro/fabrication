@@ -34,9 +34,8 @@ Simple example of Input/Output.
 
 ```php
     <?php
-    require_once(dirname(__FILE__) . '/library/FabricationEngine.php');
       
-    $engine = new Library\FabricationEngine();
+    $engine = new Fabrication\FabricationEngine();
     $engine->input('hello', 'world');
 
     echo $engine->output('hello');
@@ -52,11 +51,10 @@ ID keys are automatically mapped to elements with matching id identifiers.
 
 ```php
     <?php
-    require_once(dirname(__FILE__) . '/library/FabricationEngine.php');
       
     $template = '<html><head></head><body><div id="hello"></div></body></html>';
 
-    $engine = new Library\FabricationEngine();
+    $engine = new Fabrication\FabricationEngine();
     $engine->input('#hello', 'world');
 
     $engine->run($template);
@@ -86,11 +84,10 @@ Class keys are automatically mapped to elements with matching class identifiers.
 
 ```php
     <?php
-    require_once(dirname(__FILE__) . '/library/FabricationEngine.php');
-      
+    
     $template = '<html><head></head><body><div class="hello"></div></body></html>';
 
-    $engine = new Library\FabricationEngine();
+    $engine = new Fabrication\FabricationEngine();
     $engine->input('.hello', 'world');
 
     $engine->run($template);

@@ -2,7 +2,7 @@
 
 require dirname(__FILE__) . '/../../library/FabricationEngine.php';
 
-$engine = new \Library\FabricationEngine();
+$engine = new \Fabrication\FabricationEngine();
 $engine->registerNamespace('xmlns:dc', 'http://purl.org/dc/elements/1.1/');
 $engine->registerNamespace('xmlns:slash', 'http://purl.org/rss/1.0/modules/slash/');
 $engine->run('https://packagist.org/feeds/vendor.components.rss', 'file');

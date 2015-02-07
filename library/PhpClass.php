@@ -1,9 +1,10 @@
 <?php
-namespace Library;
+
+namespace Fabrication;
 
 require dirname(__FILE__) . '/Fabricator.php';
 
-class PhpClass extends \Library\Fabricator
+class PhpClass extends \Fabrication\Fabricator
 {
 	public $type;
 	public $stereotype;

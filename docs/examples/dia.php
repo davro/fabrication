@@ -13,8 +13,8 @@ try {
 
 	} else {
 
-		$engine = new \Library\FabricationEngine();
-		$UML    = new \Library\UML($engine, dirname(__FILE__));
+		$engine = new \Fabrication\FabricationEngine();
+		$UML    = new \Fabrication\UML($engine, dirname(__FILE__));
 
 		// get diagram name from script argument or default.
 		$diagramName = isset($argv[1]) ? $argv[1] : 'Application';
