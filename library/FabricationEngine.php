@@ -457,9 +457,9 @@ class FabricationEngine extends \DOMDocument
 	/**
 	 * Return a string representation of the data.
 	 * 
-	 * @param mixed   $data
-	 * @param boolean $return
-	 * @param array   $options
+	 * @param mixed   $data    The data to dump
+	 * @param boolean $return  True return output, False print output
+	 * @param array   $options Allow for overriding of option
 	 * 
 	 * @return	string 
 	 */
