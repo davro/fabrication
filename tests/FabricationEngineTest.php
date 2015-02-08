@@ -1,9 +1,9 @@
 <?php
 namespace Fabrication\Tests;
 
-use Library\FabricationEngine;
-use Library\Html\Table;
-use Library\Html\Form;
+use Fabrication\FabricationEngine;
+use Fabrication\Html\Table;
+use Fabrication\Html\Form;
 
 // Fabrication Framework minimum configuration.
 define('FRAMEWORK_ROOT_DIR',	'/home/davro/workspace/project-fabrication');
@@ -33,7 +33,7 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 	public function testInstance() {
 		
 		$this->assertInternalType('object', $this->engine);
-		$this->assertInstanceOf('Library\FabricationEngine', $this->engine);
+		$this->assertInstanceOf('Fabrication\FabricationEngine', $this->engine);
 		
 	}
 	
@@ -42,7 +42,7 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		$engine = $this->engine->getEngine();
 		
 		$this->assertInternalType('object', $engine);
-		$this->assertInstanceOf('Library\FabricationEngine', $engine);
+		$this->assertInstanceOf('Fabrication\FabricationEngine', $engine);
 		
 	}
 	

@@ -1,0 +1,7 @@
+{
+    "name": "davro/fabrication",
+    "description": "Template engine based on the Document Object Model no placeholders!",
+    "require": {
+        "php": ">=5.3.0"
+    }
+}

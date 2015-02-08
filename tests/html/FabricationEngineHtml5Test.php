@@ -1,7 +1,7 @@
 <?php
 namespace Fabrication\Tests;
 
-use Library\FabricationEngine;
+use Fabrication\FabricationEngine;
 
 require_once(dirname(dirname(dirname(__FILE__))).'/library/FabricationEngine.php');
 

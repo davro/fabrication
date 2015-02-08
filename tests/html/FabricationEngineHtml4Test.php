@@ -1,7 +1,7 @@
 <?php
 namespace Fabrication\Tests;
 
-use Library\FabricationEngine;
+use Fabrication\FabricationEngine;
 
 require_once(dirname(dirname(dirname(__FILE__))).'/library/FabricationEngine.php');
 
@@ -56,7 +56,7 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase {
             "</html>\n";
 
         $this->assertInternalType('object', $this->engine);
-        $this->assertInstanceOf('Library\FabricationEngine', $this->engine);
+        $this->assertInstanceOf('Fabrication\FabricationEngine', $this->engine);
     }
 
 	
