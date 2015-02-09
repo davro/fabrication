@@ -120,7 +120,7 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase {
 		//$this->assertFalse($this->engine->run('missing.html', 'file'));
 		
 		$designPath = dirname(dirname(__FILE__)).'/fixture/design.html';
-		$this->assertTrue($this->engine->run($designPath, 'html', 'file'));
+		$this->assertTrue($this->engine->run($designPath, 'file', 'html'));
 		
 		$nodeList=$this->engine->getHtml();
 		$this->assertInstanceOf('DOMNodeList', $nodeList);
@@ -146,7 +146,7 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase {
 
     public function testSanityCreateProcessingInstruction() {
 		
-        $this->assertTrue($this->engine->run('<html><head><body></html>', 'html', 'string'));
+        $this->assertTrue($this->engine->run('<html><head><body></html>', 'string', 'html'));
 
         $this->engine->getElementsByTagName('body')->item(0)->appendChild(
             $this->engine->createProcessingInstruction('php', 'echo PHP_VERSION; ?')
@@ -523,8 +523,6 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase {
 //        $this->assertInstanceOf('DOMNodeList', $result);
 //        $this->assertEquals(1, $result->length);
 //        
-//		
-//		
 //        foreach($result as $key => $element) {
 //            $this->assertInstanceOf('DOMElement', $element);
 //            $this->assertEquals('base', $element->nodeName);
