@@ -2,6 +2,25 @@
     "name": "davro/fabrication",
     "version": "0.1.0",
     "description": "Template engine based on the Document Object Model no placeholders!",
+    "type": "library",
+    "keywords": ["fabrication", "fabric", "domdocument", "dom"],
+    "homepage": "http://davro.net/",
+    "license": "LGPL",
+    "authors": [
+        {
+            "name": "David Stevens aka davro",
+            "email": "mail.davro@gmail.com",
+            "homepage": "http://www.davro.net/",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "mail.davro@gmail.com",
+        "issues": "https://davro.net/",
+        "forum": "http://davro.net/Polymath",
+        "wiki": "http://davro.net/",
+        "source": "https://github.com/davro/fabrication"
+    },
     "require": {
         "php": ">=5.3.0"
     }
