@@ -1,9 +1,9 @@
 {
     "name": "davro/fabrication",
     "version": "0.1.0",
-    "description": "Template engine based on the Document Object Model no placeholders!",
+    "description": "DOM based Template Engine no placeholders!",
     "type": "library",
-    "keywords": ["fabrication", "fabric", "domdocument", "dom"],
+    "keywords": ["template", "engine", "fabrication", "fabric", "domdocument", "dom"],
     "homepage": "http://davro.net/",
     "license": "LGPL",
     "authors": [

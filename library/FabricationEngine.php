@@ -231,8 +231,7 @@ class FabricationEngine extends \DOMDocument {
                 $pathHash = md5($data);
                 $this->views[$pathHash] = $data;
             }
-//			debug($this->getViews());			
-
+            //debug($this->getViews());
             switch ($load . '.' . $type) {
                 default:
                     return false;
