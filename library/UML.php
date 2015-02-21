@@ -28,7 +28,7 @@ class UML
 	 * 
 	 * @param \Library\FabricationEngine $engine
 	 */
-	public function __construct(\Library\FabricationEngine $engine)
+	public function __construct(\Fabrication\FabricationEngine $engine)
 	{	
 		$this->engine = $engine;
 		$this->engine->registerNamespace('xmlns:dia', 'http://www.lysator.liu.se/~alla/dia/');
@@ -209,6 +209,5 @@ class UML
 	public function cleanString($value) 
 	{
 		return str_replace('#', '', $value);
-	}
-	
+	}	
 }

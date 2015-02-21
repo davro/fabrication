@@ -18,7 +18,5 @@ $helloText =  $hi->ownerDocument->saveXML($hi);
 
 $engine->appendChild($hi);
 $engine->input('#hello', 'world');
+
 echo $engine->saveHTML();
-
-
-

@@ -10,4 +10,3 @@ $engine->run($template);
 var_dump($engine->output('#hello'));
 var_dump($engine->saveHTML('//div[@id="hello"]/text()'));
 var_dump($engine->saveHTML());
-

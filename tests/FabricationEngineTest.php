@@ -6,15 +6,15 @@ use Fabrication\Html\Table;
 use Fabrication\Html\Form;
 
 // Fabrication Framework minimum configuration.
-define('FRAMEWORK_ROOT_DIR',	'/home/davro/workspace/project-fabrication');
-define('FRAMEWORK_ROOT_PHAR',	false);  // testing phar archive.
-define('FRAMEWORK_VERSION',	    0.1);
-define('FRAMEWORK_ENVIRONMENT',	'dev');
-define('FRAMEWORK_DISPATCHER',	false);
+define('FRAMEWORK_ROOT_DIR',    '/home/davro/workspace/project-fabrication');
+define('FRAMEWORK_ROOT_PHAR',   false);  // testing phar archive.
+define('FRAMEWORK_VERSION',     0.1);
+define('FRAMEWORK_ENVIRONMENT', 'dev');
+define('FRAMEWORK_DISPATCHER',  false);
 // Fabrication Project minimum configuration.
-define('PROJECT_HOSTNAME',	'localhost');
-define('PROJECT_NAME',		'workspace');
-define('PROJECT_ROOT_DIR',	realpath(dirname(dirname(__FILE__))));
+define('PROJECT_HOSTNAME',      'localhost');
+define('PROJECT_NAME',          'workspace');
+define('PROJECT_ROOT_DIR',      realpath(dirname(dirname(__FILE__))));
 
 //require_once(dirname(dirname(__FILE__)) . '/library/bootstrap.php');
 require_once(dirname(dirname(__FILE__)) . '/library/FabricationEngine.php');
@@ -22,32 +22,30 @@ require_once(dirname(dirname(__FILE__)) . '/library/FabricationEngine.php');
 /**
  * Fabrication Engine TestCase.
  */
-class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
-
-	public function setUp() {
-		
+class FabricationEngineTest extends \PHPUnit_Framework_TestCase
+{
+	public function setUp()
+	{	
 		$this->engine = new FabricationEngine();
 		
 	}
 	
-	public function testInstance() {
-		
+	public function testInstance()
+	{	
 		$this->assertInternalType('object', $this->engine);
-		$this->assertInstanceOf('Fabrication\FabricationEngine', $this->engine);
-		
+		$this->assertInstanceOf('Fabrication\FabricationEngine', $this->engine);	
 	}
 	
-	public function testGetEngine() {
-		
+	public function testGetEngine()
+	{	
 		$engine = $this->engine->getEngine();
 		
 		$this->assertInternalType('object', $engine);
-		$this->assertInstanceOf('Fabrication\FabricationEngine', $engine);
-		
+		$this->assertInstanceOf('Fabrication\FabricationEngine', $engine);	
 	}
 	
-	public function testAttributes() {
-		
+	public function testAttributes()
+	{
 		$this->assertObjectHasAttribute('input', $this->engine);
 		$this->assertObjectHasAttribute('output', $this->engine);
 		$this->assertObjectHasAttribute('options', $this->engine);
@@ -55,8 +53,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 	
 	// This example code is copyed into the README.md testing for consistency.
 	// Simplest example.
-	public function testReadmeExample1() {
-
+	public function testReadmeExample1()
+	{
 		$engine = new FabricationEngine();
 		$engine->input('hello', 'world');
 		
@@ -64,8 +62,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($engine->output('hello'), 'world');
 	}
 	
-	public function testReadmeExample2() {
-
+	public function testReadmeExample2()
+	{
 		$engine = new FabricationEngine();
 		$engine->input('#hello', 'world');
 		$template = '<html><head></head><body><div id="hello"></div></body></html>';
@@ -78,8 +76,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 	
-	public function testReadmeExample3() {
-
+	public function testReadmeExample3()
+	{
 		$engine = new FabricationEngine();
 		$engine->input('.hello', 'world');
 		$template = '<html><head></head><body><div class="hello"></div></body></html>';
@@ -92,8 +90,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 	
-	public function testReadmeExampleOutput() {
-
+	public function testReadmeExampleOutput()
+	{
 		$tag='>';
 		$engine = new FabricationEngine();
 		$engine->input('hello', 'world');
@@ -102,8 +100,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 	
-	public function testReadmeExampleOutput1() {
-
+	public function testReadmeExampleOutput1()
+	{
 		$engine = new FabricationEngine();
 		$engine->input('hello', 'world');
 		$this->assertEquals(
@@ -116,8 +114,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 	
-	public function testReadmeExampleOutput2() {
-
+	public function testReadmeExampleOutput2()
+	{
 		$tag='>';
 		$engine = new FabricationEngine();
 		$engine->input('hello', 'world');
@@ -126,8 +124,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 	
-	public function testReadmeExampleOutput3() {
-
+	public function testReadmeExampleOutput3()
+	{
 		$engine = new FabricationEngine();
 		$engine->input('body', array('bgcolor'=>'#999999'));
 		$this->assertEquals("body {\nbgcolor: #999999;\n}\n", 
@@ -135,8 +133,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 	
-	public function testReadmeExampleOptionDoctype() {
-
+	public function testReadmeExampleOptionDoctype()
+	{
 		$engine = new FabricationEngine();
 		$template = '<html><head></head><body></body></html>';
 		$engine->run($template);
@@ -145,12 +143,13 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals('<!DOCTYPE HTML>', $engine->getDoctype());
 	}
 	
-	public function testReadmeExampleTemplateDataset() {
+	public function testReadmeExampleTemplateDataset()
+	{
 		// SEE: testCreatingHTMLAndTemplateFromData();
 	}
 	
-	public function testReadmeExampleCreate() {
-
+	public function testReadmeExampleCreate()
+	{
 		$engine = new FabricationEngine();
 
 		$hi = $engine->create('div', 'Hello World', array('id'=>'hello-world'));
@@ -167,8 +166,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 	
-	public function testReadmeExampleCreate1() {
-
+	public function testReadmeExampleCreate1()
+	{
 		$engine = new FabricationEngine();
 
 		$hi = $engine->create('div', '', array('id'=>'hello-world'),
@@ -208,18 +207,17 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 	public function testReadmeExampleView() {}
 	public function testReadmeExampleDumpDebug() {}
 	
-	public function testDoctypeDefault() {
-		
+	public function testDoctypeDefault()
+	{	
 		$this->assertEquals(
 			'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"'.
 			"\n" . '   "http://www.w3.org/TR/html4/loose.dtd">'
 			, $this->engine->getDoctype()
-		);
-		
+		);	
 	}
 	
-	public function testDoctypeHTML5() {
-		
+	public function testDoctypeHTML5()
+	{	
 		// Change the doctype option.
 		$this->engine->setOption('doctype', 'html.5');
 		
@@ -229,12 +227,11 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		// Assertion doctype output.
 		$this->assertEquals('<!DOCTYPE HTML>'
 			, $this->engine->getDoctype()
-		);
-		
+		);	
 	}
 	
-	public function testDoctypeXHTML1Strict() {
-		
+	public function testDoctypeXHTML1Strict()
+	{	
 		// Change the doctype option.
 		$this->engine->setOption('doctype', 'xhtml.1.0.strict');
 		
@@ -250,8 +247,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		
 	}
 	
-	public function testDoctypeXHTML1Frameset() {
-		
+	public function testDoctypeXHTML1Frameset()
+	{	
 		// Change the doctype option.
 		$this->engine->setOption('doctype', 'xhtml.1.0.frameset');
 		
@@ -263,29 +260,25 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 			'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"' . 
 			"\n" . '   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">'
 			, $this->engine->getDoctype()
-		);
-		
+		);	
 	}
 	
-	public function testAllOptionsDefaults() {
-		
+	public function testAllOptionsDefaults()
+	{	
 		$this->assertEquals(true, $this->engine->getOption('process'));
 		$this->assertEquals(true, $this->engine->getOption('process.body.image'));
 		$this->assertEquals(true, $this->engine->getOption('process.body.br'));
 		$this->assertEquals(true, $this->engine->getOption('process.body.hr'));
 	}
 	
-	
-	public function testInput() {
-
-		$this->engine->input('hello', 'world');
-		
+	public function testInput()
+	{
+		$this->engine->input('hello', 'world');	
 		$this->assertEquals('world', $this->engine->output('hello'));
-		
 	}
 	
-	public function testInputBoolean() {
-
+	public function testInputBoolean()
+	{
 		$this->engine->input(true, false);
 		$this->assertEquals(false, $this->engine->output(true));
 		
@@ -296,21 +289,17 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(0, $this->engine->output(1));
 		
 		$this->engine->input(0, 1);
-		$this->assertEquals(1, $this->engine->output(0));
-		
+		$this->assertEquals(1, $this->engine->output(0));	
 	}
 	
-	public function testInputArray() {
-
-		$this->engine->input('hello', array('world'));
-		
+	public function testInputArray()
+	{
+		$this->engine->input('hello', array('world'));	
 		$this->assertEquals(array('world'), $this->engine->output('hello'));
-		
 	}
 	
-	
-	public function testInputIDAndRenderOutput() {
-		
+	public function testInputIDAndRenderOutput()
+	{	
 		$this->engine->input('#hello', 'world');
 		$this->assertEquals('world', $this->engine->output('#hello'));
 
@@ -323,8 +312,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 	
-	public function testInputClassAndRenderOutput() {
-		
+	public function testInputClassAndRenderOutput()
+	{	
 		$this->engine->input('.hello', 'world');
 		$this->assertEquals('world', $this->engine->output('.hello'));
 
@@ -333,12 +322,11 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(
 			'<div class="hello">world</div>',
 			$this->engine->view('//div[@class="hello"]')
-		);
-		
+		);	
 	}
 	
-	public function testInputSymbolHashId() {
-		
+	public function testInputSymbolHashId()
+	{	
 		$this->engine->input('#hello', 'world');
 		$this->assertEquals('world', $this->engine->output('#hello'));
 		
@@ -355,11 +343,10 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 			'<html><body><div id="hello">world</div></body></html>',
 			$this->engine->saveHtml()
 		);
-
 	}
 	
-	public function testInputSymbolDotClass() {
-		
+	public function testInputSymbolDotClass()
+	{	
 		$this->engine->input('.hello', 'world');
 		$this->assertEquals('world', $this->engine->output('.hello'));
 		
@@ -379,8 +366,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		
 	}
 	
-	public function testInputSymbolsMixed() {
-		
+	public function testInputSymbolsMixed()
+	{	
 		$inputs = array(
 			'#hello' => 'world',
 			'.hello' => 'world',
@@ -412,8 +399,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		
 	}
 	
-	public function testInputSymbolsMixedFetchDOMElements() {
-
+	public function testInputSymbolsMixedFetchDOMElements()
+	{
 		$inputs = array(
 			'#hello' => 'world',
 			'.hello' => 'world',
@@ -458,48 +445,44 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals('p',     $nodeList->item(0)->childNodes->item(2)->nodeName);
 		$this->assertEquals('bar',   $nodeList->item(0)->childNodes->item(2)->nodeValue);
 		$this->assertEquals('b',     $nodeList->item(0)->childNodes->item(3)->nodeName);
-		$this->assertEquals('bar',   $nodeList->item(0)->childNodes->item(3)->nodeValue);
-		
+		$this->assertEquals('bar',   $nodeList->item(0)->childNodes->item(3)->nodeValue);	
 	}
 	
-	public function testConvert() {
-
+	public function testConvert()
+	{
 		$string = '<div><strong>Hello</strong> World</div>';
 		
 		$div = $this->engine->convert($string);
 		
 		$this->assertEquals('DOMElement', get_class($div));
 		$this->assertEquals('div', $div->nodeName);
-		$this->assertEquals('Hello World', $div->nodeValue);
-		
+		$this->assertEquals('Hello World', $div->nodeValue);	
 	}
 	
-	public function testCreateElement() {
-
+	public function testCreateElement()
+	{
 		$value = "Hello World!";
 		$div = $this->engine->create('div', $value, array(), array());
 		$this->engine->appendChild($div);
 
 		$this->assertEquals('DOMElement', get_class($div));
 		$this->assertEquals('div', $div->nodeName);
-		$this->assertEquals($value, $div->nodeValue);
-		
+		$this->assertEquals($value, $div->nodeValue);	
 	}
 	
-	public function testCreateElementWithAttributes() {
-
+	public function testCreateElementWithAttributes()
+	{
 		$value = "Hello World!";
 		$div = $this->engine->create('div', $value, array('id' => 'welcome'), array());
 		$this->engine->appendChild($div);
 
 		$this->assertEquals('DOMElement', get_class($div));
 		$this->assertEquals('div', $div->nodeName);
-		$this->assertEquals($value, $div->nodeValue);
-		
+		$this->assertEquals($value, $div->nodeValue);	
 	}
 	
-	public function testCreateElementWithAttributesAndChildren() {
-		
+	public function testCreateElementWithAttributesAndChildren()
+	{	
 		$message = $this->engine->create('div', 'Hello ', 
 			array('id' => 'welcome')
 			, array(
@@ -545,8 +528,7 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		// Element u text values.
 		$this->assertEquals(
 			'ol', $this->engine->saveHTML('//div[@id="message"]/u/text()')
-		);
-		
+		);	
 	}
 	
 //	public function testCreateStyleElement() {
@@ -583,8 +565,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 //		);
 //	}
 	
-	public function testCreateElementFromData() {
-
+	public function testCreateElementFromData()
+	{
 		//$map = 'id';
 		$map = 'class';
 
@@ -594,11 +576,11 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		$template->appendChild($this->engine->create('div', 'Content.', array($map => 'content')));
 
 		// Create dataset with the array keys matching the template children attributes.
-		$dataset = array(
-			array('uid' => 1, 'title' => 'Title 1', 'content' => 'Content 1'),
-			array('uid' => 2, 'title' => 'Title 2', 'content' => 'Content 2'),
-			array('uid' => 3, 'title' => 'Title 3', 'content' => 'Content 3'),
-		);
+		$dataset = [
+			['uid' => 1, 'title' => 'Title 1', 'content' => 'Content 1'],
+			['uid' => 2, 'title' => 'Title 2', 'content' => 'Content 2'],
+			['uid' => 3, 'title' => 'Title 3', 'content' => 'Content 3'],
+		];
 		
 		// Pattern the output to a result variable.
 		$result = $this->engine->template($template, $dataset, $map);
@@ -624,7 +606,7 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase {
 		// Append the result to the engine.
 		$this->engine->appendChild($result);
 
-		// Assertions.
+		// View assertions.
 		$this->assertEquals(1,           $this->engine->view("//div[@$map='uid_1']/text()"));
 		$this->assertEquals('Title 1',   $this->engine->view("//div[@$map='title_1']/text()"));
 		$this->assertEquals('Content 1', $this->engine->view("//div[@$map='content_1']/text()"));

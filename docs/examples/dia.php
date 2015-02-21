@@ -6,11 +6,8 @@ require dirname(__FILE__) . '/../../library/PhpClass.php';
 require dirname(__FILE__) . '/../../library/UML.php';
 
 try {
-	
 	if (PHP_SAPI !== 'cli') {
-
 		throw new Exception('This is command line script');
-
 	} else {
 
 		$engine = new \Fabrication\FabricationEngine();
@@ -30,7 +27,7 @@ try {
 			// UML - Class
 			if ($object->nodeName == 'dia:object' && $objectType == "UML - Class") {
 
-				$phpClass = new \Library\PhpClass();
+				$phpClass = new \Fabrication\PhpClass();
 				$phpClass->setName($name);
 				$phpClass->setStereotype($UML->getStereoType($object));
 
@@ -61,10 +58,11 @@ try {
 				}
 
 				// build autoload path (psr4 ~)
-				$pathClassName = __DIR__ . "/$diagramName/" . $name . ".php";
+				$pathClassName = __DIR__ . '/' . $diagramName . '/' . $name . '.php';
 
 				// create structure and put contents into a file.
 				if (!is_dir($diagramName) && !mkdir($diagramName, 0777, true)) {
+					var_dump('Could not create directory ' . $diagramName);
 				}
 				var_export((string) $phpClass);
 				file_put_contents($pathClassName, $phpClass);

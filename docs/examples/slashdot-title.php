@@ -2,7 +2,7 @@
 
 require dirname(__FILE__) . '/../../library/FabricationEngine.php';
 
-$engine = new \Library\FabricationEngine();
+$engine = new \Fabrication\FabricationEngine();
 $engine->run('http://slashdot.org', 'file');
 
 $htmlTitle = $engine->query('/html/head/title');

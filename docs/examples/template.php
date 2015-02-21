@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__) . '/../../library/FabricationEngine.php');
 
-$engine = new Library\FabricationEngine();
+$engine = new Fabrication\FabricationEngine();
 		
 $pattern = <<<EOD
 <div>PatternTemplate:
