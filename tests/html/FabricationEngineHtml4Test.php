@@ -95,22 +95,11 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase
     public function testSanityLoadHtmlString()
     {
         $this->assertEquals(true, $this->engine->getOption('process'));
-        //$this->assertEquals(true, $this->engine->setOption('process', false));
-        //$this->assertEquals(false, $this->engine->getOption('process'));
         $this->assertTrue($this->engine->run($this->design));
-
-//        $NodeList = $this->engine->getHtml();
-//        $this->assertInstanceOf('DOMNodeList', $NodeList);
-//        $this->assertEquals(1, $NodeList->length);
-//        $this->assertEquals('html', $NodeList->item(0)->tagName);
-
-        //$this->assertEquals($this->expected, $this->engine->outputHTML());
     }
 
     public function XtestSanityLoadHtmlFile()
     {
-        //$this->assertFalse($this->engine->run('missing.html', 'file'));
-
         $designPath = dirname(dirname(__FILE__)) . '/fixture/design.html';
         $this->assertTrue($this->engine->run($designPath, 'file', 'html'));
 
@@ -122,8 +111,6 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase
 
     public function XtestMessingWithSearchEngines()
     {
-        //$webpage = file_get_contents('http://www.bing.com/');
-        //$webpage = file_get_contents('http://www.google.com/');
         $webpage = file_get_contents('http://www.duckduckgo.com/');
 
         $this->assertTrue($this->engine->run($webpage, 'string', 'html'));

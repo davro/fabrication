@@ -88,8 +88,6 @@ class FabricationEngine extends \DOMDocument
      * @var array		Doctypes avaliable.
      */
     public $options = [
-        //'doctype'				=> 'html.5',
-        //'doctype'				=> 'html.4.01.strict',
         'doctype' => 'html.4.01.transitional',
         'process' => true,
         'process.doctype' => true,
@@ -132,7 +130,6 @@ class FabricationEngine extends \DOMDocument
 
         parent::__construct($version, $encoding);
 
-        //$this->pattern = $this->createPattern($pattern);
         $objectName = 'Fabrication\\' . ucfirst($pattern);
         $this->pattern = new $objectName($this);
     }
@@ -239,7 +236,7 @@ class FabricationEngine extends \DOMDocument
      * @param string $load
      * @param string $type
      * 
-     * @return	boolean
+     * @return	mixed
      */
     public function run($data = '', $load = 'string', $type = 'html')
     {
@@ -251,18 +248,18 @@ class FabricationEngine extends \DOMDocument
                 $pathHash = md5($data);
                 $this->views[$pathHash] = $data;
             }
-            //debug($this->getViews());
 
             switch ($load . '.' . $type) {
                 default:
                     return false;
-                    break;
 
                 case 'string.html':
                     if ($this->loadHTML($data)) {
-                        //$this->pattern = $this->createPattern('Html');
                         $objectName = 'Fabrication\\Html';
                         $this->pattern = new $objectName($this);
+                        
+                        $this->mapSymbols();
+                        return true;
                     } else {
                         return false;
                     }
@@ -270,6 +267,8 @@ class FabricationEngine extends \DOMDocument
 
                 case 'file.html':
                     if (@$this->loadHTMLFile($data)) {
+                        $this->mapSymbols();
+                        return true;
                     } else {
                         return false;
                     }
@@ -277,6 +276,8 @@ class FabricationEngine extends \DOMDocument
 
                 case 'string.xml':
                     if ($this->loadXML($data)) {
+                        $this->mapSymbols();
+                        return true;
                     } else {
                         return false;
                     }
@@ -285,6 +286,8 @@ class FabricationEngine extends \DOMDocument
                 case 'file.xml':
                     $contents = file_get_contents($data);
                     if (@$this->loadXML($contents)) {
+                        $this->mapSymbols();
+                        return true;
                     } else {
                         return false;
                     }
@@ -292,9 +295,7 @@ class FabricationEngine extends \DOMDocument
             }
         }
 
-        $this->mapSymbols();
-
-        return true;
+        return;
     }
 
     /**

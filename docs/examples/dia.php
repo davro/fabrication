@@ -11,7 +11,7 @@ try {
 	} else {
 
 		$engine = new \Fabrication\FabricationEngine();
-		$UML    = new \Fabrication\UML($engine, dirname(__FILE__));
+		$UML    = new \Fabrication\UML($engine);
 
 		// get diagram name from script argument or default.
 		$diagramName = isset($argv[1]) ? $argv[1] : 'Application';
