@@ -267,7 +267,6 @@ class FabricationEngine extends \DOMDocument
                     } else {
                         return false;
                     }
-                    break;
 
                 case 'file.html':
                     if (@$this->loadHTMLFile($data)) {
@@ -276,7 +275,6 @@ class FabricationEngine extends \DOMDocument
                     } else {
                         return false;
                     }
-                    break;
 
                 case 'string.xml':
                     if ($this->loadXML($data)) {
@@ -285,7 +283,6 @@ class FabricationEngine extends \DOMDocument
                     } else {
                         return false;
                     }
-                    break;
 
                 case 'file.xml':
                     $contents = file_get_contents($data);
@@ -295,7 +292,6 @@ class FabricationEngine extends \DOMDocument
                     } else {
                         return false;
                     }
-                    break;
             }
         }
 
@@ -361,11 +357,10 @@ class FabricationEngine extends \DOMDocument
      * Return the engine output html view.
      * 
      * @param string $type  The run type 
-     * @param string $xpath The xpath
      * 
      * @return type
      */
-    public function saveFabric($type = 'html', $xpath = '')
+    public function saveFabric($type = 'html')
     {
         switch ($type) {
             case 'html':
@@ -379,12 +374,6 @@ class FabricationEngine extends \DOMDocument
 
         // default output process.
         $this->outputProcess();
-
-        // TODO style the output, bundle all the elements styles to fabric.css
-        $this->bundleStyles();
-
-        // TODO script the output, bundle all the elements scripts, to fabric.js
-        $this->bundleScripts();
 
         return $this->getDoctype() . trim($this->output['raw']);
     }
@@ -431,15 +420,6 @@ class FabricationEngine extends \DOMDocument
                 $this->output['raw'] = preg_replace(
                         '/<hr(.*)>/sU', '<hr\\1 />', $this->output['raw']
                 );
-            }
-
-            // TODO Styles add configurable reference into the header.
-            if ($this->getOption('process.style')) {
-                
-            }
-            // TODO Scripts add configurable refernce into the footer.
-            if ($this->getOption('process.script')) {
-                
             }
 
             // Trim whitespace need this to get exactly the wanted data back for test cases, mmm.
@@ -566,26 +546,6 @@ class FabricationEngine extends \DOMDocument
     }
 
     /**
-     * Bundle Styles.
-     * 
-     * @return void
-     */
-    public function bundleStyles() 
-    {
-        return;
-    }
-
-    /**
-     * Bundle scripts.
-     * 
-     * @return void
-     */
-    public function bundleScripts() 
-    {
-        return;
-    }
-
-    /**
      * Create an element with a value and attributes including a mechanism for 
      * creating children elements recursively.
      * 
@@ -693,7 +653,7 @@ class FabricationEngine extends \DOMDocument
                                     isset($child['name']) ? $child['name'] : '', isset($child['value']) ? $child['value'] : '', isset($child['attributes']) ? $child['attributes'] : array(), isset($child['children']) ? $child['children'] : array()
                             );
                             if (!$newChild) {
-                                //
+                                return;
                             } else {
                                 $element->appendChild($newChild);
                             }
@@ -702,16 +662,13 @@ class FabricationEngine extends \DOMDocument
                 }
             }
 
-//			// Return a fabrication element as the fluent interface.
-//			if ($fluentInterface) {
-//
-//				$fabricationElement = new FabricationElement($this);
-//				$fabricationElement->execute($element);
-//				
-////				var_dump($fabricationElement);
-//				
-//				return $fabricationElement;
-//			}
+			// Return a fabrication element as the fluent interface.
+			if ($fluentInterface) {
+				$fabricationElement = new FabricationElement($this);
+				$fabricationElement->execute($element);
+                
+				return $fabricationElement;
+			}
 
             return $element;
         } catch (\Exception $e) {
@@ -882,8 +839,6 @@ class FabricationEngine extends \DOMDocument
      */
     public function view($path = '', $trim = true, $return = true)
     {
-        $buffer = '';
-
         if (!empty($path)) {
 
             $results = $this->query($path);
@@ -1002,11 +957,10 @@ class FabricationEngine extends \DOMDocument
      * DOM structure.
      * 
      * @param string $data
-     * @param array $options
      * 
      * @return mixed
      */
-    public function convert($data, $options = array())
+    public function convert($data)
     {
         $data = trim($data);
 
@@ -1117,10 +1071,6 @@ class FabricationEngine extends \DOMDocument
                         $argString.= $arg;
                     }
                 }
-
-                if (is_array($arg)) {
-                    // TODO
-                }
             }
         }
 
@@ -1148,10 +1098,6 @@ class FabricationEngine extends \DOMDocument
             // helpers image.
             'getimagewithalttag' => array('path' => '//img[@alt]'),
             'getimagewithoutalttag' => array('path' => '//img[not(@alt)]'),
-                // TESTING preg replace
-                //'getdivswith'		=> array('pattern'=>'^(\w+)', 'replacement'=>'//div[@($1)]'),
-                //'getallwith'		=> array('pattern'=>'^(\w+)', 'replacement'=>'//*[@($1)]'),
-                //'getallwith'		=> array('pattern'=>'^(\w+)', 'replacement'=>'//*[@id="($1)"]'),
         );
 
         if (preg_match('/^get(.*)/U', $method, $matches)) {
@@ -1355,28 +1301,6 @@ class FabricationEngine extends \DOMDocument
                                 $result.='$data->' . $k . "=" . "'" . $v . "';\n";
                             }
                         }
-//						// assignment.
-//						if (array_key_exists('class', $options)) {
-//							if  ($options['class']) {
-//								$class=$options['class'];
-//								foreach($this->input as $k => $v) {
-//									if ($key !== '' && $key !== $k) { continue; }
-//									$result.='$object'.$class."->".$k."=".var_export($v,true).";\n";
-//								}
-//							}
-//						} else {                                
-//							foreach($this->input as $k => $v) {
-//								if ($key !== '' && $k !== $k) { continue; }
-//								$result.='$data->'.$k.'='.var_export($v,true).";\n";
-//							}
-//						}
-//						// echo, implementation.
-//						if (array_key_exists('echo', $options) && array_key_exists('class', $options)) { 
-//							if ($options['echo'] === true) {
-//								$class=$options['class'];
-//								$result.='echo $object'.$class.';';
-//							}
-//						}
                         break;
 
                     default:
