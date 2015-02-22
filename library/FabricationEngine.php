@@ -26,6 +26,10 @@ namespace Fabrication;
 
 /**
  * Engine should be able to run without an autoloader, standalone mode.
+ * 
+ * 
+ * @method getArticle()
+ * 
  */
 require_once(dirname(__FILE__) . '/Html.php');
 
