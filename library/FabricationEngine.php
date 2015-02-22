@@ -69,6 +69,13 @@ class FabricationEngine extends \DOMDocument
     public $type = '';
 
     /**
+     * XPath object
+     * 
+     * @var	object
+     */
+    public $xpath;
+    
+    /**
      * Options 
      *
      * doctype                  Choose your doctype
@@ -186,7 +193,7 @@ class FabricationEngine extends \DOMDocument
     /**
      * Getter for returning the current doctype output <DOCTYPE...
      *
-     * @return string
+     * @return mixed
      */
     public function getDoctype()
     {
@@ -444,11 +451,10 @@ class FabricationEngine extends \DOMDocument
      * 
      * @param mixed   $data    The data to dump
      * @param boolean $return  True return output, False print output
-     * @param array   $options Allow for overriding of option
      * 
      * @return	string 
      */
-    public static function dump($data, $return = false, $options = array())
+    public static function dump($data, $return = false)
     {
         $result = '';
 
@@ -456,13 +462,6 @@ class FabricationEngine extends \DOMDocument
             $end = "\n";
         } else {
             $end = "<br />\n";
-        }
-
-        if (empty($options)) {
-            $options = array(
-                //'show.methods'=>true
-                'show.methods' => false
-            );
         }
 
         if (is_object($data)) {
@@ -520,13 +519,11 @@ class FabricationEngine extends \DOMDocument
         if (is_array($data)) {
 
             $result = $end .
-                    $end .
-                    str_repeat('-', 80) . $end .
-                    "| DUMP Type:" . gettype($data) . "\tReturn:" . var_export($return, true) . $end .
-                    str_repeat('-', 80) . $end .
-                    $end;
-
-            $result = var_export($data, true);
+                $end .
+                str_repeat('-', 80) . $end .
+                "| DUMP Type:" . gettype($data) . "\tReturn:" . var_export($return, true) . $end .
+                str_repeat('-', 80) . $end .
+                $end;
         }
 
         if (is_string($data)) {
@@ -630,11 +627,7 @@ class FabricationEngine extends \DOMDocument
                             !isset($this->pattern->specification[$doctype]['_head'][$name])
                     ) {
 
-                        // 
-                        if (!isset($internalTypes[$name])) {
-
-                            die("The '$name' is not in the '$doctype' current fabrication specification");
-                        } else {
+                        if (isset($internalTypes[$name])) {
                             //
                             // @TODO Create objectCache subsystem for application unique model objects.
                             // 
@@ -717,7 +710,7 @@ class FabricationEngine extends \DOMDocument
 //			}
 
             return $element;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             die('Create :: Exception : ' . $e->getMessage());
         }
     }
@@ -798,7 +791,7 @@ class FabricationEngine extends \DOMDocument
      * @param array  $dataset Dataset to template.
      * @param string $map     Identifier.
      * 
-     * @return DOMElement
+     * @return mixed
      */
     public function template($pattern, $dataset = array(), $map = 'id')
     {
@@ -813,21 +806,12 @@ class FabricationEngine extends \DOMDocument
                 $engine->setOption('doctype', 'html.5');
                 $engine->loadHTML($pattern);
 
-                //$template = $engine->query('/*')->item(0);
-                //$template = $engine->query('//*')->item(0);
-
                 $template = '';
                 $templateDiv = $engine->getDiv();
 
                 if ($templateDiv) {
                     $template = $templateDiv->item(0);
                 }
-
-//                			if (!$template instanceof DOMElement) {
-//                				throw new \Exception(
-//                					'First item should be an instance of the DOMElement.'
-//                				);
-//                			}
             }
 
             if (is_object($pattern)) {
@@ -1207,15 +1191,9 @@ class FabricationEngine extends \DOMDocument
 
             return false;
         }
-
-        // SETTERS.
-        // @todo Call setter methods.
+        
         if (preg_match('/^set(.*)/U', $method, $matches)) {
-
-            var_dump("Method: $method");
-            var_dump("ARGS: " . var_export($args, true));
-
-            die("__CALL Setters are not implemented, use native DOM elements.\n");
+            return false;
         }
     }
 
