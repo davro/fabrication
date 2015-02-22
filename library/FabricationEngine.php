@@ -18,6 +18,11 @@ namespace Fabrication;
  * Fabrication to invent or produce the act of fabricating, constructing,
  * construction; manufacture, factory.
  * 
+ * @method getHtml()
+ * @method getHead()
+ * @method getBody()
+ * @method getDiv()
+ * @method getArticle()
  * 
  * @author David Stevens <davro@davro.net>
  * @license http://www.gnu.org/copyleft/lgpl.html
@@ -1030,17 +1035,11 @@ class FabricationEngine extends \DOMDocument
     /**
      * Magic method for handling specification and helper based method these 
      * each method has a configuration array for the helper xpath query. 
-     * 
-     * @method getHtml()
-     * @method getHead()
-     * @method getBody()
-     * @method getDiv()
-     * @method getArticle()
-     * 
+
      * @param string $method The method name called.
      * @param array  $args   The arguments passed with the method call.
      * 
-     * @return mixed.
+     * @return mixed
      */
     public function __call($method, $args)
     {
