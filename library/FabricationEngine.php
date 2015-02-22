@@ -18,11 +18,11 @@ namespace Fabrication;
  * Fabrication to invent or produce the act of fabricating, constructing,
  * construction; manufacture, factory.
  * 
- * @method getHtml()
- * @method getHead()
- * @method getBody()
- * @method getDiv()
- * @method getArticle()
+ * @method getHtml(string $method, array $args)
+ * @method getHead(string $method, array $args)
+ * @method getBody(string $method, array $args)
+ * @method getDiv(string $method, array $args)
+ * @method getArticle(string $method, array $args)
  * 
  * @author David Stevens <davro@davro.net>
  * @license http://www.gnu.org/copyleft/lgpl.html
@@ -928,7 +928,6 @@ class FabricationEngine extends \DOMDocument
      * Append element to the html head element of the document.
      * 
      * @param mixed   $element The element to append
-     * @param boolean $debug   Optional debug
      */
     public function appendHead($element)
     {
