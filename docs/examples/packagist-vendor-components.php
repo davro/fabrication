@@ -11,7 +11,6 @@ $channelTitle       = $engine->query('//rss/channel/title');
 $channelDescription = $engine->query('//rss/channel/description');
 $channelGenerator   = $engine->query('//rss/channel/generator');
 $channelItems       = $engine->query('//rss/channel/item');
-//$channelItems       = $engine->getElementsByTagName('item');
 
 $output="{\n";
 foreach($channelItems as $item) {

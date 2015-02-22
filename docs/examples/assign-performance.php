@@ -2,7 +2,6 @@
 
 require dirname(__FILE__) . '/../../library/FabricationEngine.php';
 
-//$workload = array(100, 1000, 10000, 100000, 1000000, 10000000);
 $workload = array(100, 1000, 10000, 100000);
 foreach($workload as $key => $load) {
 	
