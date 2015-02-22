@@ -18,6 +18,7 @@ define('PROJECT_ROOT_DIR',      realpath(dirname(dirname(__FILE__))));
 
 //require_once(dirname(dirname(__FILE__)) . '/library/bootstrap.php');
 require_once(dirname(dirname(__FILE__)) . '/library/FabricationEngine.php');
+require_once(dirname(dirname(__FILE__)) . '/library/Html.php');
 
 /**
  * Fabrication Engine TestCase.

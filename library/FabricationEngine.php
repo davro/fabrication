@@ -24,12 +24,6 @@ namespace Fabrication;
  * 
  */
 
-/**
- * Engine should be able to run without an autoloader, standalone mode.
- * 
- */
-require_once(dirname(__FILE__) . '/Html.php');
-
 class FabricationEngine extends \DOMDocument
 {
     /**
