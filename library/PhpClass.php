@@ -1,5 +1,4 @@
 <?php
-
 namespace Fabrication;
 
 require dirname(__FILE__) . '/Fabricator.php';

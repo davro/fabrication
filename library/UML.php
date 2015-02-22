@@ -105,14 +105,14 @@ class UML
 				$output.= $tabs . $attribute->nodeName . " = " . $attribute->nodeValue . "\n";
 			}
 			
-			$output.= $tabs . $nodeList->nodeName . " = " . $nodeMap->nodeValue . "\n";
+			$output.= $tabs . $nodeList->nodeName . " = " . $nodeList->nodeValue . "\n";
 		} else {
 			$output.= $nodeList->getNodePath() . "\n";
 		}
 		
 		foreach($nodeList->childNodes as $childObject) {
 			
-			if ($childObject instanceof DOMElement) {
+			if ($childObject instanceof \DOMElement) {
 				$output.= $this->getElement($childObject, $level + 1, $showPaths);
 			} elseif ($showPaths){
 				$output.= $childObject->getNodePath() . "\n";

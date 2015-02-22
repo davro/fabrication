@@ -28,6 +28,7 @@ namespace Fabrication;
  * Engine should be able to run without an autoloader, standalone mode.
  * 
  * 
+ * @method getDiv()
  * @method getArticle()
  * 
  */
@@ -256,7 +257,8 @@ class FabricationEngine extends \DOMDocument
             switch ($load . '.' . $type) {
                 default:
                     return false;
-
+                    
+                // load string html
                 case 'string.html':
                     if ($this->loadHTML($data)) {
                         $objectName = 'Fabrication\\Html';
@@ -267,7 +269,8 @@ class FabricationEngine extends \DOMDocument
                     } else {
                         return false;
                     }
-
+                    
+                // load file html 
                 case 'file.html':
                     if (@$this->loadHTMLFile($data)) {
                         $this->mapSymbols();
@@ -276,6 +279,7 @@ class FabricationEngine extends \DOMDocument
                         return false;
                     }
 
+                // load string xml
                 case 'string.xml':
                     if ($this->loadXML($data)) {
                         $this->mapSymbols();
@@ -283,7 +287,8 @@ class FabricationEngine extends \DOMDocument
                     } else {
                         return false;
                     }
-
+                    
+                // load file xml
                 case 'file.xml':
                     $contents = file_get_contents($data);
                     if (@$this->loadXML($contents)) {
@@ -562,11 +567,8 @@ class FabricationEngine extends \DOMDocument
             return false;
         }
 
-        // Attermpt to call convert object to a string.
-        if (!is_object($value)) {
-
-            //return;
-        } else {
+        // Convert value object to a string.
+        if (is_object($value)) {
             $value = (string) $value;
         }
 
@@ -661,15 +663,6 @@ class FabricationEngine extends \DOMDocument
                     }
                 }
             }
-
-			// Return a fabrication element as the fluent interface.
-			if ($fluentInterface) {
-				$fabricationElement = new FabricationElement($this);
-				$fabricationElement->execute($element);
-                
-				return $fabricationElement;
-			}
-
             return $element;
         } catch (\Exception $e) {
             return('Create :: Exception : ' . $e->getMessage());
@@ -942,7 +935,7 @@ class FabricationEngine extends \DOMDocument
      * @param mixed   $element The element to append
      * @param boolean $debug   Optional debug
      */
-    public function appendHead($element, $debug = false)
+    public function appendHead($element)
     {
         $this->query('/html/head')->item(0)->appendChild($element);
     }

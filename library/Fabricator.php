@@ -6,7 +6,7 @@ namespace Fabrication;
  * 
  */
 class Fabricator
-{	
+{
 	public $name;
 	
 	public function setName($name)
