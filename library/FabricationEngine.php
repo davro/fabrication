@@ -27,10 +27,6 @@ namespace Fabrication;
 /**
  * Engine should be able to run without an autoloader, standalone mode.
  * 
- * 
- * @method getDiv()
- * @method getArticle()
- * 
  */
 require_once(dirname(__FILE__) . '/Html.php');
 
@@ -1040,6 +1036,12 @@ class FabricationEngine extends \DOMDocument
     /**
      * Magic method for handling specification and helper based method these 
      * each method has a configuration array for the helper xpath query. 
+     * 
+     * @method getHtml()
+     * @method getHead()
+     * @method getBody()
+     * @method getDiv()
+     * @method getArticle()
      * 
      * @param string $method The method name called.
      * @param array  $args   The arguments passed with the method call.
