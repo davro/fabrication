@@ -1,5 +1,7 @@
 # Fabrication Engine
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/davro/fabrication/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/davro/fabrication/?branch=master)
+
 ## Introduction
 
 Template engine based on the Document Object Model.
