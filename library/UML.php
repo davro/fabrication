@@ -71,6 +71,12 @@ class UML
 		return false;
 	}
 	
+    /**
+     * Getter for retrieving all operations from a DIA object structure
+     * 
+     * @param \DOMElement $diaObject
+     * @return boolean
+     */
 	public function getOperations(\DOMElement $diaObject)
 	{
 		$xpath    = $diaObject->getNodePath() . '/dia:attribute[@name="operations"]/*';
@@ -82,6 +88,14 @@ class UML
 		return false;
 	}
 	
+    /**
+     * Getter for retrieving all elements from a DIA object structure
+     * 
+     * @param \DOMElement $nodeList
+     * @param integer     $level
+     * @param boolean     $showPaths
+     * @return string
+     */
 	public function getElement(\DOMElement $nodeList, $level = 0, $showPaths = false)
 	{	
 		$tabs = str_repeat("\t", $level);
@@ -109,6 +123,13 @@ class UML
 		return $output;
 	}
 	
+    /**
+     * Getter for retrieving xpath from a DOMElement 
+     * 
+     * @param \DOMElement $nodeList
+     * @param integer $level
+     * @return type
+     */
 	public function getPaths(\DOMElement $nodeList, $level = 0)
 	{
 		$output = $nodeList->getNodePath();
@@ -124,6 +145,12 @@ class UML
 		return $output;
 	}
 	
+    /**
+     * Retrieve operation name
+     * 
+     * @param \DOMElement $element
+     * @return type
+     */
 	public function retriveOperationName(\DOMElement $element)
 	{
 		return $this->retriveName($element);
