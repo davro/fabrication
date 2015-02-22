@@ -25,4 +25,4 @@ foreach($channelItems as $item) {
 }
 $output.="}\n\n";
 
-print $output;
+echo $output;

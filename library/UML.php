@@ -1,5 +1,4 @@
 <?php
-
 namespace Fabrication;
 
 /**
@@ -22,7 +21,7 @@ class UML
 	 * 
 	 * @var array
 	 */
-	static $propertyVisibilityTypes = ['public', 'private', 'protected'];
+	static protected $propertyVisibilityTypes = ['public', 'private', 'protected'];
 
 	/**
 	 * 

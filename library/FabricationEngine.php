@@ -711,7 +711,7 @@ class FabricationEngine extends \DOMDocument
 
             return $element;
         } catch (\Exception $e) {
-            die('Create :: Exception : ' . $e->getMessage());
+            return('Create :: Exception : ' . $e->getMessage());
         }
     }
 
@@ -795,7 +795,7 @@ class FabricationEngine extends \DOMDocument
      */
     public function template($pattern, $dataset = array(), $map = 'id')
     {
-        if (sizeof($dataset) == 0) {
+        if (count($dataset) == 0) {
             return false;
         }
 
@@ -909,7 +909,7 @@ class FabricationEngine extends \DOMDocument
             return $buffer;
         }
 
-        print $buffer;
+        echo $buffer;
     }
 
     /**
@@ -1031,7 +1031,7 @@ class FabricationEngine extends \DOMDocument
             return false;
         } catch (\Exception $e) {
 
-            exit('FabricationEngine :: convert : ' . $e->getMessage());
+            return('FabricationEngine :: convert : ' . $e->getMessage());
         }
     }
     
@@ -1168,13 +1168,13 @@ class FabricationEngine extends \DOMDocument
                 return $this->query($xpath);
             } else {
 
-                print "\n";
-                print "The 'FabricationEngine' misfired, failed to find an expected element. \n";
-                print "The means the request element name is not in the current doctype specification.\n";
-                print "Doctype:  " . $this->getOption('doctype') . "\n";
-                print "Method:   $method \n";
-                print "NodeName: $nodeName \n";
-                print "XPath:    $xpath \n";
+                echo "\n";
+                echo "The 'FabricationEngine' misfired, failed to find an expected element. \n";
+                echo "The means the request element name is not in the current doctype specification.\n";
+                echo "Doctype:  " . $this->getOption('doctype') . "\n";
+                echo "Method:   $method \n";
+                echo "NodeName: $nodeName \n";
+                echo "XPath:    $xpath \n";
             }
 
             // @todo move the helpers to the pattern objects eg Html, Xml.
