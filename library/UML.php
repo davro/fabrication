@@ -13,7 +13,7 @@ class UML
 	/**
 	 * Fabrication Engine instance
 	 * 
-	 * @var \Library\FabricationEngine
+	 * @var \Fabrication\FabricationEngine
 	 */
 	protected $engine;
 
@@ -113,7 +113,7 @@ class UML
 		
 		foreach($nodeList->childNodes as $childObject) {
 			
-			if ($childObject instanceof DOMElementq) {
+			if ($childObject instanceof DOMElement) {
 				$output.= $this->getElement($childObject, $level + 1, $showPaths);
 			} elseif ($showPaths){
 				$output.= $childObject->getNodePath() . "\n";
@@ -138,7 +138,7 @@ class UML
 			
 			$output.= $childObject->getNodePath() . "\n";
 			
-			if ($childObject instanceof DOMElement) {
+			if ($childObject instanceof \DOMElement) {
 				$output.= $this->getElement($childObject, $level + 1, true);
 			}
 		}

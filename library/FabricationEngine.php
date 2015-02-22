@@ -917,7 +917,7 @@ class FabricationEngine extends \DOMDocument
      * 
      * @param string $path The xpath query to run on the current DOM
      * 
-     * @return boolean 
+     * @return mixed 
      */
     public function query($path)
     {
