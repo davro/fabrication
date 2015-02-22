@@ -156,27 +156,57 @@ class UML
 		return $this->retriveName($element);
 	}
 	
+    /**
+     * Retrieve operation type
+     * 
+     * @param \DOMElement $element
+     * @return type
+     */
 	public function retriveOperationType(\DOMElement $element)
 	{
 		return $this->retriveType($element);
 	}
 	
+    /**
+     * Retrieve operation visibility
+     * 
+     * @param \DOMElement $element
+     * @return type
+     */
 	public function retriveOperationVisibility(\DOMElement $element)
 	{
 		return $this->retriveVisibility($element);
 	}
 	
+    /**
+     * Retrieve attribute name
+     * 
+     * @param \DOMElement $element
+     * @return type
+     */
 	public function retriveAttributeName(\DOMElement $element)
 	{
 		return $this->retriveName($element);
 	}
 	
+    /**
+     * Retrieve attribute type
+     * 
+     * @param \DOMElement $element
+     * @return type
+     */
 	public function retriveAttributeType(\DOMElement $element)
 	{	
 		$name = $this->engine->query($element->getNodePath() . '/dia:attribute[@name="type"]/dia:string');
 		return $this->cleanString($name->item(0)->nodeValue);
 	}
 	
+    /**
+     * Retrieve attribute visibility
+     * 
+     * @param \DOMElement $element
+     * @return type
+     */
 	public function retriveAttributeVisibility(\DOMElement $element)
 	{
 		$name = $this->engine->query($element->getNodePath() . '/dia:attribute[@name="visibility"]/dia:enum');
@@ -185,18 +215,36 @@ class UML
 		return self::$propertyVisibilityTypes[$propertyVisibility];
 	}
 	
+    /**
+     * Retrieve name
+     * 
+     * @param \DOMElement $element
+     * @return type
+     */
 	public function retriveName(\DOMElement $element)
 	{
 		$name = $this->engine->query($element->getNodePath() . '/dia:attribute[@name="name"]/dia:string');
 		return $this->cleanString($name->item(0)->nodeValue);
 	}
 	
+    /**
+     * Retrieve type
+     * 
+     * @param \DOMElement $element
+     * @return type
+     */
 	public function retriveType(\DOMElement $element)
 	{
 		$name = $this->engine->query($element->getNodePath() . '/dia:attribute[@name="type"]/dia:string');
 		return $this->cleanString($name->item(0)->nodeValue);
 	}
-
+    
+    /**
+     * Retrieve visibility 
+     * 
+     * @param \DOMElement $element
+     * @return type
+     */
 	public function retriveVisibility(\DOMElement $element)
 	{
 		$name = $this->engine->query($element->getNodePath() . '/dia:attribute[@name="visibility"]/dia:enum');
@@ -205,6 +253,11 @@ class UML
 		return self::$propertyVisibilityTypes[$propertyVisibility];
 	}
 	
+    /**
+     * Retrieve layer objects
+     * 
+     * @return array
+     */
 	public function retriveLayerObjects()
 	{	
 		$classes = [];
@@ -233,6 +286,12 @@ class UML
 		return $classes;
 	}
 	
+    /**
+     * Clean string
+     * 
+     * @param string $value
+     * @return string
+     */
 	public function cleanString($value) 
 	{
 		return str_replace('#', '', $value);
