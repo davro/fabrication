@@ -1328,19 +1328,6 @@ class FabricationEngine extends \DOMDocument
                 break;
 
             case 'css':
-                /**
-                 *  Generate CSS structure.
-                 * 
-                 *  section, or, sections {
-                 *    name1: value1;
-                 *    name2: value2;
-                 *  }
-                 * 
-                 *  section, or, sections {
-                 *    name1: value1;
-                 *    name2: value2;
-                 *  }
-                 */
                 if (array_key_exists('header', $options)) {
                     if ($options['header'] === true) {
                         $result.="/**\n";

@@ -1,9 +1,9 @@
 <?php
 namespace Fabrication;
 
-require dirname(__FILE__) . '/Fabricator.php';
+use \Fabrication\Fabricator;
 
-class PhpClass extends \Fabrication\Fabricator
+class PhpClass extends Fabricator
 {
 	public $type;
 	public $stereotype;

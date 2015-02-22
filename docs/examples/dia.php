@@ -2,8 +2,10 @@
 namespace Library;
 
 require dirname(__FILE__) . '/../../library/FabricationEngine.php';
+require dirname(__FILE__) . '/../../library/Fabricator.php';
 require dirname(__FILE__) . '/../../library/PhpClass.php';
 require dirname(__FILE__) . '/../../library/UML.php';
+require dirname(__FILE__) . '/../../library/Html.php';
 
 try {
 	if (PHP_SAPI !== 'cli') {
