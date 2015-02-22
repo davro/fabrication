@@ -1,5 +1,4 @@
 <?php
-
 namespace Fabrication;
 
 /**
@@ -35,7 +34,7 @@ class FabricationEngine extends \DOMDocument
     /**
      * Time the fabrication engine was started.
      */
-    protected $timeStarted = 0;
+    protected $timeStarted;
 
     /**
      * Symbol container for attributes assignment.
@@ -537,7 +536,7 @@ class FabricationEngine extends \DOMDocument
         if ($return) {
             return $result . $end;
         } else {
-            print $result . $end;
+            echo $result . $end;
         }
     }
 
@@ -654,7 +653,7 @@ class FabricationEngine extends \DOMDocument
             $element = self::createElement($name, $value);
 
             if (is_array($attributes)) {
-                if (sizeof($attributes) > 0) {
+                if (count($attributes) > 0) {
                     foreach ($attributes as $key => $value) {
                         if ($key == '') {
                             continue;
@@ -664,7 +663,7 @@ class FabricationEngine extends \DOMDocument
                 }
             }
             if (is_object($attributes)) {
-                if (sizeof($attributes) > 0) {
+                if (count($attributes) > 0) {
                     foreach ($attributes as $key => $domAttr) {
                         if ($key == '') {
                             continue;
@@ -801,12 +800,13 @@ class FabricationEngine extends \DOMDocument
 
         try {
 
+            $template = '';
+                            
             if (is_string($pattern)) {
                 $engine = new FabricationEngine();
                 $engine->setOption('doctype', 'html.5');
                 $engine->loadHTML($pattern);
 
-                $template = '';
                 $templateDiv = $engine->getDiv();
 
                 if ($templateDiv) {
@@ -1009,9 +1009,7 @@ class FabricationEngine extends \DOMDocument
 
             // Buffer engine used to convert the html string into DOMElements,
             $engine = new FabricationEngine;
-
-            // Suppress errors, until html5 becomes a standard.
-            @$engine->run($data);
+            $engine->run($data);
 
             // Check if the body is null, so use the head if avaliable.
             if ($engine->getBody()->item(0) == null) {
@@ -1030,19 +1028,19 @@ class FabricationEngine extends \DOMDocument
             }
 
             return false;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
 
             exit('FabricationEngine :: convert : ' . $e->getMessage());
         }
     }
-
+    
     /**
-     * 
+     * Convert number
      * 
      * @staticvar array $unit
-     * @param type $size
-     * @param type $precision
-     * @return type
+     * @param integer $value
+     * @param integer $precision
+     * @return mixed
      */
     public function convertNumber($value, $precision = 2)
     {
@@ -1063,7 +1061,6 @@ class FabricationEngine extends \DOMDocument
      * Import a html string into the current engine, without causing DOM
      * hierarchy errors.
      * 
-     * 
      * @param string $html
      * 
      * @return mixed
@@ -1080,7 +1077,7 @@ class FabricationEngine extends \DOMDocument
         // Append the new DOM Element(s) to the found DOMElement.
         $element->appendChild(
                 $this->importNode(
-                        $fabrication->query($xpath . '/*')->item(0)
+                        $fabrication->query($this->xpath . '/*')->item(0)
                         , true
                 )
         );
@@ -1291,7 +1288,7 @@ class FabricationEngine extends \DOMDocument
                         // echo, implementation.
                         if (array_key_exists('echo', $options) && array_key_exists('class', $options)) {
                             if ($options['echo'] === true) {
-                                $result.='echo $data' . $class . ';';
+                                $result.='echo $data' . $options['class'] . ';';
                             }
                         }
                         break;
