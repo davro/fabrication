@@ -77,15 +77,15 @@ class FabricationEngine extends \DOMDocument
     /**
      * Options 
      *
-     * doctype                  Choose your doctype
-     * process                  Clean up DOMDocument tardedness.
-     * process.doctype          Doctype depending on doctype option.
-     * process.body.image       Image tags valid depending on doctype option.
-     * process.body.br          br tags to be valid depending on doctype option.
-     * process.body.hr          hr tags to be valid depending on doctype option.
-     * process.body.a           A tags and match a tags with #name to #anchors.
+     * doctype            Choose your doctype
+     * process            Clean up DOMDocument tardedness.
+     * process.doctype    Doctype depending on doctype option.
+     * process.body.image Image tags valid depending on doctype option.
+     * process.body.br    br tags to be valid depending on doctype option.
+     * process.body.hr    hr tags to be valid depending on doctype option.
+     * process.body.a     A tags and match a tags with #name to #anchors.
      *
-     * @var array		Doctypes avaliable.
+     * @var array Doctypes avaliable.
      */
     public $options = [
         'doctype' => 'html.4.01.transitional',
@@ -1172,11 +1172,21 @@ class FabricationEngine extends \DOMDocument
         $this->getHtml($q)->item(0)->nodeValue = "$value";
         return $this->getHtml($q)->item(0);
     }
+
+    /**
+     * Time Started
+     * 
+     * return float
+     */
+    public function timeStarted()
+    {
+        return $this->timeStarted;
+    }
     
     /**
      * Generate the amount of time taken since the object was contructed.
      * 
-     * @return string
+     * @return float
      */
     public function timeTaken()
     {
