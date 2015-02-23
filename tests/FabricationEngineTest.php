@@ -25,35 +25,39 @@ require_once(FRAMEWORK_ROOT_DIR . '/library/Html.php');
  */
 class FabricationEngineTest extends \PHPUnit_Framework_TestCase
 {
-    public function setUp() {
+    public function setUp()
+    {
         $this->engine = new FabricationEngine();
     }
 
-    public function testInstance() {
+    public function testInstance()
+    {
         $this->assertInternalType('object', $this->engine);
         $this->assertInstanceOf('Fabrication\FabricationEngine', $this->engine);
     }
 
-    public function testGetEngine() {
+    public function testGetEngine()
+    {
         $engine = $this->engine->getEngine();
 
         $this->assertInternalType('object', $engine);
         $this->assertInstanceOf('Fabrication\FabricationEngine', $engine);
     }
     
-    public function testTimeStarted() {
+    public function testTimeStarted()
+    {
         $engine = $this->engine->getEngine();
-        
-        $this->assertTrue(is_float($engine->timeStarted()));       
+        $this->assertInternalType('float', $engine->timeStarted());
     }
     
-    public function testTimeTaken() {
+    public function testTimeTaken()
+    {
         $engine = $this->engine->getEngine();
-        
-        $this->assertTrue(is_float($engine->timeTaken()));
+        $this->assertInternalType('float', $engine->timeTaken());
     }
     
-    public function testAttributes() {
+    public function testAttributes()
+    {
         $this->assertObjectHasAttribute('input', $this->engine);
         $this->assertObjectHasAttribute('output', $this->engine);
         $this->assertObjectHasAttribute('options', $this->engine);
@@ -61,7 +65,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase
 
     // This example code is copyed into the README.md testing for consistency.
     // Simplest example.
-    public function testReadmeExample1() {
+    public function testReadmeExample1()
+    {
         $engine = new FabricationEngine();
         $engine->input('hello', 'world');
 
@@ -69,7 +74,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($engine->output('hello'), 'world');
     }
 
-    public function testReadmeExample2() {
+    public function testReadmeExample2()
+    {
         $engine = new FabricationEngine();
         $engine->input('#hello', 'world');
         $template = '<html><head></head><body><div id="hello"></div></body></html>';
@@ -93,7 +99,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testReadmeExampleOutput() {
+    public function testReadmeExampleOutput()
+    {
         $tag = '>';
         $engine = new FabricationEngine();
         $engine->input('hello', 'world');
@@ -101,7 +108,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testReadmeExampleOutput1() {
+    public function testReadmeExampleOutput1()
+    {
         $engine = new FabricationEngine();
         $engine->input('hello', 'world');
         $this->assertEquals(
@@ -137,10 +145,6 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('<!DOCTYPE HTML>', $engine->getDoctype());
     }
 
-    public function testReadmeExampleTemplateDataset() {
-        // SEE: testCreatingHTMLAndTemplateFromData();
-    }
-
     public function testReadmeExampleCreate() {
         $engine = new FabricationEngine();
 
@@ -153,7 +157,8 @@ class FabricationEngineTest extends \PHPUnit_Framework_TestCase
 
         $engine->appendChild($hi);
 
-        $this->assertEquals('<div id="hello-world">Hello World</div>', $engine->saveHTML()
+        $this->assertEquals('<div id="hello-world">Hello World</div>', 
+            $engine->saveHTML()
         );
     }
 

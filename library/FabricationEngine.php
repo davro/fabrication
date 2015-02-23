@@ -912,7 +912,7 @@ class FabricationEngine extends \DOMDocument
             $options = array('return' => true, 'tags' => true, 'echo' => false);
         }
 
-        // Experimental, change for the createPattern method.
+        // templated output patterns
         $output = $this->templateTextElement($key, $query, $options);
 
         if (array_key_exists('return', $options)) {
@@ -986,6 +986,7 @@ class FabricationEngine extends \DOMDocument
      * @staticvar array $unit
      * @param integer $value
      * @param integer $precision
+     * 
      * @return mixed
      */
     public function convertNumber($value, $precision = 2)
@@ -1135,7 +1136,7 @@ class FabricationEngine extends \DOMDocument
     /**
      * Setter for changing a element  
      * 
-     * TODO put in __call
+     * @todo put in __call
      */
     public function setElementBy($element, $value, $nodeValue)
     {
@@ -1153,7 +1154,7 @@ class FabricationEngine extends \DOMDocument
     /**
      * Setter for changing a element  
      * 
-     * TODO put in __call
+     * @todo put in __call
      */
     public function getElementBy($element, $value)
     {
@@ -1165,7 +1166,7 @@ class FabricationEngine extends \DOMDocument
     /**
      * Setter for changing HTML element.
      * 
-     * TODO put in __call
+     * @todo put in __call
      */
     public function setHtml($q, $value)
     {
@@ -1198,6 +1199,8 @@ class FabricationEngine extends \DOMDocument
     /**
      * TemplateTextElement
      * 
+     * @todo Refactor 
+     * 
      * @param mixed  $key
      * @param string $query
      * @param array  $options
@@ -1206,12 +1209,11 @@ class FabricationEngine extends \DOMDocument
      */
     public function templateTextElement($key, $query, $options)
     {
-        $output = '';
-
-        $parts = (array) explode('.', $query);
+        $output   = '';
+        $parts    = (array) explode('.', $query);
         $language = (string) isset($parts[0]) ? $parts[0] : '';
         $template = (string) isset($parts[1]) ? $parts[1] : '';
-        $result = (string) '';
+        $result   = (string) '';
 
         switch ($language) {
             case 'php':
