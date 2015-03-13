@@ -23,7 +23,6 @@ create structures. There are also some advanced dateset templating features.
 ## Features
 
 Templating without place holders.
-Document specification pattern methods.
 Dataset Templating.
 
 ## Documentation
