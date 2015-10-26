@@ -142,6 +142,9 @@ class GCode
 			$axisSpindleValue = $z;
 			$arcFormat1       = 'I';
 			$arcFormat2       = 'J';
+			
+			// find the of point for X, Y 
+			$of = $x - $radius;
 		}
 		if ($plane == 'G18') {
 			$axis1            = 'X';
@@ -150,6 +153,9 @@ class GCode
 			$axisSpindleValue = $y;
 			$arcFormat1       = 'I';
 			$arcFormat2       = 'K';
+			
+			// find the of point for X, Z
+			$of = $x - $radius;
 		}
 		if ($plane == 'G19') {
 			$axis1            = 'Y';
@@ -158,17 +164,17 @@ class GCode
 			$axisSpindleValue = $x;
 			$arcFormat1       = 'J';
 			$arcFormat2       = 'K';
+			
+			// find the of point for Y, Z 
+			$of = $y - $radius;
 		}
 		
-		// find the of point for x, y 
-		$ofx = $x - $radius;
-		$ofy = $y - $radius;
 
-		$this->setCode("\n(circle x={$x} y={$y} z={$z} radius={$radius} plane={$plane} ofx={$ofx} ofy={$ofy})");
-		$this->setCode("G0 X{$ofx} Y{$y} (rapid start)");
+		$this->setCode("\n(circle x={$x} y={$y} z={$z} radius={$radius} plane={$plane} of={$of} )");
+		$this->setCode("G0 {$axis1}{$of} {$axis2}{$y} (rapid start)");
 		$this->setCode("G1 {$axisSpindle}{$axisSpindleStart} (axis spindle start point)");
 		// Cutting spindle movement todo ...
-		$this->setCode("{$plane} {$motion} {$axis1}{$ofx} {$axis2}{$y} {$arcFormat1}{$radius} {$arcFormat2}0.00 {$axisSpindle}{$axisSpindleValue}");
+		$this->setCode("{$plane} {$motion} {$axis1}{$of} {$axis2}{$y} {$arcFormat1}{$radius} {$arcFormat2}0.00 {$axisSpindle}{$axisSpindleValue}");
 		$this->setCode("G0 {$axisSpindle}{$axisSpindleSafe} (axis spindle safe point)");
 		$this->setCode("(/circle)");
 		
