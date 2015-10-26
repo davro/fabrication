@@ -113,6 +113,15 @@ class GCode
 	 * Draw a circle on a plane
 	 * With a certain motion clockwise or anticlockwise for conventional or climb milling
 	 * 
+	 * Plane selection
+	 * G17	XY Plane
+	 * G18	XZ Plane
+	 * G19  YZ Plane
+	 * 
+	 * Motion control
+	 * G2	Clockwise Arcs
+	 * G3	Counter-Clockwise Arcs
+	 * 
 	 * @param float $x
 	 * @param float $y
 	 * @param float $z
@@ -123,25 +132,37 @@ class GCode
 	 */
 	public function drawCircle($x, $y, $z, $radius, $motion = 'G2', $plane = 'G17')
 	{
-		// TODO extend to allow for plane selections
-		// G17	XY Plane
-		// G18	XZ Plane
-		// G19  YZ Plane
-
-		// Motion
-		// G2	Clockwise Arcs
-		// G3	Counter-Clockwise Arcs
-
+		$axisSpindleStart = 0;
+		$axisSpindleSafe = 10;
+				
+		if ($plane == 'G17') {
+			$axis1       = 'X';
+			$axis2       = 'Y';
+			$axisSpindle = 'Z';
+		}
+		if ($plane == 'G18') {
+			$axis1       = 'X';
+			$axis2       = 'Z';
+			$axisSpindle = 'Y';
+		}
+		if ($plane == 'G19') {
+			$axis1       = 'Y';
+			$axis2       = 'Z';
+			$axisSpindle = 'X';
+		}
+		
+		// find the of point for x, y 
 		$ofx = $x - $radius;
 		$ofy = $y - $radius;
 
 		$this->setCode("\n(circle x={$x} y={$y} z={$z} radius={$radius} plane={$plane} ofx={$ofx} ofy={$ofy})");
 		$this->setCode("G0 X{$ofx} Y{$y} (rapid start)");
-		$this->setCode("G1 Z{$z}");
-		$this->setCode("{$plane} {$motion} X{$ofx} Y{$y} I{$radius} J0.00 Z{$z} (Plane)");
-		$this->setCode("G0 Z10 (move z)");
+		$this->setCode("G1 {$axisSpindle}{$axisSpindleStart} (axis spindle start point)");
+		// Cutting spindle movement todo ...
+		$this->setCode("{$plane} {$motion} {$axis1}{$ofx} {$axis2}{$y} I{$radius} J0.00 {$axisSpindle}{$z}");
+		$this->setCode("G0 {$axisSpindle}{$axisSpindleSafe} (axis spindle safe point)");
 		$this->setCode("(/circle)");
-
+		
 		return $this;
 	}
 	
