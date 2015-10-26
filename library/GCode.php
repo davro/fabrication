@@ -155,7 +155,7 @@ class GCode
 			$arcFormat2       = 'K';
 			
 			// find the of point for X, Z
-			$of = $x - $radius;
+			$of = $z - $radius;
 		}
 		if ($plane == 'G19') {
 			$axis1            = 'Y';
@@ -166,7 +166,7 @@ class GCode
 			$arcFormat2       = 'K';
 			
 			// find the of point for Y, Z 
-			$of = $y - $radius;
+			$of = $z - $radius;
 		}
 		
 
