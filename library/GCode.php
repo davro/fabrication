@@ -113,7 +113,7 @@ class GCode
 	 * Draw a circle on a plane
 	 * With a certain motion clockwise or anticlockwise for conventional or climb milling
 	 * 
-	 * Plane selection
+	 * TODO Plane selection
 	 * G17	XY Plane
 	 * G18	XZ Plane
 	 * G19  YZ Plane
@@ -143,43 +143,29 @@ class GCode
 			$axisSpindleValue = $z;
 			$arcFormat1       = 'I';
 			$arcFormat2       = 'J';
-			
-			// find the of point for X, Y 
 			$of = $x - $radius;
-		}
-		if ($plane == 'G18') {
-			$axis1            = 'X';
-			$axis1Value       = $x;
-			$axis2            = 'Z';
-			$axisSpindle      = 'Y';
-			$axisSpindleValue = $y;
-			$arcFormat1       = 'I';
-			$arcFormat2       = 'K';
 			
-			// find the of point for X, Z
-			$of = $x - $radius;
-		}
-		if ($plane == 'G19') {
-			$axis1            = 'Y';
-			$axis1Value       = $y;
-			$axis2            = 'Z';
-			$axisSpindle      = 'X';
-			$axisSpindleValue = $x;
-			$arcFormat1       = 'J';
-			$arcFormat2       = 'K';
+			$this->setCode("\n(circle x={$x} y={$y} z={$z} radius={$radius} )");
+			$this->setCode("G0 {$axis1}{$of} {$axis2}{$axis1Value} (rapid start)");
+			$this->setCode("G1 {$axisSpindle}{$axisSpindleStart} (axis spindle start point)");
 			
-			// find the of point for Y, Z 
-			$of = $y - $radius;
+			// Cutting spindle movement todo ...
+			$this->setCode("{$plane} {$motion} {$axis1}{$of} {$axis2}{$y} {$arcFormat1}{$radius} {$arcFormat2}0.00 {$axisSpindle}{$axisSpindleValue}");
+			$this->setCode("G0 {$axisSpindle}{$axisSpindleSafe} (axis spindle safe point)");
+			$this->setCode("(/circle)");
 		}
 		
-
-		$this->setCode("\n(circle x={$x} y={$y} z={$z} radius={$radius} )");
-		$this->setCode("G0 {$axis1}{$of} {$axis2}{$axis1Value} (rapid start)");
-		$this->setCode("G1 {$axisSpindle}{$axisSpindleStart} (axis spindle start point)");
-		// Cutting spindle movement todo ...
-		$this->setCode("{$plane} {$motion} {$axis1}{$of} {$axis2}{$y} {$arcFormat1}{$radius} {$arcFormat2}0.00 {$axisSpindle}{$axisSpindleValue}");
-		$this->setCode("G0 {$axisSpindle}{$axisSpindleSafe} (axis spindle safe point)");
-		$this->setCode("(/circle)");
+		if ($plane == 'G18') {
+			
+			// G18 is disabled
+			return;
+		}
+		
+		if ($plane == 'G19') {
+			
+			// G19 is disabled
+			return;
+		}
 		
 		return $this;
 	}
