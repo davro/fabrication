@@ -142,7 +142,7 @@ class GCode
 		$this->setCode("G0 Z10 (move z)");
 		$this->setCode("(/circle)");
 
-		return true;
+		return $this;
 	}
 	
 	/**
