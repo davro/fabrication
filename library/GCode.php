@@ -157,7 +157,7 @@ class GCode
 			$arcFormat2       = 'K';
 			
 			// find the of point for X, Z
-			$of = $z - $radius;
+			$of = $x - $radius;
 		}
 		if ($plane == 'G19') {
 			$axis1            = 'Y';
@@ -169,11 +169,11 @@ class GCode
 			$arcFormat2       = 'K';
 			
 			// find the of point for Y, Z 
-			$of = $z - $radius;
+			$of = $y - $radius;
 		}
 		
 
-		$this->setCode("\n(circle)");
+		$this->setCode("\n(circle x={$x} y={$y} z={$z} radius={$radius} )");
 		$this->setCode("G0 {$axis1}{$of} {$axis2}{$axis1Value} (rapid start)");
 		$this->setCode("G1 {$axisSpindle}{$axisSpindleStart} (axis spindle start point)");
 		// Cutting spindle movement todo ...
