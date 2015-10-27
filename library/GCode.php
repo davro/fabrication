@@ -143,8 +143,8 @@ class GCode
 			
 			$of = $x - $radius;
 			
-			$this->setCode("(circle x={$x} y={$y} z={$z} radius={$radius} )");
-			$this->setCode("G0 X{$of} Y{$x}");
+			$this->setCode("(circle)");
+			$this->setCode("G0 X{$of} Y{$y}");
 			$this->setCode("G1 Z{$z} (axis spindle start point)");
 			
 			// TODO Tool size  ...
