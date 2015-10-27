@@ -12,6 +12,11 @@
  * G02 Circular interpolation, clockwise
  * G03 Circular interpolation, counterclockwise
  * 
+ * 
+ * http://www.practicalmachinist.com/vb/cnc-machining/newbie-g-code-tool-compensation-help-124118/
+ * G41 = Cutter Comp left; that is, the cutter WILL ALWAYS BE CUTTING TO THE LEFT OF THE PART. This is 'climb' milling, and is the preferred method.
+ * G42 = Cutter Comp right; that is, the cutter WILL ALWAYS CUT TO THE RIGHT OF THE PART. This is 'conventional' milling, and generally doesn't give as good of a finish, and re-cutting chips is a problem.
+ * 
  * @license http://www.gnu.org/licenses/lgpl-3.0.en.html
  * @author David Stevens <mail.davro@gmail.com>
  */
@@ -25,7 +30,21 @@ class GCode
 	protected $code;
 	
 	/**
-	 * The current Feed Rate
+	 * The Tool Size Diameter
+	 * 
+	 * @var integer
+	 */
+	protected $toolSizeDiameter = 0;
+	
+	/**
+	 * The Tool Size Radius
+	 * 
+	 * @var integer
+	 */
+	protected $toolSizeRadius = 0;
+	
+	/**
+	 * The Feed Rate
 	 * 
 	 * @var integer
 	 */
@@ -65,7 +84,13 @@ class GCode
 			$this->setCode('G20 (Imperial inch)');
 		}
 	}
-
+	
+	public function setToolSize($value)
+	{
+		$this->toolSizeDiameter = $value;
+		$this->toolSizeRadius   = $value/2;
+	}
+	
 	/**
 	 * Setter for changing the feed rate
 	 * 
@@ -75,7 +100,7 @@ class GCode
 	{
 		$this->feedRate = $value;
 	}
-
+	
 	/**
 	 * Getter for retrieving the header GCodes
 	 * 
@@ -116,6 +141,20 @@ class GCode
 		$this->code.= $code . "\n";
 	}
 
+	/**
+	 * Output HeaderCode MainCode and FooterCode in a single string
+	 * 
+	 * @return string
+	 */
+	public function __toString()
+	{
+		$output = $this->getHeader();
+		$output.= $this->code;
+		$output.= $this->getFooter();
+		
+		return $output;
+	}
+	
 	/**
 	 * Draw a circle on a XY plane
 	 * With a certain motion clockwise or anticlockwise for conventional or climb milling
@@ -194,19 +233,4 @@ class GCode
 			
 			return $this;
 	}
-	
-	/**
-	 * Output HeaderCode MainCode and FooterCode in a single string
-	 * 
-	 * @return string
-	 */
-	public function __toString()
-	{
-		$output = $this->getHeader();
-		$output.= $this->code;
-		$output.= $this->getFooter();
-		
-		return $output;
-	}
 }
-
