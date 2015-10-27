@@ -178,7 +178,7 @@ class GCode
 			$this->setCode("G1 X" . $x2);
 			$this->setCode("G1 Y" . $y1);
 			$this->setCode("G1 X" . $x1);
-			$this->setCode("G0 Z" . $safeZ);
+			$this->setCode("G0 Z10");
 			$this->setCode("(/box)\n");
 
 			return $this;
