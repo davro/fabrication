@@ -7,7 +7,7 @@ $gcode->setUnitType('metric');
 $gcode->setFeedRate(2000);
 
 
-$gcode->drawBox(0, 0, 0, 50, 50, 0);
+$gcode->drawBox(10, 10, 0, 50, 50, 0);
 
 echo $gcode;
 

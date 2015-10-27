@@ -32,11 +32,18 @@ class GCode
 	protected $feedRate = 0;
 	
 	/**
-	 * The current Spindle Speed
+	 * The spindle speed
 	 * 
-	 * @var type 
+	 * @var integer 
 	 */
 	protected $spindleSpeed = 0;
+	
+	/**
+	 * The spindle start position eg Z10
+	 *
+	 * @var integer
+	 */
+	protected $spindleAxisStartPosition = 10;
 	
 	/**
 	 * Class constructor
@@ -110,7 +117,7 @@ class GCode
 	}
 
 	/**
-	 * Draw a circle on a plane
+	 * Draw a circle on a XY plane
 	 * With a certain motion clockwise or anticlockwise for conventional or climb milling
 	 * 
 	 * TODO Plane selection
@@ -131,27 +138,20 @@ class GCode
 	 * @return boolean
 	 */
 	public function drawCircle($x, $y, $z, $radius, $motion = 'G2', $plane = 'G17')
-	{
-		$axisSpindleStart = 0;
-		$axisSpindleSafe = 10;
-				
+	{			
 		if ($plane == 'G17') {
-			$axis1            = 'X';
-			$axis1Value       = $x;
-			$axis2            = 'Y';
-			$axisSpindle      = 'Z';
-			$axisSpindleValue = $z;
-			$arcFormat1       = 'I';
-			$arcFormat2       = 'J';
+			
 			$of = $x - $radius;
 			
 			$this->setCode("(circle x={$x} y={$y} z={$z} radius={$radius} )");
-			$this->setCode("G0 {$axis1}{$of} {$axis2}{$axis1Value}");
-			$this->setCode("G1 {$axisSpindle}{$axisSpindleStart} (axis spindle start point)");
+			$this->setCode("G0 X{$of} Y{$x}");
+			$this->setCode("G1 Z{$z} (axis spindle start point)");
 			
-			// Cutting spindle movement todo ...
-			$this->setCode("{$plane} {$motion} {$axis1}{$of} {$axis2}{$y} {$arcFormat1}{$radius} {$arcFormat2}0.00 {$axisSpindle}{$axisSpindleValue}");
-			$this->setCode("G0 {$axisSpindle}{$axisSpindleSafe} (axis spindle safe point)");
+			// TODO Tool size  ...
+			// TODO Cutting spindle movement ...
+			
+			$this->setCode("{$plane} {$motion} X{$of} Y{$y} I{$radius} J0.00 Z{$z}");
+			$this->setCode("G0 Z{$this->spindleAxisStartPosition} (axis spindle start position)");
 			$this->setCode("(/circle)\n");
 		}
 		
@@ -168,19 +168,30 @@ class GCode
 		return $this;
 	}
 	
+	/**
+	 * Draw a box on a XY plane
+	 * 
+	 * @param type $x1
+	 * @param type $y1
+	 * @param type $z1
+	 * @param type $x2
+	 * @param type $y2
+	 * @param type $z2
+	 * @return \GCode
+	 */
 	function drawBox($x1, $y1, $z1, $x2, $y2, $z2)
 	{
 			$this->setCode("(box)");
-			$this->setCode("G0 X{$x1} Y{$y1} Z0");
+			$this->setCode("G0 X{$x1} Y{$y1} Z{$this->spindleAxisStartPosition} (move to spindle axis start position)");
 			$this->setCode("G1 Z{$z1}");
 			$this->setCode("G1 X{$x1} Y{$y1} Z{$z1}");
-			$this->setCode("G1 Y" . $y2);
-			$this->setCode("G1 X" . $x2);
-			$this->setCode("G1 Y" . $y1);
-			$this->setCode("G1 X" . $x1);
-			$this->setCode("G0 Z10");
+			$this->setCode("G1 Y{$y2}");
+			$this->setCode("G1 X{$x2}");
+			$this->setCode("G1 Y{$y1}");
+			$this->setCode("G1 X{$x1}");
+			$this->setCode("G0 Z{$z2}");
 			$this->setCode("(/box)\n");
-
+			
 			return $this;
 	}
 	
