@@ -4,7 +4,7 @@ require dirname(__FILE__) . '/../../library/GCode.php';
 
 $gcode = new GCode();
 $gcode->setUnitType('metric');
-$gcode->setFeedRate(1000);
+$gcode->setFeedRate(300);
 
 $gcode->drawCircle(50,  50, 0, 30)
 	->drawCircle(120, 50, 0, 30)

@@ -1,16 +1,20 @@
 <?php
 /**
- * GCode is the common name for the most widely used numerical control (NC) programming language. 
- * It is used mainly in computer-aided manufacturing to control automated machine tools. 
- * GCode is a language in which LinuxCNC is going to tell the stepper motor tentacles how to make something. 
- * The "how" is defined by instructions on where to move, how fast to move, and what path to move.
+ * GCode is the common name for the most widely used numerical control programming language. 
+ * It is used mainly in computer-aided manufacturing to control automated machine tools.
  * 
- * The first four general codes
+ * The first four general codes apart from thou shall spawn PHP everywhere ;)
  * 
  * G00 Rapid positioning
  * G01 Linear interpolation
  * G02 Circular interpolation, clockwise
  * G03 Circular interpolation, counterclockwise
+ * 
+ * Add the following to the config file in the [FILTER] section of your machine's config
+ * then LinuxCnc can read the string output of the PHP script!
+ *
+ * PROGRAM_EXTENSION = .php PHP Script
+ * php = php
  * 
  * 
  * http://www.practicalmachinist.com/vb/cnc-machining/newbie-g-code-tool-compensation-help-124118/
