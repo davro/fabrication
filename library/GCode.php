@@ -145,29 +145,43 @@ class GCode
 			$arcFormat2       = 'J';
 			$of = $x - $radius;
 			
-			$this->setCode("\n(circle x={$x} y={$y} z={$z} radius={$radius} )");
-			$this->setCode("G0 {$axis1}{$of} {$axis2}{$axis1Value} (rapid start)");
+			$this->setCode("(circle x={$x} y={$y} z={$z} radius={$radius} )");
+			$this->setCode("G0 {$axis1}{$of} {$axis2}{$axis1Value}");
 			$this->setCode("G1 {$axisSpindle}{$axisSpindleStart} (axis spindle start point)");
 			
 			// Cutting spindle movement todo ...
 			$this->setCode("{$plane} {$motion} {$axis1}{$of} {$axis2}{$y} {$arcFormat1}{$radius} {$arcFormat2}0.00 {$axisSpindle}{$axisSpindleValue}");
 			$this->setCode("G0 {$axisSpindle}{$axisSpindleSafe} (axis spindle safe point)");
-			$this->setCode("(/circle)");
+			$this->setCode("(/circle)\n");
 		}
 		
 		if ($plane == 'G18') {
-			
 			// G18 is disabled
 			return;
 		}
 		
 		if ($plane == 'G19') {
-			
 			// G19 is disabled
 			return;
 		}
 		
 		return $this;
+	}
+	
+	function drawBox($x1, $y1, $z1, $x2, $y2, $z2)
+	{
+			$this->setCode("(box)");
+			$this->setCode("G0 X{$x1} Y{$y1} Z0");
+			$this->setCode("G1 Z{$z1}");
+			$this->setCode("G1 X{$x1} Y{$y1} Z{$z1}");
+			$this->setCode("G1 Y" . $y2);
+			$this->setCode("G1 X" . $x2);
+			$this->setCode("G1 Y" . $y1);
+			$this->setCode("G1 X" . $x1);
+			$this->setCode("G0 Z" . $safeZ);
+			$this->setCode("(/box)\n");
+
+			return $this;
 	}
 	
 	/**
