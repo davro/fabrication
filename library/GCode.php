@@ -17,6 +17,10 @@
  * php = php
  * 
  * 
+ * NOTES 
+ * 
+ * http://www.tormach.com/g40_g41_g42.html
+ * 
  * http://www.practicalmachinist.com/vb/cnc-machining/newbie-g-code-tool-compensation-help-124118/
  * G41 = Cutter Comp left; that is, the cutter WILL ALWAYS BE CUTTING TO THE LEFT OF THE PART. This is 'climb' milling, and is the preferred method.
  * G42 = Cutter Comp right; that is, the cutter WILL ALWAYS CUT TO THE RIGHT OF THE PART. This is 'conventional' milling, and generally doesn't give as good of a finish, and re-cutting chips is a problem.
