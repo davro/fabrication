@@ -6,7 +6,6 @@ $gcode = new GCode();
 $gcode->setUnitType('metric');
 $gcode->setFeedRate(150);
 
-$gcode->drawCircle(15, 15, 0, 10);
+$gcode->drawLine(0, 0, 0, 0, 60, 0);
 
 echo $gcode;
-

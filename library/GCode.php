@@ -226,7 +226,7 @@ class GCode
 	 * @param type $z2
 	 * @return \GCode
 	 */
-	function drawBox($x1, $y1, $z1, $x2, $y2, $z2)
+	public function drawBox($x1, $y1, $z1, $x2, $y2, $z2)
 	{
 			$this->setCode("(box)");
 			$this->setCode("G0 X{$x1} Y{$y1} Z{$this->spindleAxisStartPosition} (move to spindle axis start position)");
@@ -241,4 +241,18 @@ class GCode
 			
 			return $this;
 	}
+
+        public function drawLine($x1, $y1, $z1, $x2, $y2, $z2)
+        {
+                $this->setCode("G0 X{$x1} Y{$y1} Z{$this->spindleAxisStartPosition}");
+
+                $this->setCode("G1 Z{$z1}");
+                $this->setCode("G1 X{$x1} Y{$y1} Z{$z1}");
+                $this->setCode("G1 X{$x2} Y{$y2} Z{$z2}");
+
+                $this->setCode("G0 Z{$this->spindleAxisStartPosition}");
+                $this->setCode("G0 X0 Y0");
+
+                return $this;
+        }
 }
