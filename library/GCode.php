@@ -5,6 +5,9 @@
  * 
  * The first four general codes apart from thou shall spawn PHP everywhere ;)
  * 
+ * Please use library with CARE as this is very experimental!
+ * 
+ * 
  * G00 Rapid positioning
  * G01 Linear interpolation
  * G02 Circular interpolation, clockwise
@@ -16,9 +19,8 @@
  * PROGRAM_EXTENSION = .php PHP Script
  * php = php
  * 
- * 
  * NOTES 
- * 
+ * http://linuxcnc.org/docs/html/gcode.html
  * http://www.tormach.com/g40_g41_g42.html
  * 
  * http://www.practicalmachinist.com/vb/cnc-machining/newbie-g-code-tool-compensation-help-124118/
@@ -71,6 +73,41 @@ class GCode
 	 * @var integer
 	 */
 	protected $spindleAxisStartPosition = 10;
+	
+	/**
+	 * GCODE reference
+	 * 
+	 * http://linuxcnc.org/docs/html/gcode.html
+	 *
+	 * @var array
+	 */
+	protected $gcodeReference = [
+		
+		// Motion 	(X Y Z A B C U V W apply to all motions) 
+		'G0'   => ['code' => 'motion', 'description' => 'Rapid Motion', 'parameters' => []],
+		'G1'   => ['code' => 'motion', 'description' => 'Coordinated motion ("Straight feed")', 'parameters' => []],
+		'G2'   => ['code' => 'motion', 'description' => 'Coordinated helical motion ("Arc feed") CW', 'parameters' => ['I','J','K','R','P']],
+		'G3'   => ['code' => 'motion', 'description' => 'Coordinated helical motion ("Arc feed") CCW', 'parameters' => ['I','J','K','R','P']],
+		'G4'   => ['code' => 'motion', 'description' => 'Dwell (no motion for P seconds)', 'parameters' => ['P']],
+		'G5'   => ['code' => 'motion', 'description' => 'Cubic spline', 'parameters' => ['I','J','P','Q']],
+		'G5.1' => ['code' => 'motion', 'description' => 'Quadratic spline', 'parameters' => ['I','J']],
+		'G5.2' => ['code' => 'motion', 'description' => 'NURBS, add control point ', 'parameters' => ['P','L']],
+		'G5.3' => ['code' => 'motion', 'description' => 'NURBS, execute ', 'parameters' => []],
+		
+		// Canned cycles 	(X Y Z or U V W apply to canned cycles, depending on active plane) 
+		'G81' => ['code' => 'canned-cycles', 'description' => '', 'parameters' => []],
+		
+		// Distance Mode 
+		'G90' => ['code' => 'distance-mode', 'description' => '', 'parameters' => []],
+		
+		// Feed Rate Mode 
+		'G93' => ['code' => 'feed-rate-mode', 'description' => '', 'parameters' => []],
+		'G94' => ['code' => 'feed-rate-mode', 'description' => '', 'parameters' => []],
+		'G95' => ['code' => 'feed-rate-mode', 'description' => '', 'parameters' => []],
+		
+	];
+	
+	
 	
 	/**
 	 * Class constructor
@@ -147,6 +184,8 @@ class GCode
 	public function setCode($code)
 	{
 		$this->code.= $code . "\n";
+		
+		return;
 	}
 
 	/**
@@ -218,41 +257,86 @@ class GCode
 	/**
 	 * Draw a box on a XY plane
 	 * 
-	 * @param type $x1
-	 * @param type $y1
-	 * @param type $z1
-	 * @param type $x2
-	 * @param type $y2
-	 * @param type $z2
+	 * @param float $x1
+	 * @param float $y1
+	 * @param float $z1
+	 * @param float $x2
+	 * @param float $y2
+	 * @param float $z2
 	 * @return \GCode
 	 */
 	public function drawBox($x1, $y1, $z1, $x2, $y2, $z2)
 	{
-			$this->setCode("(box)");
-			$this->setCode("G0 X{$x1} Y{$y1} Z{$this->spindleAxisStartPosition} (move to spindle axis start position)");
-			$this->setCode("G1 Z{$z1}");
-			$this->setCode("G1 X{$x1} Y{$y1} Z{$z1}");
-			$this->setCode("G1 Y{$y2}");
-			$this->setCode("G1 X{$x2}");
-			$this->setCode("G1 Y{$y1}");
-			$this->setCode("G1 X{$x1}");
-			$this->setCode("G0 Z{$z2}");
-			$this->setCode("(/box)\n");
-			
-			return $this;
+		$this->setCode("(box)");
+		$this->setCode("G0 X{$x1} Y{$y1} Z{$this->spindleAxisStartPosition} (move to spindle axis start position)");
+		$this->setCode("G1 Z{$z1}");
+		$this->setCode("G1 X{$x1} Y{$y1} Z{$z1}");
+		$this->setCode("G1 Y{$y2}");
+		$this->setCode("G1 X{$x2}");
+		$this->setCode("G1 Y{$y1}");
+		$this->setCode("G1 X{$x1}");
+		$this->setCode("G0 Z{$z2}");
+		$this->setCode("(/box)\n");
+
+		return $this;
 	}
 
-        public function drawLine($x1, $y1, $z1, $x2, $y2, $z2)
-        {
-                $this->setCode("G0 X{$x1} Y{$y1} Z{$this->spindleAxisStartPosition}");
+	/**
+	 * Draw a line on a XY plane
+	 * 
+	 * @param float $xStart
+	 * @param float $yStart
+	 * @param float $zStart
+	 * @param float $xEnd
+	 * @param float $yEnd
+	 * @param float $zEnd
+	 * @return \GCode
+	 */
+	public function drawLine($xStart, $yStart, $zStart, $xEnd, $yEnd, $zEnd)
+	{
+		$this->setCode("(line)");
+		$this->setCode("G0 X{$xStart} Y{$yStart} Z{$this->spindleAxisStartPosition}");
+		$this->setCode("G1 Z{$zStart}");
+		
+		// testing tool setup tool metric M8 diameter 4mm
+		$this->setCode("T1 M08");
+		$this->setCode("G41 D4");
+		
+		$this->setCode("G1 X{$xStart} Y{$yStart} Z{$zStart}");
+		$this->setCode("G1 X{$xEnd} Y{$yEnd} Z{$zEnd}");
 
-                $this->setCode("G1 Z{$z1}");
-                $this->setCode("G1 X{$x1} Y{$y1} Z{$z1}");
-                $this->setCode("G1 X{$x2} Y{$y2} Z{$z2}");
-
-                $this->setCode("G0 Z{$this->spindleAxisStartPosition}");
-                $this->setCode("G0 X0 Y0");
-
-                return $this;
-        }
+		$this->setCode("G0 Z{$this->spindleAxisStartPosition}");
+		$this->setCode("G0 X{$xStart} Y{$yStart}");
+		$this->setCode("(/line)\n");
+		
+		return $this;
+	}
+	
+	/**
+	 * G5 creates a cubic B-spline in the XY plane with the X and Y axes only. 
+	 * P and Q must both be specified for every G5 command.
+	 * 
+	 * @param float $xStart
+	 * @param float $yStart
+	 * @param float $xFromEnd
+	 * @param float $yFromEnd
+	 * @param float $xEnd
+	 * @param float $yEnd
+	 * @return \GCode
+	 */
+	public function drawCubicSpline($xStart, $yStart, $xFromEnd, $yFromEnd, $xEnd, $yEnd)
+	{
+		$this->setCode("(cubic spline)");
+		$this->setCode("G0 X{$xStart} Y{$yStart} Z{$this->spindleAxisStartPosition}");
+//		$this->setCode("G1 Z{$zStart}");
+		
+		// G5 Cubic spline
+		$this->setCode("G5 I{$xStart} J{$yStart} P{$xFromEnd} Q-{$yFromEnd} X{$xEnd} Y{$yEnd}");
+		
+		$this->setCode("G0 Z{$this->spindleAxisStartPosition}");
+		$this->setCode("G0 X{$xStart} Y{$yStart}");
+		$this->setCode("(/cubic spline)");
+		
+		return $this;
+	}
 }
