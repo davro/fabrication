@@ -38,9 +38,9 @@ Simple example of Input/Output.
     $engine->input('hello', 'world');
 
     echo $engine->output('hello');
-	#
+    #
     # world
-	#
+    #
 
 	?>
 ```
@@ -59,21 +59,21 @@ ID keys are automatically mapped to elements with matching id identifiers.
     $engine->run($template);
 
     echo $engine->output('#hello');
-	#
+    #
     # world
-	#
+    #
 
     echo $engine->saveHTML();
-	#
+    #
     # <html><head></head><body><div id="hello">world</div></body></html>
-	#
+    #
 
     echo $engine->saveFabric();
-	#
+    #
     # <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     #    "http://www.w3.org/TR/html4/loose.dtd">'.
     # <html><head></head><body><div id="hello">world</div></body></html>
-	#
+    #
 
     ?>
 ```
@@ -92,21 +92,21 @@ Class keys are automatically mapped to elements with matching class identifiers.
     $engine->run($template);
 
     echo $engine->output('.hello'); 
-	#
+    #
     # world
-	#
+    #
 
     echo $engine->saveHTML();
-	#
+    #
     # <html><head></head><body><div class="hello">world</div></body></html>
-	#
+    #
 
     echo $engine->saveFabric();
-	#
+    #
     # <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     #    "http://www.w3.org/TR/html4/loose.dtd">'.
     # <html><head></head><body><div class="hello">world</div></body></html>
-	#
+    #
 
     ?>
 ```
