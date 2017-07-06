@@ -1,6 +1,5 @@
 {
     "name": "davro/fabrication",
-    "version": "0.1.0",
     "description": "DOM based Template Engine no placeholders!",
     "type": "library",
     "keywords": ["template", "engine", "fabrication", "fabric", "domdocument", "dom"],
