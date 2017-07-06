@@ -5,19 +5,9 @@
 #
 # $ bash bin/runall.bash
 #
-systemTestLog=$(pwd)/cache/system.tests.log
 
-echo '' > $systemTestLog
+php vendor/bin/phpcs --standard=PSR2 $(pwd)/library
 
-echo '----------------------------------------------------------------------' >> $systemTestLog
-echo 'CODE STYLE PSR2'  >> $systemTestLog
-echo '----------------------------------------------------------------------' >> $systemTestLog
-php ../bin/phpcs.phar --standard=PSR2 $(pwd)/library >> $systemTestLog
+echo '----------------------------------------------------------------------'
+php vendor/bin/phpunit $(pwd)/tests/
 
-echo '----------------------------------------------------------------------' >> $systemTestLog
-echo 'UNIT TESTS' >> $systemTestLog
-echo '----------------------------------------------------------------------' >> $systemTestLog
-#php ../bin/phpunit.phar --bootstrap $(pwd)/tests/bootstrap.php $(pwd)/tests/ >> $systemTestLog
-php ../bin/phpunit.phar $(pwd)/tests/ >> $systemTestLog
-
-cat $systemTestLog
