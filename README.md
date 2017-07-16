@@ -31,6 +31,8 @@ Dataset Templating.
 ### Example: Input key, value pair and output.
 Simple example of Input/Output.
 
+Documentation example, [Assign by ID](https://github.com/davro/fabrication/blob/master/docs/examples/assign-by-id.php).
+
 ```php
 <?php
 
