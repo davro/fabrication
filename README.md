@@ -28,11 +28,10 @@ Dataset Templating.
 ## Documentation
 
 
-### Example: Input key, value pair and output.
+### Example: Assign key, value pair and output.
 Simple example of Input/Output.
 
-Documentation example, [Assign by ID](https://github.com/davro/fabrication/blob/master/docs/examples/assign-by-id.php).
-
+Documentation example, [Assign](https://github.com/davro/fabrication/blob/master/docs/examples/assign.php).
 ```php
 <?php
 
@@ -47,8 +46,10 @@ echo $engine->output('hello');
 ?>
 ```
 
-### Example: Input id #key, value pair.
-ID keys are automatically mapped to elements with matching id identifiers.
+### Example: Assign ID #key, value pair.
+ID keys are automatically mapped to DOM elements with matching identifiers.
+
+Documentation example, [Assign by ID](https://github.com/davro/fabrication/blob/master/docs/examples/assign-by-id.php).
 
 ```php
 <?php
@@ -112,6 +113,11 @@ echo $engine->saveFabric();
 
 ?>
 ```
+
+Documentation examples.
+[Assign Element](https://github.com/davro/fabrication/blob/master/docs/examples/assign-element.php).
+[Assign Performance](https://github.com/davro/fabrication/blob/master/docs/examples/assign-performance.php).
+[Create](https://github.com/davro/fabrication/blob/master/docs/examples/create.php).
 
 ## Contributors
 
