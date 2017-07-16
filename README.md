@@ -32,83 +32,83 @@ Dataset Templating.
 Simple example of Input/Output.
 
 ```php
-    <?php
-      
-    $engine = new Fabrication\FabricationEngine();
-    $engine->input('hello', 'world');
+<?php
 
-    echo $engine->output('hello');
-    #
-    # world
-    #
+$engine = new Fabrication\FabricationEngine();
+$engine->input('hello', 'world');
 
-	?>
+echo $engine->output('hello');
+#
+# world
+#
+
+?>
 ```
 
 ### Example: Input id #key, value pair.
 ID keys are automatically mapped to elements with matching id identifiers.
 
 ```php
-    <?php
-      
-    $template = '<html><head></head><body><div id="hello"></div></body></html>';
+<?php
 
-    $engine = new Fabrication\FabricationEngine();
-    $engine->input('#hello', 'world');
+$template = '<html><head></head><body><div id="hello"></div></body></html>';
 
-    $engine->run($template);
+$engine = new Fabrication\FabricationEngine();
+$engine->input('#hello', 'world');
 
-    echo $engine->output('#hello');
-    #
-    # world
-    #
+$engine->run($template);
 
-    echo $engine->saveHTML();
-    #
-    # <html><head></head><body><div id="hello">world</div></body></html>
-    #
+echo $engine->output('#hello');
+#
+# world
+#
 
-    echo $engine->saveFabric();
-    #
-    # <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-    #    "http://www.w3.org/TR/html4/loose.dtd">'.
-    # <html><head></head><body><div id="hello">world</div></body></html>
-    #
+echo $engine->saveHTML();
+#
+# <html><head></head><body><div id="hello">world</div></body></html>
+#
 
-    ?>
+echo $engine->saveFabric();
+#
+# <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+#    "http://www.w3.org/TR/html4/loose.dtd">'.
+# <html><head></head><body><div id="hello">world</div></body></html>
+#
+
+?>
 ```
 
 ### Example: Input class .key, value pair.
 Class keys are automatically mapped to elements with matching class identifiers.
 
 ```php
-    <?php
-    
-    $template = '<html><head></head><body><div class="hello"></div></body></html>';
+<?php
 
-    $engine = new Fabrication\FabricationEngine();
-    $engine->input('.hello', 'world');
+$template = '<html><head></head><body><div class="hello"></div></body></html>';
 
-    $engine->run($template);
+$engine = new Fabrication\FabricationEngine();
+$engine->input('.hello', 'world');
 
-    echo $engine->output('.hello'); 
-    #
-    # world
-    #
+$engine->run($template);
 
-    echo $engine->saveHTML();
-    #
-    # <html><head></head><body><div class="hello">world</div></body></html>
-    #
+echo $engine->output('.hello'); 
+#
+# world
+#
 
-    echo $engine->saveFabric();
-    #
-    # <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-    #    "http://www.w3.org/TR/html4/loose.dtd">'.
-    # <html><head></head><body><div class="hello">world</div></body></html>
-    #
+echo $engine->saveHTML();
+#
+# <html><head></head><body><div class="hello">world</div></body></html>
+#
 
-    ?>
+echo $engine->saveFabric();
+#
+# <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+#    "http://www.w3.org/TR/html4/loose.dtd">'.
+# <html><head></head><body><div class="hello">world</div></body></html>
+#
+
+?>
 ```
 
 ## Contributors
