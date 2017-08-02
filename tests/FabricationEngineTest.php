@@ -17,9 +17,6 @@ define('PROJECT_HOSTNAME', 'localhost');
 define('PROJECT_NAME', 'workspace');
 define('PROJECT_ROOT_DIR', realpath(dirname(dirname(__FILE__))));
 
-require_once(FRAMEWORK_ROOT_DIR . '/library/FabricationEngine.php');
-require_once(FRAMEWORK_ROOT_DIR . '/library/Html.php');
-
 /**
  * Fabrication Engine TestCase.
  */

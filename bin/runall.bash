@@ -6,8 +6,8 @@
 # $ bash bin/runall.bash
 #
 
-php vendor/bin/phpcs --standard=PSR2 $(pwd)/library
+php bin/phpcs --standard=PSR2 $(pwd)/library
 
 echo '----------------------------------------------------------------------'
-php vendor/bin/phpunit $(pwd)/tests/
 
+php bin/phpunit --bootstrap vendor/autoload.php tests/

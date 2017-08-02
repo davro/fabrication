@@ -31,9 +31,6 @@
         "bin-dir": "bin"
     },
     "autoload": {
-        "psr-4": {"Library\\": "library/"}
-    },
-    "autoload-dev": {
-        "psr-4": { "Library\\Tests\\": "tests/" }
+        "classmap": ["library/"]
     }
 }
