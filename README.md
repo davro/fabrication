@@ -122,6 +122,27 @@ Documentation examples.
 
 [Create](https://github.com/davro/fabrication/blob/master/docs/examples/create.php).
 
+## Composer and Tagging notes.
+
+https://packagist.org/packages/davro/fabrication
+
+$ git tag 1.0.5
+$ git tag
+1.0.0
+1.0.1
+1.0.2
+1.0.3
+1.0.4
+1.0.5
+
+$ git push --tags
+Total 0 (delta 0), reused 0 (delta 0)
+To https://github.com/davro/fabrication.git
+ * [new tag]         1.0.5 -> 1.0.5
+
+Tagging a branch on github will also notify packagist.org to update to the new tag.
+
+
 ## Contributors
 
 * David Stevens (davro)
