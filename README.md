@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/davro/fabrication.png?label=ready&title=Ready)](https://waffle.io/davro/fabrication?utm_source=badge)
 # Fabrication Engine
 
 ## Introduction
