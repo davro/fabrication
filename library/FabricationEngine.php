@@ -255,7 +255,7 @@ class FabricationEngine extends \DOMDocument
                     
                 // load string html
                 case 'string.html':
-                    if ($this->loadHTML($data)) {
+                    if (@$this->loadHTML($data)) {
                         $objectName = 'Fabrication\\Html';
                         $this->pattern = new $objectName($this);
                         

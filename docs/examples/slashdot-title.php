@@ -1,6 +1,7 @@
 <?php
 
 require dirname(__FILE__) . '/../../library/FabricationEngine.php';
+require dirname(__FILE__) . '/../../library/Html.php';
 
 $engine = new \Fabrication\FabricationEngine();
 $engine->run('http://slashdot.org', 'file');

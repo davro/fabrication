@@ -8,7 +8,7 @@ namespace Fabrication;
  * Design Object Systems with Standard UML
  *
  */
-class UML
+class DiagramUML
 {
     /**
      * Fabrication Engine instance

@@ -4,7 +4,7 @@ namespace Library;
 require dirname(__FILE__) . '/../../library/FabricationEngine.php';
 require dirname(__FILE__) . '/../../library/Fabricator.php';
 require dirname(__FILE__) . '/../../library/PhpClass.php';
-require dirname(__FILE__) . '/../../library/UML.php';
+require dirname(__FILE__) . '/../../library/DiagramUML.php';
 require dirname(__FILE__) . '/../../library/Html.php';
 
 try {
@@ -13,7 +13,7 @@ try {
 	} else {
 
 		$engine = new \Fabrication\FabricationEngine();
-		$UML    = new \Fabrication\UML($engine);
+		$UML    = new \Fabrication\DiagramUML($engine);
 
 		// get diagram name from script argument or default.
 		$diagramName = isset($argv[1]) ? $argv[1] : 'Application';
