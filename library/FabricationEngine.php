@@ -442,12 +442,12 @@ class FabricationEngine extends \DOMDocument
     {
         $result = '';
 
-        if (Fabrication::isCli()) {
+        if (PHP_SAPI === 'cli') {
             $end = "\n";
         } else {
-            $end = "<br />\n";
+            $end = "<br />\n";            
         }
-
+        
         if (is_object($data)) {
 
             $classname = get_class($data);
