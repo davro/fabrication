@@ -145,10 +145,9 @@ Tagging a branch on github will also notify packagist.org to update to the new t
 
 ## Contributors
 
-* David Stevens (davro)
+* David Stevens (davro) (https://www.davro.net)
 
 
 ## License
 
 Fabrication Engine is released under the LGPL license.
-
