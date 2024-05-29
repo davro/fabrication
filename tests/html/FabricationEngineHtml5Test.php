@@ -1,11 +1,12 @@
 <?php
 namespace Fabrication\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Fabrication\FabricationEngine;
 
-class FabricationEngineHtml5Test extends \PHPUnit_Framework_TestCase
+class FabricationEngineHtml5Test extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->engine = new FabricationEngine();
 

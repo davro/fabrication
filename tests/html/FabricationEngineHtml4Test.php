@@ -2,11 +2,12 @@
 
 namespace Fabrication\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Fabrication\FabricationEngine;
 
-class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase
+class FabricationEngineHtml4Test extends TestCase
 {
-    public function setUp()
+    public function setUp() : void
     {
         $this->header  = 'HEADER';
         $this->content = 'CONTENT';
@@ -14,7 +15,7 @@ class FabricationEngineHtml4Test extends \PHPUnit_Framework_TestCase
 
         $this->engine = new FabricationEngine();
 
-        $this->assertInternalType('object', $this->engine);
+        $this->assertIsObject($this->engine);
         $this->assertInstanceOf('Fabrication\FabricationEngine', $this->engine);
     }
 
