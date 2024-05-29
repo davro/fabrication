@@ -665,26 +665,6 @@ class FabricationEngine extends \DOMDocument
     }
 
     /**
-     * Create comment 
-     * To prevent a parser error when the comment string contains this character 
-     * sequence "--", This will insert a Soft Hyphen in between the two hyphens 
-     * which will not cause the parser to error out.
-     * 
-     * @param string $value
-     * 
-     * @return object DOMComment
-     */
-    public function createComment($value)
-    {
-        // Keep a space either side of the comment.
-        $value = ' ' . str_replace('--', '-' . chr(194) . chr(173) . '-', $value) . ' ';
-
-        $comment = parent::createComment($value);
-
-        return $comment;
-    }
-
-    /**
      * Pattern method for fabrication-framework standardized patterns.
      * 
      * @param	string	$name							Object $name to instantiate.
