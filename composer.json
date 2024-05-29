@@ -4,7 +4,7 @@
     "type": "library",
     "keywords": ["template", "engine", "fabrication", "fabric", "domdocument", "dom"],
     "homepage": "http://davro.net/",
-    "license": "LGPL-3.0+",
+    "license": "LGPL-3.0-or-later",
     "authors": [
         {
             "name": "David Stevens aka davro",
