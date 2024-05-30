@@ -61,6 +61,40 @@ class FabricationEngineTest extends TestCase
         $this->assertObjectHasProperty('options', $this->engine);
     }
 
+    // DUMP TestCases
+    public function testDumpString()
+    {
+        $result = FabricationEngine::dump("Hello, World!", true);
+        $this->assertStringContainsString("Hello, World!", $result);
+    }
+
+    public function testDumpArray()
+    {
+        $array = ['foo' => 'bar', 'baz' => 123];
+        $expectedOutput = "\n\n" .
+            str_repeat('-', 80) . "\n" .
+            "| DUMP Type: array\tReturn: false\n" .
+            str_repeat('-', 80) . "\n\n" .
+            "['foo'] => 'bar'\n" .
+            "['baz'] => 123\n\n";
+
+        $result = FabricationEngine::dump($array, true);
+        $this->assertEquals($expectedOutput, $result);
+    }
+
+    public function testDumpObject()
+    {
+        $dom = new \DOMDocument();
+        $result = FabricationEngine::dump($dom, true);
+        $this->assertStringContainsString("DOMDocument", $result);
+    }
+
+    public function testDumpNull()
+    {
+        $result = FabricationEngine::dump(null, true);
+        $this->assertStringContainsString("NULL", $result);
+    }
+
     // This example code is copyed into the README.md testing for consistency.
     // Simplest example.
     public function testReadmeExample1()

@@ -436,7 +436,7 @@ class FabricationEngine extends \DOMDocument
      * @param mixed   $data    The data to dump
      * @param boolean $return  True to return output, False to print output
      * 
-     * @return string 
+     * @return string
      */
     public static function dump($data, $return = false)
     {
@@ -522,101 +522,6 @@ class FabricationEngine extends \DOMDocument
 
         return $result;
     }
-    
-//    /**
-//     * Return a string representation of the data.
-//     * 
-//     * @param mixed   $data    The data to dump
-//     * @param boolean $return  True return output, False print output
-//     * 
-//     * @return	string 
-//     */
-//    public static function dump($data, $return = false)
-//    {
-//        $result = '';
-//
-//        if (PHP_SAPI === 'cli') {
-//            $end = "\n";
-//        } else {
-//            $end = "<br />\n";            
-//        }
-//        
-//        if (is_object($data)) {
-//
-//            $classname = get_class($data);
-//
-//            $result = str_repeat('-', 80) . $end .
-//                    "\t" . __METHOD__ . ' Type: ' . gettype($data) . "\tReturn:" . var_export($return, true) . $end .
-//                    str_repeat('-', 80) . $end .
-//                    "Object Instance: $classname: $end" .
-//                    "Object Methods $end";
-//
-//            $class_methods = get_class_methods($data);
-//            if (count($class_methods) > 0) {
-//                foreach ($class_methods as $method) {
-//                    $result.="\t" . $method . $end;
-//                }
-//            } else {
-//                $result.="No methods found.$end";
-//            }
-//
-//            $result.= $end;
-//            $result.= "Object XPath:$end";
-//            $result.= $end;
-//
-//            switch ($classname) {
-//
-//                case 'DOMAttr':
-//                    $result.= "DOMAttr XPath: {$data->getNodePath()}$end" .
-//                            $data->ownerDocument->saveXML($data);
-//                    break;
-//
-//                case 'DOMDocument':
-//                    $result.= "DOMDocument XPath: {$data->getNodePath()}$end" .
-//                            $data->saveXML($data);
-//                    break;
-//
-//                case 'DOMElement':
-//                    $result.= "DOMElement XPath: {$data->getNodePath()}$end" .
-//                            $data->ownerDocument->saveXML($data);
-//                    break;
-//
-//                case 'DOMNodeList':
-//                    for ($i = 0; $i < $data->length; $i++) {
-//                        $result.= "DOMNodeList Item #$i, " .
-//                                "XPath: {$data->item($i)->getNodePath()}$end" .
-//                                "{$data->item($i)->ownerDocument->saveXML($data->item($i))}$end";
-//                    }
-//                    break;
-//
-//                default: $result.= var_export($data, true);
-//            }
-//        }
-//
-//        if (is_array($data)) {
-//
-//            $result = $end .
-//                $end .
-//                str_repeat('-', 80) . $end .
-//                "| DUMP Type:" . gettype($data) . "\tReturn:" . var_export($return, true) . $end .
-//                str_repeat('-', 80) . $end .
-//                $end;
-//        }
-//
-//        if (is_string($data)) {
-//            $result = var_export($data, true);
-//        }
-//
-//        if (is_int($data)) {
-//            $result = var_export($data, true);
-//        }
-//
-//        if ($return) {
-//            return $result . $end;
-//        } else {
-//            echo $result . $end;
-//        }
-//    }
 
     /**
      * Getter for retrieving styles.
