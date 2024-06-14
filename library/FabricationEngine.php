@@ -3,30 +3,30 @@ namespace Fabrication;
 
 /**
  * Fabrication Engine
- * 
+ *
  * Document Object Model based template engine without placeholders.
- * 
- * There are many words in English which end with -ation. This is a interesting 
- * and useful pattern to learn forming nouns Denoting an action or an instance 
+ *
+ * There are many words in English which end with -ation. This is a interesting
+ * and useful pattern to learn forming nouns Denoting an action or an instance
  * of it. Here are just a few common examples exploration, hesitation, vibration
  * reputation, starvation, nation, relation, location.
  * From the Latin suffix -atio, an alternative form of -tio (from whence -tion).
- * 
- * Fabric From French fabrique, from Latin fabrica a workshop, art, trade, 
+ *
+ * Fabric From French fabrique, from Latin fabrica a workshop, art, trade,
  * product of art, structure, fabric, from faber (artisan, workman).
- * 
+ *
  * Fabrication to invent or produce the act of fabricating, constructing,
  * construction; manufacture, factory.
- * 
+ *
  * @method getHtml(string $method, array $args)
  * @method getHead(string $method, array $args)
  * @method getBody(string $method, array $args)
  * @method getDiv(string $method, array $args)
  * @method getArticle(string $method, array $args)
- * 
+ *
  * @author David Stevens <davro@davro.net>
  * @license http://www.gnu.org/copyleft/lgpl.html
- * 
+ *
  */
 
 class FabricationEngine extends \DOMDocument
@@ -38,7 +38,7 @@ class FabricationEngine extends \DOMDocument
 
     /**
      * Symbol container for attributes assignment.
-     * 
+     *
      * @var array
      */
     public $symbols = [
@@ -48,34 +48,34 @@ class FabricationEngine extends \DOMDocument
 
     /**
      * Input container.
-     * 
+     *
      * @var	array
      */
     public $input = [];
 
     /**
      * Output container.
-     * 
+     *
      * @var	array
      */
     public $output = [];
 
     /**
      * Document Type.
-     * 
+     *
      * @var	string
      */
     public $type = '';
 
     /**
      * XPath object
-     * 
+     *
      * @var	object
      */
     public $xpath;
-    
+
     /**
-     * Options 
+     * Options
      *
      * doctype            Choose your doctype
      * process            Clean up DOMDocument tardedness.
@@ -99,7 +99,7 @@ class FabricationEngine extends \DOMDocument
 
     /**
      * Current pattern object.
-     * 
+     *
      * @var object
      */
     public $pattern;
@@ -107,7 +107,7 @@ class FabricationEngine extends \DOMDocument
     /**
      * Control for automatic fixing of DOMDocument bugs before output.
      *
-     * @var boolean True process and clean output, False do nothing. 
+     * @var boolean True process and clean output, False do nothing.
      */
     private $outputProcess = false;
 
@@ -121,7 +121,7 @@ class FabricationEngine extends \DOMDocument
 
     /**
      * Main setup function for the Fabrication Engine.
-     * 
+     *
      * Examples from http://www.w3.org/QA/2002/04/valid-dtd-list.html
      */
     public function __construct($version = '1.0', $encoding = 'utf-8', $pattern = 'html')
@@ -136,7 +136,7 @@ class FabricationEngine extends \DOMDocument
 
     /**
      * Register a prefix and uri to the xpath namespace.
-     * 
+     *
      * @param string $prefix The namespace prefix.
      * @param string $uri    The namespace uri.
      */
@@ -148,7 +148,7 @@ class FabricationEngine extends \DOMDocument
 
     /**
      * DOMDocument and XPath.
-     * 
+     *
      */
     public function initializeXPath()
     {
@@ -167,7 +167,7 @@ class FabricationEngine extends \DOMDocument
 
     /**
      * Getter for accessing an option value by key from the options array.
-     * 
+     *
      */
     public function getOption($key)
     {
@@ -176,8 +176,8 @@ class FabricationEngine extends \DOMDocument
 
     /**
      * Setter for inserting a key value pair into the options array.
-     * Once a key value pair has been insert the updateOptions method is executed. 
-     * 
+     * Once a key value pair has been insert the updateOptions method is executed.
+     *
      * @return boolean True on success.
      */
     public function setOption($key, $value)
@@ -203,9 +203,9 @@ class FabricationEngine extends \DOMDocument
 
     /**
      * TESTING Getter for retriving the specification in the current context.
-     * 
+     *
      * @param string $element
-     * 
+     *
      * @return string
      */
     public function getSpecification($element = '')
@@ -220,7 +220,7 @@ class FabricationEngine extends \DOMDocument
 
     /**
      * Getter for retriving the current views.
-     * 
+     *
      * @return array
      */
     public function getViews()
@@ -235,7 +235,7 @@ class FabricationEngine extends \DOMDocument
      * @param string $data
      * @param string $load
      * @param string $type
-     * 
+     *
      * @return	mixed
      */
     public function run($data = '', $load = 'string', $type = 'html')
@@ -252,20 +252,20 @@ class FabricationEngine extends \DOMDocument
             switch ($load . '.' . $type) {
                 default:
                     return false;
-                    
+
                 // load string html
                 case 'string.html':
                     if (@$this->loadHTML($data)) {
                         $objectName = 'Fabrication\\Html';
                         $this->pattern = new $objectName($this);
-                        
+
                         $this->mapSymbols();
                         return true;
                     } else {
                         return false;
                     }
-                    
-                // load file html 
+
+                // load file html
                 case 'file.html':
                     if (@$this->loadHTMLFile($data)) {
                         $this->mapSymbols();
@@ -282,7 +282,7 @@ class FabricationEngine extends \DOMDocument
                     } else {
                         return false;
                     }
-                    
+
                 // load file xml
                 case 'file.xml':
                     $contents = file_get_contents($data);
@@ -299,11 +299,11 @@ class FabricationEngine extends \DOMDocument
     }
 
     /**
-     * Symbol mapper for engine input symbolic values to engine element 
+     * Symbol mapper for engine input symbolic values to engine element
      * attribute values for a basic mapping sub-system.
-     * 
+     *
      * @todo add functionality for adding removing custom symbols.
-     * 
+     *
      * @return void
      */
     public function mapSymbols()
@@ -329,18 +329,14 @@ class FabricationEngine extends \DOMDocument
     }
 
     /**
-     * Extend the native saveHTML method.
-     * Allow path search functionality.
-     * 
-     * @param string  $path Output file path.
-     * @param boolean $trim Trim the output of surrounding space.
-     * 
-     * @return	string
+     * Deprecated not compatible with DOMDocument::saveHTMLExtend
+     *
+     * saveHTML(\DOMNode|null $node = null): string|false {}
      */
+    /*
     public function saveHTML($path = '', $trim = true)
     {
         if (is_string($path) && $path !== '') {
-            // no processing as just return xpath html result no adding doctype.
             $this->output['raw'] = $this->view($path);
         } else {
             $this->output['raw'] = parent::saveHTML();
@@ -352,12 +348,13 @@ class FabricationEngine extends \DOMDocument
 
         return $trim ? trim($raw) : $raw;
     }
+    */
 
     /**
      * Return the engine output html view.
-     * 
-     * @param string $type  The run type 
-     * 
+     *
+     * @param string $type  The run type
+     *
      * @return type
      */
     public function saveFabric($type = 'html')
@@ -380,7 +377,7 @@ class FabricationEngine extends \DOMDocument
 
     /**
      * Time to sort out the plethora of DOMDocument bugs.
-     * 
+     *
      * TODO Styles create compiled CSS file, insert into reference into the head.
      * TODO Script create compiled JS file, insert into the page footer.
      * TODO Both should be configurable using options.
@@ -399,7 +396,7 @@ class FabricationEngine extends \DOMDocument
 
             /**
              * Process img, br, hr, tags, change html to xhtml.
-             * 
+             *
              * <img> <img src=""> <img src="/image.png">
              * Are changed to xhtml
              * <img /> <img src="" /> <img src="/image.png" />
@@ -432,10 +429,10 @@ class FabricationEngine extends \DOMDocument
 
     /**
      * Return a string representation of the data.
-     * 
+     *
      * @param mixed   $data    The data to dump
      * @param boolean $return  True to return output, False to print output
-     * 
+     *
      * @return string
      */
     public static function dump($data, $return = false)
@@ -525,7 +522,7 @@ class FabricationEngine extends \DOMDocument
 
     /**
      * Getter for retrieving styles.
-     * 
+     *
      * @return array
      */
     public function getStyles()
@@ -535,26 +532,26 @@ class FabricationEngine extends \DOMDocument
 
     /**
      * Getter for retriving scripts.
-     * 
+     *
      * @return array
      */
-    public function getScripts() 
+    public function getScripts()
     {
         return $this->scripts;
     }
 
     /**
-     * Create an element with a value and attributes including a mechanism for 
+     * Create an element with a value and attributes including a mechanism for
      * creating children elements recursively.
-     * 
+     *
      * @param string $name       The name of the element to create.
      * @param string $value      The value to assign to the element.
      * @param array  $attributes The attributes to place into the element.
      * @param array  $children   The children to create within the element.
-     * 
+     *
      * @return	mixed 	DOMElement on success or boolean false.
      */
-    public function create($name, $value = '', $attributes = array(), $children = array()) 
+    public function create($name, $value = '', $attributes = array(), $children = array())
     {
         if ($name == '') {
             return false;
@@ -589,11 +586,11 @@ class FabricationEngine extends \DOMDocument
                         if (isset($internalTypes[$name])) {
                             //
                             // @TODO Create objectCache subsystem for application unique model objects.
-                            // 
+                            //
                             // Create object from element id attribute name.
                             // Example Fabric{attributeID}
                             //
-							if (isset($attributes['id'])) {
+			    if (isset($attributes['id'])) {
 
                                 $uniqueComponent = 'Applications\\Components\\' . ucfirst($attributes['id']);
 
@@ -664,11 +661,11 @@ class FabricationEngine extends \DOMDocument
 
     /**
      * Pattern method for fabrication-framework standardized patterns.
-     * 
+     *
      * @param	string	$name							Object $name to instantiate.
      * @param	type	$attributes						Object attributes.
      * @param	type	$data							Object data.
-     * @return	object	\Library\Pattern\objectName 
+     * @return	object	\Library\Pattern\objectName
      */
     public function createPattern($name = 'html', $attributes = array(), $data = array())
     {
@@ -682,18 +679,18 @@ class FabricationEngine extends \DOMDocument
 
     /**
      * Document specification pattern.
-     * 
+     *
      * This method is an extension of the create method but for building
      * structures.
-     * 
+     *
      * Experiment note signature will change
      *
      * @param string $pattern    Html Xml structure pattern.
      * @param string $value      Pattern value.
      * @param array  $attributes Pattern attributes.
      * @param array  $contract	 Pattern children recursion.
-     * 
-     * @return FabricationEngine 
+     *
+     * @return FabricationEngine
      */
     public function specification($pattern = 'html', $value = '', $attributes = [], $contract = [])
     {
@@ -710,14 +707,14 @@ class FabricationEngine extends \DOMDocument
     }
 
     /**
-     * Template method allows for an element and its children to be used as the 
-     * pattern for an array dataset, the default map for the element children 
+     * Template method allows for an element and its children to be used as the
+     * pattern for an array dataset, the default map for the element children
      * atrribute is 'id'
      *
      * @param mixed  $pattern String or DOMElement
      * @param array  $dataset Dataset to template.
      * @param string $map     Identifier.
-     * 
+     *
      * @return mixed
      */
     public function template($pattern, $dataset = array(), $map = 'id')
@@ -729,7 +726,7 @@ class FabricationEngine extends \DOMDocument
         try {
 
             $template = '';
-                            
+
             if (is_string($pattern)) {
                 $engine = new FabricationEngine();
                 $engine->setOption('doctype', 'html.5');
@@ -794,13 +791,13 @@ class FabricationEngine extends \DOMDocument
     }
 
     /**
-     * View the DOMTree in HTML either in full or search using XPath for the 
+     * View the DOMTree in HTML either in full or search using XPath for the
      * first argument, also trim, return and change the output type, html, xml.
-     * 
+     *
      * @param string  $path   The xpath to the element to view.
      * @param boolean $trim   Trim the returned output string.
      * @param boolean $return Return or Print the output string.
-     * 
+     *
      * @return	string
      */
     public function view($path = '', $trim = true, $return = true)
@@ -839,10 +836,10 @@ class FabricationEngine extends \DOMDocument
 
     /**
      * Main XPath query method.
-     * 
+     *
      * @param string $path The xpath query to run on the current DOM
-     * 
-     * @return mixed 
+     *
+     * @return mixed
      */
     public function query($path)
     {
@@ -859,8 +856,8 @@ class FabricationEngine extends \DOMDocument
      *
      * @param mixed $key   The key to associate the value with.
      * @param mixed $value The value associated with the key.
-     * 
-     * @return boolean 
+     *
+     * @return boolean
      */
     public function input($key, $value)
     {
@@ -871,11 +868,11 @@ class FabricationEngine extends \DOMDocument
 
     /**
      * Output key value from the input array.
-     * 
+     *
      * @param mixed  $key     The key=>value to retrive.
-     * @param string $query   Example php.array 
+     * @param string $query   Example php.array
      * @param array  $options Options for the template text element.
-     * 
+     *
      * @return	mixed
      */
     public function output($key = '', $query = '', $options = array())
@@ -904,7 +901,7 @@ class FabricationEngine extends \DOMDocument
 
     /**
      * Append element to the html head element of the document.
-     * 
+     *
      * @param mixed   $element The element to append
      */
     public function appendHead($element)
@@ -913,16 +910,16 @@ class FabricationEngine extends \DOMDocument
     }
 
     /**
-     * Helper to allow the import of a html string into the current engine, 
+     * Helper to allow the import of a html string into the current engine,
      * without causing DOM hierarchy errors.
-     * 
-     * This method generate's a temporary engine DOM structure from the data 
+     *
+     * This method generate's a temporary engine DOM structure from the data
      * Will return the body first child, if null the head first child.
      * Then the engine will call importNode using the found node and return the
      * DOM structure.
-     * 
+     *
      * @param string $data
-     * 
+     *
      * @return mixed
      */
     public function convert($data)
@@ -957,21 +954,21 @@ class FabricationEngine extends \DOMDocument
             return('FabricationEngine :: convert : ' . $e->getMessage());
         }
     }
-    
+
     /**
      * Convert number
-     * 
+     *
      * @staticvar array $unit
      * @param integer $value
      * @param integer $precision
-     * 
+     *
      * @return mixed
      */
     public function convertNumber($value, $precision = 2)
     {
         // Every days a school day!
-        // In binary notation, 1024 is represented as 10000000000, making it a 
-        // simple round number. So 1024 is the maximum number of computer memory 
+        // In binary notation, 1024 is represented as 10000000000, making it a
+        // simple round number. So 1024 is the maximum number of computer memory
         // addresses that can be referenced with ten binary switches.
         $memoryAddresses = 1024;
 
@@ -985,9 +982,9 @@ class FabricationEngine extends \DOMDocument
     /**
      * Import a html string into the current engine, without causing DOM
      * hierarchy errors.
-     * 
+     *
      * @param string $html
-     * 
+     *
      * @return mixed
      */
     public function htmlToElement($html)
@@ -1011,12 +1008,12 @@ class FabricationEngine extends \DOMDocument
     }
 
     /**
-     * Magic method for handling specification and helper based method these 
-     * each method has a configuration array for the helper xpath query. 
+     * Magic method for handling specification and helper based method these
+     * each method has a configuration array for the helper xpath query.
 
      * @param string $method The method name called.
      * @param array  $args   The arguments passed with the method call.
-     * 
+     *
      * @return mixed
      */
     public function __call($method, $args)
@@ -1105,15 +1102,15 @@ class FabricationEngine extends \DOMDocument
 
             return false;
         }
-        
+
         if (preg_match('/^set(.*)/U', $method, $matches)) {
             return false;
         }
     }
 
     /**
-     * Setter for changing a element  
-     * 
+     * Setter for changing a element
+     *
      * @todo put in __call
      */
     public function setElementBy($element, $value, $nodeValue)
@@ -1130,8 +1127,8 @@ class FabricationEngine extends \DOMDocument
     }
 
     /**
-     * Setter for changing a element  
-     * 
+     * Setter for changing a element
+     *
      * @todo put in __call
      */
     public function getElementBy($element, $value)
@@ -1140,10 +1137,10 @@ class FabricationEngine extends \DOMDocument
 
         return $this->query($xql)->item(0);
     }
-    
+
     /**
      * Setter for changing HTML element.
-     * 
+     *
      * @todo put in __call
      */
     public function setHtml($q, $value)
@@ -1154,17 +1151,17 @@ class FabricationEngine extends \DOMDocument
 
     /**
      * Time Started
-     * 
+     *
      * return float
      */
     public function timeStarted()
     {
         return $this->timeStarted;
     }
-    
+
     /**
      * Generate the amount of time taken since the object was contructed.
-     * 
+     *
      * @return float
      */
     public function timeTaken()
@@ -1173,16 +1170,16 @@ class FabricationEngine extends \DOMDocument
         $timeTaken = (float) substr(-($this->timeStarted - $timeStop), 0, 5);
         return $timeTaken;
     }
-    
+
     /**
      * TemplateTextElement
-     * 
-     * @todo Refactor 
-     * 
+     *
+     * @todo Refactor
+     *
      * @param mixed  $key
      * @param string $query
      * @param array  $options
-     * 
+     *
      * @return string
      */
     public function templateTextElement($key, $query, $options)
@@ -1196,8 +1193,8 @@ class FabricationEngine extends \DOMDocument
         switch ($language) {
             case 'php':
                 /**
-                 * PHP 
-                 * Language generation is all done in one switch based 
+                 * PHP
+                 * Language generation is all done in one switch based
                  * loosely on php datatypes, template, class, array, string
                  * need to implement rest.
                  */

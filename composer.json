@@ -30,6 +30,10 @@
     "config": {
         "bin-dir": "bin"
     },
+    "scripts" : {
+        "test" : "./vendor/phpunit/phpunit/phpunit tests/"
+    },
+
     "autoload": {
         "classmap": ["library/"]
     }
