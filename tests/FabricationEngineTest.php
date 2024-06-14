@@ -13,6 +13,7 @@ define('FRAMEWORK_ROOT_PHAR', false);  // testing phar archive.
 define('FRAMEWORK_VERSION', 0.1);
 define('FRAMEWORK_ENVIRONMENT', 'dev');
 define('FRAMEWORK_DISPATCHER', false);
+
 // Fabrication Project minimum configuration.
 define('PROJECT_HOSTNAME', 'localhost');
 define('PROJECT_NAME', 'workspace');
@@ -30,38 +31,39 @@ class FabricationEngineTest extends TestCase
 
     public function testInstance()
     {
-        $this->assertIsObject($this->engine);
-        $this->assertInstanceOf('Fabrication\FabricationEngine', $this->engine);
-    }
-
-    public function testGetEngine()
-    {
-        $engine = $this->engine->getEngine();
-
+        $engine = new FabricationEngine();
         $this->assertIsObject($engine);
         $this->assertInstanceOf('Fabrication\FabricationEngine', $engine);
     }
 
+    public function testAttributes()
+    {
+        $engine = new FabricationEngine();
+        $this->assertObjectHasProperty('input',   $engine);
+        $this->assertObjectHasProperty('output',  $engine);
+        $this->assertObjectHasProperty('options', $engine);
+    }
+
+    public function testGetEngine()
+    {
+        $engine = new FabricationEngine();
+        $newEngine = $engine->getEngine();
+        $this->assertIsObject($newEngine);
+        $this->assertInstanceOf('Fabrication\FabricationEngine', $newEngine);
+    }
+
     public function testTimeStarted()
     {
-        $engine = $this->engine->getEngine();
+        $engine = new FabricationEngine();
         $this->assertIsFloat($engine->timeStarted());
     }
 
     public function testTimeTaken()
     {
-        $engine = $this->engine->getEngine();
+        $engine = new FabricationEngine();
         $this->assertIsFloat($engine->timeTaken());
     }
 
-    public function testAttributes()
-    {
-        $this->assertObjectHasProperty('input', $this->engine);
-        $this->assertObjectHasProperty('output', $this->engine);
-        $this->assertObjectHasProperty('options', $this->engine);
-    }
-
-    // DUMP TestCases
     public function testDumpString()
     {
         $result = FabricationEngine::dump("Hello, World!", true);
@@ -96,13 +98,11 @@ class FabricationEngineTest extends TestCase
     }
 
     // This example code is copyed into the README.md testing for consistency.
-    // Simplest example.
     public function testReadmeExample1()
     {
         $engine = new FabricationEngine();
         $engine->input('hello', 'world');
 
-        // Assertions.
         $this->assertEquals($engine->output('hello'), 'world');
     }
 
@@ -131,9 +131,9 @@ class FabricationEngineTest extends TestCase
 
     public function testReadmeExampleOutput()
     {
-        $tag = '>';
         $engine = new FabricationEngine();
         $engine->input('hello', 'world');
+        $tag = '>';
         $this->assertEquals("<?php\n\$hello=\"world\";\n?$tag", $engine->output('hello', 'php')
         );
     }
@@ -151,7 +151,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testReadmeExampleOutput2() {
+    public function testReadmeExampleOutput2()
+    {
         $tag = '>';
         $engine = new FabricationEngine();
         $engine->input('hello', 'world');
@@ -159,14 +160,16 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testReadmeExampleOutput3() {
+    public function testReadmeExampleOutput3()
+    {
         $engine = new FabricationEngine();
         $engine->input('body', array('bgcolor' => '#999999'));
         $this->assertEquals("body {\nbgcolor: #999999;\n}\n", $engine->output('body', 'css')
         );
     }
 
-    public function testReadmeExampleOptionDoctype() {
+    public function testReadmeExampleOptionDoctype()
+    {
         $engine = new FabricationEngine();
         $template = '<html><head></head><body></body></html>';
         $engine->run($template);
@@ -175,7 +178,8 @@ class FabricationEngineTest extends TestCase
         $this->assertEquals('<!DOCTYPE HTML>', $engine->getDoctype());
     }
 
-    public function testReadmeExampleCreate() {
+    public function testReadmeExampleCreate()
+    {
         $engine = new FabricationEngine();
 
         $hi = $engine->create('div', 'Hello World', array('id' => 'hello-world'));
@@ -192,7 +196,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testReadmeExampleCreate1() {
+    public function testReadmeExampleCreate1()
+    {
         $engine = new FabricationEngine();
 
         $hi = $engine->create('div', '', array('id' => 'hello-world'), array(
@@ -226,7 +231,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testDoctypeDefault() {
+    public function testDoctypeDefault()
+    {
         $this->assertEquals(
                 '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"' .
                 "\n" . '   "http://www.w3.org/TR/html4/loose.dtd">'
@@ -234,7 +240,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testDoctypeHTML5() {
+    public function testDoctypeHTML5()
+    {
         // Change the doctype option.
         $this->engine->setOption('doctype', 'html.5');
 
@@ -247,7 +254,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testDoctypeXHTML1Strict() {
+    public function testDoctypeXHTML1Strict()
+    {
         // Change the doctype option.
         $this->engine->setOption('doctype', 'xhtml.1.0.strict');
 
@@ -262,7 +270,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testDoctypeXHTML1Frameset() {
+    public function testDoctypeXHTML1Frameset()
+    {
         // Change the doctype option.
         $this->engine->setOption('doctype', 'xhtml.1.0.frameset');
 
@@ -277,19 +286,22 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testAllOptionsDefaults() {
+    public function testAllOptionsDefaults()
+    {
         $this->assertEquals(true, $this->engine->getOption('process'));
         $this->assertEquals(true, $this->engine->getOption('process.body.image'));
         $this->assertEquals(true, $this->engine->getOption('process.body.br'));
         $this->assertEquals(true, $this->engine->getOption('process.body.hr'));
     }
 
-    public function testInput() {
+    public function testInput()
+    {
         $this->engine->input('hello', 'world');
         $this->assertEquals('world', $this->engine->output('hello'));
     }
 
-    public function testInputBoolean() {
+    public function testInputBoolean()
+    {
         $this->engine->input(true, false);
         $this->assertEquals(false, $this->engine->output(true));
 
@@ -303,12 +315,14 @@ class FabricationEngineTest extends TestCase
         $this->assertEquals(1, $this->engine->output(0));
     }
 
-    public function testInputArray() {
+    public function testInputArray()
+    {
         $this->engine->input('hello', array('world'));
         $this->assertEquals(array('world'), $this->engine->output('hello'));
     }
 
-    public function testInputIDAndRenderOutput() {
+    public function testInputIDAndRenderOutput()
+    {
         $this->engine->input('#hello', 'world');
         $this->assertEquals('world', $this->engine->output('#hello'));
 
@@ -320,7 +334,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testInputClassAndRenderOutput() {
+    public function testInputClassAndRenderOutput()
+    {
         $this->engine->input('.hello', 'world');
         $this->assertEquals('world', $this->engine->output('.hello'));
 
@@ -377,7 +392,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testInputSymbolsMixed() {
+    public function testInputSymbolsMixed()
+    {
         $inputs = array(
             '#hello' => 'world',
             '.hello' => 'world',
@@ -408,7 +424,8 @@ class FabricationEngineTest extends TestCase
         $this->assertEquals('<b class="foo">bar</b>', $this->engine->view('//b[@class="foo"]'));
     }
 
-    public function testInputSymbolsMixedFetchDOMElements() {
+    public function testInputSymbolsMixedFetchDOMElements()
+    {
         $inputs = array(
             '#hello' => 'world',
             '.hello' => 'world',
@@ -456,7 +473,8 @@ class FabricationEngineTest extends TestCase
         $this->assertEquals('bar', $nodeList->item(0)->childNodes->item(3)->nodeValue);
     }
 
-    public function testConvert() {
+    public function testConvert()
+    {
         $string = '<div><strong>Hello</strong> World</div>';
 
         $div = $this->engine->convert($string);
@@ -466,7 +484,8 @@ class FabricationEngineTest extends TestCase
         $this->assertEquals('Hello World', $div->nodeValue);
     }
 
-    public function testCreateElement() {
+    public function testCreateElement()
+    {
         $value = "Hello World!";
         $div = $this->engine->create('div', $value, array(), array());
         $this->engine->appendChild($div);
@@ -476,7 +495,8 @@ class FabricationEngineTest extends TestCase
         $this->assertEquals($value, $div->nodeValue);
     }
 
-    public function testCreateElementWithAttributes() {
+    public function testCreateElementWithAttributes()
+    {
         $value = "Hello World!";
         $div = $this->engine->create('div', $value, array('id' => 'welcome'), array());
         $this->engine->appendChild($div);
@@ -486,7 +506,8 @@ class FabricationEngineTest extends TestCase
         $this->assertEquals($value, $div->nodeValue);
     }
 
-    public function testCreateElementWithAttributesAndChildren() {
+    public function testCreateElementWithAttributesAndChildren()
+    {
         $message = $this->engine->create('div', 'Hello ', array('id' => 'welcome')
                 , array(
             array(
@@ -568,7 +589,8 @@ class FabricationEngineTest extends TestCase
 //		);
 //	}
 
-    public function testCreateElementFromData() {
+    public function testCreateElementFromData()
+    {
         //$map = 'id';
         $map = 'class';
 
@@ -628,8 +650,8 @@ class FabricationEngineTest extends TestCase
 //
 //	}
 
-    public function testSpecification() {
-
+    public function testSpecification()
+    {
         //$this->engine->input('html', array());
 
         $contract = array(
@@ -812,21 +834,22 @@ class FabricationEngineTest extends TestCase
 //		);
 //	}
 
-    public function testOutputString() {
-
+    public function testOutputString()
+    {
         $this->engine->input('hello', 'world');
 
         $this->assertEquals('world', $this->engine->output('hello'));
     }
 
-    public function testOutputArray() {
-
+    public function testOutputArray()
+    {
         $this->engine->input('hello', array('world'));
 
         $this->assertEquals(array('world'), $this->engine->output('hello'));
     }
 
-    public function testOutputPatternPhpString() {
+    public function testOutputPatternPhpString()
+    {
         $this->engine->input('hello', 'world');
 
         $this->assertEquals(
@@ -836,7 +859,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testPhpStringSingleInputEcho() {
+    public function testPhpStringSingleInputEcho()
+    {
         $this->engine->input('hello', 'world');
 
         $this->assertEquals(
@@ -852,7 +876,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testPhpNoTagsStringSingleSelectHello() {
+    public function testPhpNoTagsStringSingleSelectHello()
+    {
         $this->engine->input('hello', 'world');
 
         $this->assertEquals('$hello="world";' . "\n", $this->engine->output('hello', 'php.string', array('return' => true, 'tags' => false)
@@ -860,7 +885,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testPhpStringMultiple() {
+    public function testPhpStringMultiple()
+    {
         $this->engine->input('hello', 'world');
         $this->engine->input('foo', 'bar');
 
@@ -872,7 +898,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testPhpStringMultipleEcho() {
+    public function testPhpStringMultipleEcho()
+    {
         $this->engine->input('hello', 'world');
         $this->engine->input('foo', 'bar');
 
@@ -891,7 +918,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testPhpStringMultipleGetSingle() {
+    public function testPhpStringMultipleGetSingle()
+    {
         $this->engine->input('hello', 'world');
         $this->engine->input('foo', 'bar');
 
@@ -902,7 +930,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testOutputPatternPhpArray() {
+    public function testOutputPatternPhpArray()
+    {
         $this->engine->input('hello', 'world');
 
         $this->assertEquals(
@@ -914,7 +943,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testPhpArrayMultipleStringSelectFoo() {
+    public function testPhpArrayMultipleStringSelectFoo()
+    {
         $this->engine->input('hello', 'world');
         $this->engine->input('foo', 'bar');
 
@@ -927,7 +957,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testPhpArrayMultipleString() {
+    public function testPhpArrayMultipleString()
+    {
         $this->engine->input('hello', 'world');
         $this->engine->input('foo', 'bar');
 
@@ -941,7 +972,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testPhpArrayMultipleMixed() {
+    public function testPhpArrayMultipleMixed()
+    {
         $this->engine->input('hello', 'world');
         $this->engine->input('foo', 'bar');
         $this->engine->input('test', array('hello' => $this->engine->output('hello'), 'foo' => $this->engine->output('foo')));
@@ -959,7 +991,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testOutputPatternPhpClass() {
+    public function testOutputPatternPhpClass()
+    {
         $this->engine->input('hello', 'world');
         $this->engine->input('foo', 'bar');
 
@@ -974,7 +1007,8 @@ class FabricationEngineTest extends TestCase
     }
 
     // TODO add recursive method for handling nested arrays.
-    public function testPhpNoTagsStdClass() {
+    public function testPhpNoTagsStdClass()
+    {
         $testing = array('testing');
 
         $this->engine->input('hello', 'world');
@@ -991,7 +1025,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testPhpNoTagsCustomClass() {
+    public function testPhpNoTagsCustomClass()
+    {
         $this->assertEquals(
                 "class Custom {\n" .
                 "}\n"
@@ -1010,7 +1045,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testPhpTemplateNoTagsClassWithStereotype() {
+    public function testPhpTemplateNoTagsClassWithStereotype()
+    {
         $this->assertEquals(
                 "class Custom extends CustomStereotype {\n" .
                 "}\n"
@@ -1024,7 +1060,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testPhpTemplateClassConstructor() {
+    public function testPhpTemplateClassConstructor()
+    {
         $testing = array('testing');
 
         $this->engine->input('hello', 'world');
@@ -1058,7 +1095,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testPhpTemplateClassConstructorAll() {
+    public function testPhpTemplateClassConstructorAll()
+    {
         $testing = array('testing');
 
         $this->engine->input('hello', 'world');
@@ -1097,7 +1135,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testPhpTemplateClassConstructorAndMethodAll() {
+    public function testPhpTemplateClassConstructorAndMethodAll()
+    {
         $testing = array('testing');
 
         $this->engine->input('hello', 'world');
@@ -1144,7 +1183,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testOutputPatternPhpClassComplex() {
+    public function testOutputPatternPhpClassComplex()
+    {
         $testing = array('testing');
 
         $this->engine->input('hello', 'world');
@@ -1203,8 +1243,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testOutputPatternCss() {
-
+    public function testOutputPatternCss()
+    {
         $this->engine->input('body', array('bgcolor' => '#999999'));
 
         $this->assertEquals(
@@ -1215,7 +1255,8 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testOutputPatternCssMultiple() {
+    public function testOutputPatternCssMultiple()
+    {
         $data = array(
             'body, html' => array(
                 'margin' => '0px',
@@ -1233,47 +1274,42 @@ class FabricationEngineTest extends TestCase
         }
 
         $this->assertEquals(
-                '/**' . "\n" .
-                ' * CSS Generated by the FabricationEngine.' . "\n" .
-                ' */' . "\n" .
-                'body, html {' . "\n" .
-                'margin: 0px;' . "\n" .
-                'padding: 0px;' . "\n" .
-                'color: black;' . "\n" .
-                'background-color: white;' . "\n" .
-                '}' . "\n" .
-                'body, input, textarea, select, option {' . "\n" .
-                'font-family: verdana, arial, helvetica, sans-serif;' . "\n" .
-                '}' . "\n"
-                , $this->engine->output('', 'css.template', array(
-                    'return' => true,
-                    'header' => true,
-                        )
-                )
+            '/**' . "\n" .
+            ' * CSS Generated by the FabricationEngine.' . "\n" .
+            ' */' . "\n" .
+            'body, html {' . "\n" .
+            'margin: 0px;' . "\n" .
+            'padding: 0px;' . "\n" .
+            'color: black;' . "\n" .
+            'background-color: white;' . "\n" .
+            '}' . "\n" .
+            'body, input, textarea, select, option {' . "\n" .
+            'font-family: verdana, arial, helvetica, sans-serif;' . "\n" .
+            '}' . "\n"
+            , $this->engine->output('', 'css.template', array(
+                'return' => true,
+                'header' => true,
+                    )
+            )
         );
     }
 
-    public function XtestDiagram() {
-        $stringXml = file_get_contents(dirname(dirname(__FILE__)) . '/tests/fixture/dia/Example.dia');
-        $this->engine->run($stringXml, 'string', 'xml');
-
-        $xml = $this->engine->outputXML();
-        //$this->engine->dump($xml); exit;
-    }
-
-    public function testSanityLoadHtmlString() {
+    public function testSanityLoadHtmlString()
+    {
         $design = file_get_contents(dirname(__FILE__) . '/fixture/design.html');
 
         $this->assertEquals(true, $this->engine->getOption('process'));
         $this->assertTrue($this->engine->run($design));
     }
 
-    public function testSanityLoadHtmlFile() {
+    public function testSanityLoadHtmlFile()
+    {
         $designPath = dirname(__FILE__) . '/fixture/design.html';
         $this->assertTrue($this->engine->run($designPath, 'file', 'html'));
     }
 
-    public function testSanityCreateProcessingInstruction() {
+    public function testSanityCreateProcessingInstruction()
+    {
         $this->assertTrue($this->engine->run('<html><head><body></html>', 'string', 'html'));
 
         $this->engine->getElementsByTagName('body')->item(0)->appendChild(
@@ -1284,7 +1320,19 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function XtestMessingWithSearchEngines() {
+    //-------------------------------------------------------------------------
+    // TODO X'ed out test cases
+    public function XtestDiagram()
+    {
+        $stringXml = file_get_contents(dirname(dirname(__FILE__)) . '/tests/fixture/dia/Example.dia');
+        $this->engine->run($stringXml, 'string', 'xml');
+
+        $xml = $this->engine->outputXML();
+        //$this->engine->dump($xml); exit;
+    }
+
+    public function XtestMessingWithSearchEngines()
+    {
         $webpage = file_get_contents('http://www.duckduckgo.com/');
 
         $this->assertTrue($this->engine->run($webpage, 'string', 'html'));
@@ -1295,8 +1343,8 @@ class FabricationEngineTest extends TestCase
         $this->assertEquals('html', $NodeList->item(0)->tagName);
     }
 
-    public function XXtestJQuery() {
-
+    public function XXtestJQuery()
+    {
         $this->engine->input('document.ready', array(
             'a' => '$("a").click(function() { alert("Hello world!") });',
             'atest' => '$("a .test").click(function() { alert("Testing!") });',
@@ -1305,19 +1353,21 @@ class FabricationEngineTest extends TestCase
 
         // make assertions that data output is css?
         $this->assertEquals(
-                '/**' . "\n" .
-                ' * JQuery Generated by the FabricationEngine.' . "\n" .
-                ' */' . "\n" .
-                '$(document).ready(function() {' . "\n" .
-                '  $("a").click(function() {' . "\n" .
-                '    alert("Hello world!")' . "\n" .
-                '  });' . "\n" .
-                '});' . "\n" .
-                "\n", $this->engine->output('', 'jquery.template', array(
+            '/**' . "\n" .
+            ' * JQuery Generated by the FabricationEngine.' . "\n" .
+            ' */' . "\n" .
+            '$(document).ready(function() {' . "\n" .
+            '  $("a").click(function() {' . "\n" .
+            '    alert("Hello world!")' . "\n" .
+            '  });' . "\n" .
+            '});' . "\n" .
+            "\n",
+            $this->engine->output('', 'jquery.template',
+                array(
                     'return' => true,
                     'header' => true,
-                        )
                 )
+            )
         );
     }
 }

@@ -724,7 +724,6 @@ class FabricationEngine extends \DOMDocument
         }
 
         try {
-
             $template = '';
 
             if (is_string($pattern)) {
@@ -747,7 +746,6 @@ class FabricationEngine extends \DOMDocument
             if (is_object($template)) {
 
                 $container = $this->create($template->nodeName, $template->nodeValue);
-
                 foreach ($dataset as $key => $row) {
 
                     // process the template child nodes.
@@ -758,7 +756,6 @@ class FabricationEngine extends \DOMDocument
                         }
 
                         if (is_object($child->attributes->getNamedItem($map))) {
-
                             $mappedName = $child->attributes->getNamedItem($map)->nodeName;
                             $mappedValue = $child->attributes->getNamedItem($map)->nodeValue;
 
@@ -768,12 +765,14 @@ class FabricationEngine extends \DOMDocument
                             }
 
                             if (in_array($mappedValue, array_keys($row))) {
-
                                 // create the mapped node attribute with updated numeric key.
                                 $nodeAttributes[$mappedName] = $mappedValue . '_' . ($key + 1);
 
                                 // fabricate the new child nodes.
-                                $node = $this->create($child->nodeName, $row[$mappedValue], $nodeAttributes
+                                $node = $this->create(
+                                    $child->nodeName,
+                                    $row[$mappedValue],
+                                    $nodeAttributes
                                 );
 
                                 $container->appendChild($node);
@@ -803,11 +802,11 @@ class FabricationEngine extends \DOMDocument
     public function view($path = '', $trim = true, $return = true)
     {
         if (!empty($path)) {
-
             $results = $this->query($path);
 
             // create an empty template object for xpath query results.
             $template = new FabricationEngine();
+
             foreach ($results as $result) {
                 $node = $template->importNode($result, true);
                 $template->appendChild($node);
@@ -818,6 +817,7 @@ class FabricationEngine extends \DOMDocument
             } else {
                 $buffer = $template->saveHTML();
             }
+
         } else {
 
             if ($trim) {
