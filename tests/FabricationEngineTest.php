@@ -41,19 +41,19 @@ class FabricationEngineTest extends TestCase
         $this->assertIsObject($engine);
         $this->assertInstanceOf('Fabrication\FabricationEngine', $engine);
     }
-    
+
     public function testTimeStarted()
     {
         $engine = $this->engine->getEngine();
         $this->assertIsFloat($engine->timeStarted());
     }
-    
+
     public function testTimeTaken()
     {
         $engine = $this->engine->getEngine();
         $this->assertIsFloat($engine->timeTaken());
     }
-    
+
     public function testAttributes()
     {
         $this->assertObjectHasProperty('input', $this->engine);
@@ -110,13 +110,12 @@ class FabricationEngineTest extends TestCase
     {
         $engine = new FabricationEngine();
         $engine->input('#hello', 'world');
-        $template = '<html><head></head><body><div id="hello"></div></body></html>';
+        $template = '<html><head></head><body><div id="hello"></div></body></html>\n';
         $engine->run($template);
 
         // Assertions.
         $this->assertEquals($engine->output('#hello'), 'world');
-        $this->assertEquals('world', $engine->saveHTML('//div[@id="hello"]/text()')
-        );
+        $this->assertEquals('world', $engine->view('//div[@id="hello"]/text()'));
     }
 
     public function testReadmeExample3() {
@@ -127,8 +126,7 @@ class FabricationEngineTest extends TestCase
 
         // Assertions.
         $this->assertEquals($engine->output('.hello'), 'world');
-        $this->assertEquals('world', $engine->saveHTML('//div[@class="hello"]/text()')
-        );
+        $this->assertEquals('world', $engine->view('//div[@class="hello"]/text()'));
     }
 
     public function testReadmeExampleOutput()
@@ -189,7 +187,7 @@ class FabricationEngineTest extends TestCase
 
         $engine->appendChild($hi);
 
-        $this->assertEquals('<div id="hello-world">Hello World</div>', 
+        $this->assertEquals("<div id=\"hello-world\">Hello World</div>\n",
             $engine->saveHTML()
         );
     }
@@ -223,7 +221,8 @@ class FabricationEngineTest extends TestCase
         $engine->appendChild($hi);
 
         $this->assertEquals(
-                '<strong id="world"><i>W</i><i>o</i><i>r</i><i>l</i><i>d</i></strong>', $engine->saveHTML('//div[@id="hello-world"]/strong[@id="world"]')
+            '<strong id="world"><i>W</i><i>o</i><i>r</i><i>l</i><i>d</i></strong>',
+            $engine->view('//div[@id="hello-world"]/strong[@id="world"]')
         );
     }
 
@@ -332,37 +331,49 @@ class FabricationEngineTest extends TestCase
         );
     }
 
-    public function testInputSymbolHashId() {
-        $this->engine->input('#hello', 'world');
-        $this->assertEquals('world', $this->engine->output('#hello'));
+    public function testInputSymbolHashId()
+    {
+        $engine = new FabricationEngine();
+        $engine->input('#hello', 'world');
+        $engine->run('<div id="hello"></div>');
 
-        // Start the engine.
-        $this->engine->run('<div id="hello"></div>');
+        $this->assertEquals('world', $engine->output('#hello'));
 
-        // Assertions.
         $this->assertEquals(
-                '<div id="hello">world</div>', $this->engine->view('//div[@id="hello"]')
+            '<div id="hello">world</div>',
+            $engine->view('//div[@id="hello"]')
         );
 
         $this->assertEquals(
-                '<html><body><div id="hello">world</div></body></html>', $this->engine->saveHtml()
+            '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">' .
+            "\n" .
+            "<html><body><div id=\"hello\">world</div></body></html>\n",
+            $engine->saveHtml()
         );
     }
 
-    public function testInputSymbolDotClass() {
-        $this->engine->input('.hello', 'world');
-        $this->assertEquals('world', $this->engine->output('.hello'));
+    public function testInputSymbolDotClass()
+    {
+        $engine = new FabricationEngine();
+        $engine->input('.hello', 'world');
+        $engine->run('<div class="hello"></div>');
+
+        $this->assertEquals('world', $engine->output('.hello'));
 
         // Start the engine.
-        $this->engine->run('<div class="hello"></div>');
+        $engine->run('<div class="hello"></div>');
 
         // Assertions.
         $this->assertEquals(
-                '<div class="hello">world</div>', $this->engine->view('//div[@class="hello"]')
+            '<div class="hello">world</div>', $engine->view('//div[@class="hello"]')
         );
 
         $this->assertEquals(
-                '<html><body><div class="hello">world</div></body></html>', $this->engine->saveHtml()
+            '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">' .
+            "\n" .
+            '<html><body><div class="hello">world</div></body></html>' .
+            "\n",
+            $engine->saveHtml()
         );
     }
 
@@ -503,23 +514,23 @@ class FabricationEngineTest extends TestCase
         $this->assertEquals(
                 '<div id="welcome">' .
                 'Hello <div id="message">' .
-                '<b>W</b><u>o</u><b>r</b><u>l</u><b>d</b></div></div>'
+                "<b>W</b><u>o</u><b>r</b><u>l</u><b>d</b></div></div>\n"
                 , $this->engine->saveHtml()
         );
 
         // Element text.
         $this->assertEquals(
-                'Hello', $this->engine->saveHTML('//div[@id="welcome"]/text()')
+                'Hello', $this->engine->view('//div[@id="welcome"]/text()')
         );
 
         // Element b text values.
         $this->assertEquals(
-                'Wrd', $this->engine->saveHTML('//div[@id="message"]/b/text()')
+                'Wrd', $this->engine->view('//div[@id="message"]/b/text()')
         );
 
         // Element u text values.
         $this->assertEquals(
-                'ol', $this->engine->saveHTML('//div[@id="message"]/u/text()')
+                'ol', $this->engine->view('//div[@id="message"]/u/text()')
         );
     }
 
@@ -537,7 +548,7 @@ class FabricationEngineTest extends TestCase
 //		);
 //		$scripts    = array();
 //
-//		
+//
 //		$result = $this->engine->create($name, $value
 //			, $attributes, $children, $styles, $scripts
 //		);
@@ -611,7 +622,7 @@ class FabricationEngineTest extends TestCase
 //	public function testPattern() {
 //
 //		$result = (string) $this->engine->createPattern();
-//		
+//
 //		$this->assertInternalType('object', $this->engine->createPattern());
 //		$this->assertInstanceOf('Library\Pattern\Html', $this->engine->createPattern());
 //
@@ -668,33 +679,33 @@ class FabricationEngineTest extends TestCase
 //	public function testPatternRequirementsHtmlAsString() {
 //
 //		//$this->engine->input('html', array());
-//		
+//
 //		$this->engine->requirements = array(
 //			array(
-//				'name' => 'head', 
+//				'name' => 'head',
 //				'value' => '',
 //				'children'=> array(
 //					array('name'=>'title', 'value'=>'Requirements')
 //				)
 //			),
 //			array(
-//				'name' => 'body', 
+//				'name' => 'body',
 //				'value' => '',
 //				'children'=> array(
-//					array('name'=>'div', 'attributes'=> array('id'=>'header')), 
+//					array('name'=>'div', 'attributes'=> array('id'=>'header')),
 //					array(
-//						'name'=>'div', 
+//						'name'=>'div',
 //						'attributes'=> array('id'=>'content'),
 //						'children'=>array(
 //							array('name'=>'h1', 'value'=>'Welcome to this test case.'),
 //							array('name'=>'p', 'value'=>'Stuff here.')
 //						)
-//					), 
+//					),
 //					array('name'=>'div', 'attributes'=> array('id'=>'footer'))
 //				)
 //			)
 //		);
-//				
+//
 //		$result = (string) $this->engine->createPattern();
 //
 //		$this->assertEquals(
@@ -703,19 +714,19 @@ class FabricationEngineTest extends TestCase
 //', $result);
 //
 //	}
-//	
+//
 //	public function testPatternXmlKeyValue() {
 //
 //		// TODO xml doctype correct output.
 //	}
-//	
+//
 //	public function testPatternSpecification() {
 //
 //		$this->assertEquals(2,
 //			sizeof($this->engine->createPattern()->specification)
 //		);
 //	}
-//	
+//
 //	public function testPatternHtmlTable() {
 //
 //		$this->assertEquals(
@@ -723,13 +734,13 @@ class FabricationEngineTest extends TestCase
 //			(string) $this->engine->createPattern('Html\Table')
 //		);
 //	}
-//	
+//
 //	public function testPatternHtmlTableWithSingleRow() {
 //
-//		$htmlTable = $this->engine->createPattern('Html\Table', array(), 
+//		$htmlTable = $this->engine->createPattern('Html\Table', array(),
 //			array(array('hello', 'world'))
 //		);
-//		
+//
 //		$this->assertEquals(
 //			"<table><tr><td>hello</td>\n".
 //			"<td>world</td>\n".
@@ -744,11 +755,11 @@ class FabricationEngineTest extends TestCase
 //		$data = array(
 //			array('hello', 'world', 'are you awake?'),
 //		);
-//		
+//
 //		$htmlTable = $this->engine->createPattern('Html\Table',
 //			array('id'=>'hello', 'class'=>'world'), $data
 //		);
-//		
+//
 //		$this->assertEquals(
 //			"<table id=\"hello\" class=\"world\"><tr><td>hello</td>\n".
 //			"<td>world</td>\n".
@@ -765,9 +776,9 @@ class FabricationEngineTest extends TestCase
 //			array('hello', 'world', 'are you really awake?'),
 //			array('foo', 'bar')
 //		);
-//		
+//
 //		$htmlTable = new \Library\Html\Table($data);
-//		
+//
 //		$this->assertEquals(
 //			"<table><tr><td>hello</td>\n".
 //			"<td>world</td>\n".
@@ -784,7 +795,7 @@ class FabricationEngineTest extends TestCase
 //	public function testPatternHtmlForm() {
 //
 //		$htmlForm = new Library\Html\Form($data);
-//		
+//
 //		$this->assertEquals(
 //			'<form></form>',
 //			(string) $htmlForm
@@ -794,7 +805,7 @@ class FabricationEngineTest extends TestCase
 //	public function testPatternHtmlFormWithAttributes() {
 //
 //		$htmlForm = $this->engine->createPattern('Html\Form', array('id'=>'hello'));
-//		
+//
 //		$this->assertEquals(
 //			'<form id="hello"></form>',
 //			(string) $htmlForm
