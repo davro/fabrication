@@ -183,7 +183,8 @@ class FabricationEngine extends \DOMDocument
     public function setOption($key, $value)
     {
         $this->options[$key] = $value;
-        return $this->options[$key];
+        //return $this->options[$key];
+        return true;
     }
 
     /**
@@ -590,12 +591,10 @@ class FabricationEngine extends \DOMDocument
                             // Create object from element id attribute name.
                             // Example Fabric{attributeID}
                             //
-			    if (isset($attributes['id'])) {
-
+			                if (isset($attributes['id'])) {
                                 $uniqueComponent = 'Applications\\Components\\' . ucfirst($attributes['id']);
 
                                 if (class_exists($uniqueComponent)) {
-
                                     $component = new $uniqueComponent($this, $name, $value, $attributes, $children);
 
                                     return $component->execute();
@@ -635,15 +634,22 @@ class FabricationEngine extends \DOMDocument
                         if (is_object($child) && get_class($child) == 'stdClass') {
                             // import stdClass.
                             $newChild = $this->create(
-                                    isset($child->name) ? $child->name : '', isset($child->value) ? $child->value : '', isset($child->attributes) ? $child->attributes : array(), isset($child->children) ? $child->children : array()
+                                isset($child->name)       ? $child->name : '',
+                                isset($child->value)      ? $child->value : '',
+                                isset($child->attributes) ? $child->attributes : array(),
+                                isset($child->children)   ? $child->children : array()
                             );
                             $element->appendChild($newChild);
                         }
 
                         if (is_array($child)) {
                             $newChild = $this->create(
-                                    isset($child['name']) ? $child['name'] : '', isset($child['value']) ? $child['value'] : '', isset($child['attributes']) ? $child['attributes'] : array(), isset($child['children']) ? $child['children'] : array()
+                                isset($child['name'])       ? $child['name'] : '',
+                                isset($child['value'])      ? $child['value'] : '',
+                                isset($child['attributes']) ? $child['attributes'] : array(),
+                                isset($child['children'])   ? $child['children'] : array()
                             );
+
                             if (!$newChild) {
                                 return;
                             } else {
@@ -910,13 +916,13 @@ class FabricationEngine extends \DOMDocument
     }
 
     /**
-     * Helper to allow the import of a html string into the current engine,
+     * Helper to allow the import of a html string into the current engine
      * without causing DOM hierarchy errors.
      *
-     * This method generate's a temporary engine DOM structure from the data
-     * Will return the body first child, if null the head first child.
-     * Then the engine will call importNode using the found node and return the
-     * DOM structure.
+     * This method generate's a temporary FabricationEngine DOM structure from
+     * the data that will return the body first child, if null the head first
+     * child.  Then the engine will call importNode using the found node and
+     * return the DOM structure to be used in the original FabricationEngine.
      *
      * @param string $data
      *
@@ -927,30 +933,26 @@ class FabricationEngine extends \DOMDocument
         $data = trim($data);
 
         try {
-
-            // Buffer engine used to convert the html string into DOMElements,
+            // Buffer engine used to convert the html string into DOMElements.
             $engine = new FabricationEngine;
             $engine->run($data);
 
-            // Check if the body is null, so use the head if avaliable.
+            // Extract data from Head if Body is null.
             if ($engine->getBody()->item(0) == null) {
-
                 $node = $engine->getHead()->item(0)->childNodes->item(0);
 
                 return $this->importNode($node, true);
             }
 
+            // Extract data from Body
             if ($engine->getBody()->item(0) !== null) {
-
-                // body first item.
                 $node = $engine->getBody()->item(0)->childNodes->item(0);
 
                 return $this->importNode($node, true);
             }
-
             return false;
-        } catch (\Exception $e) {
 
+        } catch (\Exception $e) {
             return('FabricationEngine :: convert : ' . $e->getMessage());
         }
     }

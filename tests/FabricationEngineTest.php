@@ -233,122 +233,144 @@ class FabricationEngineTest extends TestCase
 
     public function testDoctypeDefault()
     {
+        $engine = new FabricationEngine();
+
         $this->assertEquals(
                 '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"' .
                 "\n" . '   "http://www.w3.org/TR/html4/loose.dtd">'
-                , $this->engine->getDoctype()
+                , $engine->getDoctype()
         );
     }
 
     public function testDoctypeHTML5()
     {
+        $engine = new FabricationEngine();
+
         // Change the doctype option.
-        $this->engine->setOption('doctype', 'html.5');
+        $engine->setOption('doctype', 'html.5');
 
         // Assertion doctype option.
-        $this->assertEquals('html.5', $this->engine->getOption('doctype'));
+        $this->assertEquals('html.5', $engine->getOption('doctype'));
 
         // Assertion doctype output.
         $this->assertEquals('<!DOCTYPE HTML>'
-                , $this->engine->getDoctype()
+                , $engine->getDoctype()
         );
     }
 
     public function testDoctypeXHTML1Strict()
     {
+        $engine = new FabricationEngine();
+
         // Change the doctype option.
-        $this->engine->setOption('doctype', 'xhtml.1.0.strict');
+        $engine->setOption('doctype', 'xhtml.1.0.strict');
 
         // Assertion doctype option.
-        $this->assertEquals('xhtml.1.0.strict', $this->engine->getOption('doctype'));
+        $this->assertEquals('xhtml.1.0.strict', $engine->getOption('doctype'));
 
         // Assertion doctype output.
         $this->assertEquals(
-                '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"' .
-                "\n" . '   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'
-                , $this->engine->getDoctype()
+            '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"' .
+            "\n" . '   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">',
+            $engine->getDoctype()
         );
     }
 
     public function testDoctypeXHTML1Frameset()
     {
+        $engine = new FabricationEngine();
+
         // Change the doctype option.
-        $this->engine->setOption('doctype', 'xhtml.1.0.frameset');
+        $engine->setOption('doctype', 'xhtml.1.0.frameset');
 
         // Assertion doctype option.
-        $this->assertEquals('xhtml.1.0.frameset', $this->engine->getOption('doctype'));
+        $this->assertEquals('xhtml.1.0.frameset', $engine->getOption('doctype'));
 
         // Assertion doctype output.
         $this->assertEquals(
-                '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"' .
-                "\n" . '   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">'
-                , $this->engine->getDoctype()
+            '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"' .
+            "\n" . '   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">',
+            $engine->getDoctype()
         );
     }
 
     public function testAllOptionsDefaults()
     {
-        $this->assertEquals(true, $this->engine->getOption('process'));
-        $this->assertEquals(true, $this->engine->getOption('process.body.image'));
-        $this->assertEquals(true, $this->engine->getOption('process.body.br'));
-        $this->assertEquals(true, $this->engine->getOption('process.body.hr'));
+        $engine = new FabricationEngine();
+
+        $this->assertEquals(true, $engine->getOption('process'));
+        $this->assertEquals(true, $engine->getOption('process.body.image'));
+        $this->assertEquals(true, $engine->getOption('process.body.br'));
+        $this->assertEquals(true, $engine->getOption('process.body.hr'));
     }
 
     public function testInput()
     {
-        $this->engine->input('hello', 'world');
-        $this->assertEquals('world', $this->engine->output('hello'));
+        $engine = new FabricationEngine();
+
+        $engine->input('hello', 'world');
+        $this->assertEquals('world', $engine->output('hello'));
     }
 
     public function testInputBoolean()
     {
-        $this->engine->input(true, false);
-        $this->assertEquals(false, $this->engine->output(true));
+        $engine = new FabricationEngine();
 
-        $this->engine->input(false, true);
-        $this->assertEquals(true, $this->engine->output(false));
+        $engine->input(true, false);
+        $this->assertEquals(false, $engine->output(true));
 
-        $this->engine->input(1, 0);
-        $this->assertEquals(0, $this->engine->output(1));
+        $engine->input(false, true);
+        $this->assertEquals(true, $engine->output(false));
 
-        $this->engine->input(0, 1);
-        $this->assertEquals(1, $this->engine->output(0));
+        $engine->input(1, 0);
+        $this->assertEquals(0, $engine->output(1));
+
+        $engine->input(0, 1);
+        $this->assertEquals(1, $engine->output(0));
     }
 
     public function testInputArray()
     {
-        $this->engine->input('hello', array('world'));
-        $this->assertEquals(array('world'), $this->engine->output('hello'));
+        $engine = new FabricationEngine();
+
+        $engine->input('hello', array('world'));
+        $this->assertEquals(array('world'), $engine->output('hello'));
     }
 
     public function testInputIDAndRenderOutput()
     {
-        $this->engine->input('#hello', 'world');
-        $this->assertEquals('world', $this->engine->output('#hello'));
+        $engine = new FabricationEngine();
 
-        $this->engine->run('<div id="hello"></div>');
+        $engine->input('#hello', 'world');
+        $this->assertEquals('world', $engine->output('#hello'));
+
+        $engine->run('<div id="hello"></div>');
 
         $this->assertEquals(
-                //'<div id="hello">world</div>',
-                '<div id="hello">world</div>', $this->engine->view('//div[@id="hello"]')
+            '<div id="hello">world</div>',
+            $engine->view('//div[@id="hello"]')
         );
     }
 
     public function testInputClassAndRenderOutput()
     {
-        $this->engine->input('.hello', 'world');
-        $this->assertEquals('world', $this->engine->output('.hello'));
+        $engine = new FabricationEngine();
 
-        $this->engine->run('<div class="hello"></div>');
+        $engine->input('.hello', 'world');
+        $this->assertEquals('world', $engine->output('.hello'));
+
+        $engine->run('<div class="hello"></div>');
 
         $this->assertEquals(
-                '<div class="hello">world</div>', $this->engine->view('//div[@class="hello"]')
+            '<div class="hello">world</div>',
+            $engine->view('//div[@class="hello"]')
         );
     }
 
     public function testInputSymbolHashId()
     {
         $engine = new FabricationEngine();
+
         $engine->input('#hello', 'world');
         $engine->run('<div id="hello"></div>');
 
@@ -370,6 +392,7 @@ class FabricationEngineTest extends TestCase
     public function testInputSymbolDotClass()
     {
         $engine = new FabricationEngine();
+
         $engine->input('.hello', 'world');
         $engine->run('<div class="hello"></div>');
 
@@ -394,6 +417,8 @@ class FabricationEngineTest extends TestCase
 
     public function testInputSymbolsMixed()
     {
+        $engine = new FabricationEngine();
+
         $inputs = array(
             '#hello' => 'world',
             '.hello' => 'world',
@@ -403,11 +428,11 @@ class FabricationEngineTest extends TestCase
 
         // Input the key value pairs.
         foreach ($inputs as $key => $value) {
-            $this->engine->input($key, $value);
+            $engine->input($key, $value);
         }
 
         // Start the engine.
-        $this->engine->run(
+        $engine->run(
                 '<div id="hello"></div>' .
                 '<div class="hello"></div>' .
                 '<p id="foo"></p>' .
@@ -416,16 +441,18 @@ class FabricationEngineTest extends TestCase
 
         // Assertions.
         foreach ($inputs as $key => $value) {
-            $this->assertEquals($value, $this->engine->output($key));
+            $this->assertEquals($value, $engine->output($key));
         }
-        $this->assertEquals('<div id="hello">world</div>', $this->engine->view('//div[@id="hello"]'));
-        $this->assertEquals('<div class="hello">world</div>', $this->engine->view('//div[@class="hello"]'));
-        $this->assertEquals('<p id="foo">bar</p>', $this->engine->view('//p[@id="foo"]'));
-        $this->assertEquals('<b class="foo">bar</b>', $this->engine->view('//b[@class="foo"]'));
+        $this->assertEquals('<div id="hello">world</div>', $engine->view('//div[@id="hello"]'));
+        $this->assertEquals('<div class="hello">world</div>', $engine->view('//div[@class="hello"]'));
+        $this->assertEquals('<p id="foo">bar</p>', $engine->view('//p[@id="foo"]'));
+        $this->assertEquals('<b class="foo">bar</b>', $engine->view('//b[@class="foo"]'));
     }
 
     public function testInputSymbolsMixedFetchDOMElements()
     {
+        $engine = new FabricationEngine();
+
         $inputs = array(
             '#hello' => 'world',
             '.hello' => 'world',
@@ -435,28 +462,28 @@ class FabricationEngineTest extends TestCase
 
         // Input key value pairs.
         foreach ($inputs as $key => $value) {
-            $this->engine->input($key, $value);
+            $engine->input($key, $value);
         }
 
         // Start the engine.
-        $this->engine->run(
-                '<div id="hello"></div>' .
-                '<div class="hello"></div>' .
-                '<p id="foo"></p>' .
-                '<b class="foo"></b>'
+        $engine->run(
+            '<div id="hello"></div>' .
+            '<div class="hello"></div>' .
+            '<p id="foo"></p>' .
+            '<b class="foo"></b>'
         );
 
         // Assertions.
         foreach ($inputs as $key => $value) {
-            $this->assertEquals($value, $this->engine->output($key));
+            $this->assertEquals($value, $engine->output($key));
         }
-        $this->assertEquals('<div id="hello">world</div>', $this->engine->view('//div[@id="hello"]'));
-        $this->assertEquals('<div class="hello">world</div>', $this->engine->view('//div[@class="hello"]'));
-        $this->assertEquals('<p id="foo">bar</p>', $this->engine->view('//p[@id="foo"]'));
-        $this->assertEquals('<b class="foo">bar</b>', $this->engine->view('//b[@class="foo"]'));
+        $this->assertEquals('<div id="hello">world</div>', $engine->view('//div[@id="hello"]'));
+        $this->assertEquals('<div class="hello">world</div>', $engine->view('//div[@class="hello"]'));
+        $this->assertEquals('<p id="foo">bar</p>', $engine->view('//p[@id="foo"]'));
+        $this->assertEquals('<b class="foo">bar</b>', $engine->view('//b[@class="foo"]'));
 
         // Fetch the engine html body elements.
-        $nodeList = $this->engine->getBody();
+        $nodeList = $engine->getBody();
 
         // Assertions DOM Element structure.
         $this->assertEquals('DOMNodeList', get_class($nodeList));
@@ -475,20 +502,42 @@ class FabricationEngineTest extends TestCase
 
     public function testConvert()
     {
-        $string = '<div><strong>Hello</strong> World</div>';
+        $engine = new FabricationEngine();
 
-        $div = $this->engine->convert($string);
+        $string = '<div><strong>Hello</strong> World</div>';
+        $div    = $engine->convert($string);
 
         $this->assertEquals('DOMElement', get_class($div));
         $this->assertEquals('div', $div->nodeName);
         $this->assertEquals('Hello World', $div->nodeValue);
     }
 
+    public function testConvertAndAppend()
+    {
+        $engine = new FabricationEngine();
+
+        $string = '<div><strong>Hello</strong> World</div>';
+        $div    = $engine->convert($string);
+
+        $this->assertEquals('DOMElement', get_class($div));
+        $this->assertEquals('div', $div->nodeName);
+        $this->assertEquals('Hello World', $div->nodeValue);
+
+        //$div->nodeValue = "Changed";
+        //<div>Changed</div>
+
+        $engine->appendChild($div);
+
+        $this->assertEquals($string, $engine->view());
+    }
+
     public function testCreateElement()
     {
-        $value = "Hello World!";
-        $div = $this->engine->create('div', $value, array(), array());
-        $this->engine->appendChild($div);
+        $engine = new FabricationEngine();
+
+        $value  = "Hello World!";
+        $div    = $engine->create('div', $value, array(), array());
+        $engine->appendChild($div);
 
         $this->assertEquals('DOMElement', get_class($div));
         $this->assertEquals('div', $div->nodeName);
@@ -497,9 +546,11 @@ class FabricationEngineTest extends TestCase
 
     public function testCreateElementWithAttributes()
     {
+        $engine = new FabricationEngine();
+
         $value = "Hello World!";
-        $div = $this->engine->create('div', $value, array('id' => 'welcome'), array());
-        $this->engine->appendChild($div);
+        $div = $engine->create('div', $value, array('id' => 'welcome'), array());
+        $engine->appendChild($div);
 
         $this->assertEquals('DOMElement', get_class($div));
         $this->assertEquals('div', $div->nodeName);
@@ -508,23 +559,25 @@ class FabricationEngineTest extends TestCase
 
     public function testCreateElementWithAttributesAndChildren()
     {
-        $message = $this->engine->create('div', 'Hello ', array('id' => 'welcome')
-                , array(
-            array(
-                'name' => 'div'
-                , 'attributes' => array('id' => 'message')
-                , 'children' => array(
-                    array('name' => 'b', 'value' => 'W'),
-                    array('name' => 'u', 'value' => 'o'),
-                    array('name' => 'b', 'value' => 'r'),
-                    array('name' => 'u', 'value' => 'l'),
-                    array('name' => 'b', 'value' => 'd'),
+        $engine = new FabricationEngine();
+
+        $message = $engine->create('div', 'Hello ',
+            array('id' => 'welcome'), array(
+                array(
+                    'name' => 'div'
+                    , 'attributes' => array('id' => 'message')
+                    , 'children' => array(
+                        array('name' => 'b', 'value' => 'W'),
+                        array('name' => 'u', 'value' => 'o'),
+                        array('name' => 'b', 'value' => 'r'),
+                        array('name' => 'u', 'value' => 'l'),
+                        array('name' => 'b', 'value' => 'd'),
+                    )
                 )
             )
-                )
         );
         // Append new element to the engine.
-        $this->engine->appendChild($message);
+        $engine->appendChild($message);
 
         // Assertions.
         $this->assertEquals('DOMElement', get_class($message));
@@ -533,25 +586,25 @@ class FabricationEngineTest extends TestCase
 
         // Assertions output.
         $this->assertEquals(
-                '<div id="welcome">' .
-                'Hello <div id="message">' .
-                "<b>W</b><u>o</u><b>r</b><u>l</u><b>d</b></div></div>\n"
-                , $this->engine->saveHtml()
+            '<div id="welcome">' .
+            'Hello <div id="message">' .
+            "<b>W</b><u>o</u><b>r</b><u>l</u><b>d</b></div></div>\n",
+            $engine->saveHtml()
         );
 
         // Element text.
         $this->assertEquals(
-                'Hello', $this->engine->view('//div[@id="welcome"]/text()')
+            'Hello', $engine->view('//div[@id="welcome"]/text()')
         );
 
         // Element b text values.
         $this->assertEquals(
-                'Wrd', $this->engine->view('//div[@id="message"]/b/text()')
+            'Wrd', $engine->view('//div[@id="message"]/b/text()')
         );
 
         // Element u text values.
         $this->assertEquals(
-                'ol', $this->engine->view('//div[@id="message"]/u/text()')
+            'ol', $engine->view('//div[@id="message"]/u/text()')
         );
     }
 
@@ -610,20 +663,20 @@ class FabricationEngineTest extends TestCase
         $result = $this->engine->template($template, $dataset, $map);
 
         $this->assertEquals(
-                '<div>Template:UID.Title.Content.' .
-                // ROW 1
-                '<div ' . $map . '="uid_1">1</div>' .
-                '<div ' . $map . '="title_1">Title 1</div>' .
-                '<div ' . $map . '="content_1">Content 1</div>' .
-                // ROW 2
-                '<div ' . $map . '="uid_2">2</div>' .
-                '<div ' . $map . '="title_2">Title 2</div>' .
-                '<div ' . $map . '="content_2">Content 2</div>' .
-                // ROW 3
-                '<div ' . $map . '="uid_3">3</div>' .
-                '<div ' . $map . '="title_3">Title 3</div>' .
-                '<div ' . $map . '="content_3">Content 3</div>' .
-                '</div>', $this->engine->saveXML($result)
+            '<div>Template:UID.Title.Content.' .
+            // ROW 1
+            '<div ' . $map . '="uid_1">1</div>' .
+            '<div ' . $map . '="title_1">Title 1</div>' .
+            '<div ' . $map . '="content_1">Content 1</div>' .
+            // ROW 2
+            '<div ' . $map . '="uid_2">2</div>' .
+            '<div ' . $map . '="title_2">Title 2</div>' .
+            '<div ' . $map . '="content_2">Content 2</div>' .
+            // ROW 3
+            '<div ' . $map . '="uid_3">3</div>' .
+            '<div ' . $map . '="title_3">Title 3</div>' .
+            '<div ' . $map . '="content_3">Content 3</div>' .
+            '</div>', $this->engine->saveXML($result)
         );
 
         // Append the result to the engine.
